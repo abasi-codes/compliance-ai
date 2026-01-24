@@ -1,0 +1,867 @@
+{
+  "version": "1.0",
+  "description": "Interview question bank for NIST CSF 2.0 assessment",
+  "questions": [
+    {
+      "subcategory_code": "GV.OC-01",
+      "question_text": "Does your organization have a documented mission statement that informs cybersecurity decisions?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager", "consultant"]
+    },
+    {
+      "subcategory_code": "GV.OC-01",
+      "question_text": "How is the organizational mission communicated to cybersecurity stakeholders?",
+      "question_type": "operation",
+      "order": 2,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.OC-02",
+      "question_text": "Has the organization identified and documented internal and external stakeholders?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.OC-02",
+      "question_text": "How are stakeholder expectations regarding cybersecurity risk management captured and addressed?",
+      "question_type": "operation",
+      "order": 2,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.OC-03",
+      "question_text": "Does your organization maintain a register of legal, regulatory, and contractual cybersecurity requirements?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.OC-03",
+      "question_text": "How are privacy and civil liberties obligations integrated into cybersecurity risk management?",
+      "question_type": "design",
+      "order": 2,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.OC-04",
+      "question_text": "Are critical objectives and services that external stakeholders depend on documented?",
+      "question_type": "documentation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.OC-05",
+      "question_text": "Has the organization documented its dependencies on external services and outcomes?",
+      "question_type": "documentation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RM-01",
+      "question_text": "Are cybersecurity risk management objectives formally documented and agreed upon by stakeholders?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RM-01",
+      "question_text": "Who are the key stakeholders that have agreed to the risk management objectives?",
+      "question_type": "responsibility",
+      "order": 2,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RM-02",
+      "question_text": "Does the organization have documented risk appetite and risk tolerance statements?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RM-02",
+      "question_text": "How are risk appetite and tolerance statements communicated across the organization?",
+      "question_type": "operation",
+      "order": 2,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RM-03",
+      "question_text": "Are cybersecurity risk management activities integrated into enterprise risk management processes?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RM-04",
+      "question_text": "Is there documented strategic direction for risk response options?",
+      "question_type": "documentation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RM-05",
+      "question_text": "Are communication lines for cybersecurity risks established across the organization?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RM-06",
+      "question_text": "Does the organization use a standardized method for calculating and prioritizing cybersecurity risks?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RM-07",
+      "question_text": "Does the organization consider strategic opportunities (positive risks) in cybersecurity discussions?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RR-01",
+      "question_text": "Does organizational leadership demonstrate accountability for cybersecurity risk?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager", "consultant"]
+    },
+    {
+      "subcategory_code": "GV.RR-01",
+      "question_text": "How does leadership foster a risk-aware and ethical culture?",
+      "question_type": "operation",
+      "order": 2,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RR-02",
+      "question_text": "Are cybersecurity roles, responsibilities, and authorities formally documented?",
+      "question_type": "documentation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RR-02",
+      "question_text": "How are cybersecurity responsibilities communicated and enforced?",
+      "question_type": "operation",
+      "order": 2,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RR-03",
+      "question_text": "Are adequate resources allocated for cybersecurity commensurate with the risk strategy?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.RR-04",
+      "question_text": "Is cybersecurity included in human resources practices such as hiring and termination?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.PO-01",
+      "question_text": "Does the organization have a cybersecurity policy that is based on organizational context and priorities?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.PO-01",
+      "question_text": "How is the cybersecurity policy communicated and enforced?",
+      "question_type": "operation",
+      "order": 2,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.PO-02",
+      "question_text": "Is there a process for reviewing and updating cybersecurity policies?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.PO-02",
+      "question_text": "How frequently are cybersecurity policies reviewed and updated?",
+      "question_type": "operation",
+      "order": 2,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.SC-01",
+      "question_text": "Does the organization have a cybersecurity supply chain risk management program?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.SC-02",
+      "question_text": "Are cybersecurity roles and responsibilities established for suppliers and partners?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.SC-03",
+      "question_text": "Is supply chain risk management integrated into enterprise risk management?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.SC-04",
+      "question_text": "Are suppliers identified and prioritized by criticality?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.SC-05",
+      "question_text": "Are cybersecurity requirements included in supplier contracts?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.SC-06",
+      "question_text": "Is due diligence performed before entering supplier relationships?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.SC-07",
+      "question_text": "Are supplier risks monitored throughout the relationship?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.SC-08",
+      "question_text": "Are suppliers included in incident response planning?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.SC-09",
+      "question_text": "Are supply chain security practices monitored throughout the product lifecycle?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "GV.SC-10",
+      "question_text": "Do supply chain risk management plans address end-of-relationship activities?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "ID.AM-01",
+      "question_text": "Does the organization maintain an inventory of hardware assets?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner", "compliance_manager"]
+    },
+    {
+      "subcategory_code": "ID.AM-01",
+      "question_text": "How is the hardware inventory kept current?",
+      "question_type": "operation",
+      "order": 2,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "ID.AM-02",
+      "question_text": "Does the organization maintain inventories of software, services, and systems?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner", "compliance_manager"]
+    },
+    {
+      "subcategory_code": "ID.AM-02",
+      "question_text": "How are software inventories maintained and updated?",
+      "question_type": "operation",
+      "order": 2,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "ID.AM-03",
+      "question_text": "Are network communication flows and data flows documented?",
+      "question_type": "documentation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "ID.AM-04",
+      "question_text": "Is there an inventory of services provided by suppliers?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "ID.AM-05",
+      "question_text": "Are assets prioritized based on classification and criticality?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "ID.AM-07",
+      "question_text": "Does the organization maintain inventories of data and metadata?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "ID.AM-08",
+      "question_text": "Are systems and data managed throughout their lifecycle?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "ID.RA-01",
+      "question_text": "Are vulnerabilities in assets identified, validated, and recorded?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "ID.RA-01",
+      "question_text": "What tools or processes are used for vulnerability identification?",
+      "question_type": "operation",
+      "order": 2,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "ID.RA-02",
+      "question_text": "Does the organization receive cyber threat intelligence from external sources?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "ID.RA-03",
+      "question_text": "Are internal and external threats identified and recorded?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "ID.RA-04",
+      "question_text": "Are potential impacts and likelihoods of threats identified and recorded?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "ID.RA-05",
+      "question_text": "Are threats and vulnerabilities used to understand inherent risk?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "ID.RA-06",
+      "question_text": "Are risk responses chosen, prioritized, and tracked?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "ID.RA-07",
+      "question_text": "Are changes and exceptions managed and assessed for risk impact?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "ID.RA-08",
+      "question_text": "Are there processes for receiving and responding to vulnerability disclosures?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "ID.RA-09",
+      "question_text": "Is the authenticity and integrity of hardware and software assessed before acquisition?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "ID.RA-10",
+      "question_text": "Are critical suppliers assessed prior to acquisition?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "ID.IM-01",
+      "question_text": "Are improvements identified from evaluations?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "ID.IM-02",
+      "question_text": "Are improvements identified from security tests and exercises?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "ID.IM-03",
+      "question_text": "Are improvements identified from operational processes?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "ID.IM-04",
+      "question_text": "Are incident response plans established, maintained, and improved?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "PR.AA-01",
+      "question_text": "Are identities and credentials managed for users, services, and hardware?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.AA-01",
+      "question_text": "What identity management system is in place?",
+      "question_type": "design",
+      "order": 2,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.AA-02",
+      "question_text": "Are identities proofed and bound to credentials based on interaction context?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.AA-03",
+      "question_text": "Are users, services, and hardware authenticated?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.AA-03",
+      "question_text": "What authentication mechanisms are in place?",
+      "question_type": "design",
+      "order": 2,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.AA-04",
+      "question_text": "Are identity assertions protected, conveyed, and verified?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.AA-05",
+      "question_text": "Are access permissions defined, managed, and reviewed?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.AA-05",
+      "question_text": "Are least privilege and separation of duties principles enforced?",
+      "question_type": "design",
+      "order": 2,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.AA-06",
+      "question_text": "Is physical access to assets managed and monitored?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.AT-01",
+      "question_text": "Is cybersecurity awareness training provided to personnel?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "PR.AT-01",
+      "question_text": "How often is awareness training conducted?",
+      "question_type": "operation",
+      "order": 2,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "PR.AT-02",
+      "question_text": "Is specialized training provided for roles with cybersecurity responsibilities?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "PR.DS-01",
+      "question_text": "Is data-at-rest protected for confidentiality, integrity, and availability?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.DS-01",
+      "question_text": "What encryption mechanisms are used for data-at-rest?",
+      "question_type": "design",
+      "order": 2,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.DS-02",
+      "question_text": "Is data-in-transit protected for confidentiality, integrity, and availability?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.DS-02",
+      "question_text": "What encryption mechanisms are used for data-in-transit?",
+      "question_type": "design",
+      "order": 2,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.DS-10",
+      "question_text": "Is data-in-use protected for confidentiality, integrity, and availability?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.DS-11",
+      "question_text": "Are backups of data created, protected, maintained, and tested?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.DS-11",
+      "question_text": "How often are backup restoration tests performed?",
+      "question_type": "operation",
+      "order": 2,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.PS-01",
+      "question_text": "Are configuration management practices established and applied?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.PS-02",
+      "question_text": "Is software maintained, replaced, and removed commensurate with risk?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.PS-03",
+      "question_text": "Is hardware maintained, replaced, and removed commensurate with risk?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.PS-04",
+      "question_text": "Are log records generated and made available for continuous monitoring?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.PS-05",
+      "question_text": "Is installation and execution of unauthorized software prevented?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.PS-06",
+      "question_text": "Are secure software development practices integrated into the SDLC?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.IR-01",
+      "question_text": "Are networks protected from unauthorized logical access?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.IR-02",
+      "question_text": "Are technology assets protected from environmental threats?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.IR-03",
+      "question_text": "Are resilience mechanisms implemented for normal and adverse situations?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "PR.IR-04",
+      "question_text": "Is adequate resource capacity maintained to ensure availability?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "DE.CM-01",
+      "question_text": "Are networks and network services monitored for adverse events?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "DE.CM-01",
+      "question_text": "What monitoring tools are used for network surveillance?",
+      "question_type": "design",
+      "order": 2,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "DE.CM-02",
+      "question_text": "Is the physical environment monitored for adverse events?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "DE.CM-03",
+      "question_text": "Are personnel activity and technology usage monitored?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "DE.CM-06",
+      "question_text": "Are external service provider activities monitored?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "DE.CM-09",
+      "question_text": "Are computing environments monitored for adverse events?",
+      "question_type": "existence",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "DE.AE-02",
+      "question_text": "Are potentially adverse events analyzed to understand associated activities?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "DE.AE-03",
+      "question_text": "Is information correlated from multiple sources for event analysis?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "DE.AE-04",
+      "question_text": "Are estimated impact and scope of adverse events understood?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "DE.AE-06",
+      "question_text": "Is information on adverse events provided to authorized staff?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "DE.AE-07",
+      "question_text": "Is cyber threat intelligence integrated into event analysis?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "DE.AE-08",
+      "question_text": "Are incidents declared when adverse events meet defined criteria?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RS.MA-01",
+      "question_text": "Is the incident response plan executed when incidents are declared?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RS.MA-02",
+      "question_text": "Are incident reports triaged and validated?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RS.MA-03",
+      "question_text": "Are incidents categorized and prioritized?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RS.MA-04",
+      "question_text": "Are incidents escalated as needed?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RS.MA-05",
+      "question_text": "Are criteria for initiating incident recovery applied?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RS.AN-03",
+      "question_text": "Is analysis performed to establish root cause of incidents?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RS.AN-06",
+      "question_text": "Are investigation actions recorded with integrity preserved?",
+      "question_type": "documentation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RS.AN-07",
+      "question_text": "Is incident data and metadata collected with integrity preserved?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RS.AN-08",
+      "question_text": "Is an incident's magnitude estimated and validated?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RS.CO-02",
+      "question_text": "Are internal and external stakeholders notified of incidents?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "RS.CO-03",
+      "question_text": "Is incident information shared with designated stakeholders?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "RS.MI-01",
+      "question_text": "Are incidents contained effectively?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RS.MI-02",
+      "question_text": "Are incidents eradicated effectively?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RC.RP-01",
+      "question_text": "Is the recovery portion of the incident response plan executed?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RC.RP-02",
+      "question_text": "Are recovery actions selected, scoped, and prioritized?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RC.RP-03",
+      "question_text": "Is the integrity of backups verified before restoration?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RC.RP-04",
+      "question_text": "Are critical mission functions considered in establishing post-incident norms?",
+      "question_type": "design",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "RC.RP-05",
+      "question_text": "Is the integrity of restored assets verified?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RC.RP-06",
+      "question_text": "Is incident recovery declared based on criteria with documentation completed?",
+      "question_type": "documentation",
+      "order": 1,
+      "target_roles": ["control_owner"]
+    },
+    {
+      "subcategory_code": "RC.CO-03",
+      "question_text": "Are recovery activities communicated to stakeholders?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    },
+    {
+      "subcategory_code": "RC.CO-04",
+      "question_text": "Are public updates on incident recovery shared appropriately?",
+      "question_type": "operation",
+      "order": 1,
+      "target_roles": ["compliance_manager"]
+    }
+  ]
+}

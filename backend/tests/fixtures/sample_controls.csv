@@ -1,0 +1,21 @@
+identifier,name,description,owner,control_type,implementation_status
+AC-001,Access Control Policy,"Establishes and enforces access control policies for all systems and data",IT Security,Administrative,Implemented
+AC-002,Multi-Factor Authentication,"Requires MFA for all privileged and remote access",IT Security,Technical,Implemented
+AC-003,Least Privilege Access,"Implements least privilege access principles for all users and service accounts",IT Security,Technical,Partial
+AC-004,Access Review Process,"Quarterly review of all user access rights and permissions",IT Security,Administrative,Implemented
+CM-001,Configuration Management,"Maintains baseline configurations for all systems",IT Operations,Technical,Implemented
+CM-002,Change Management Process,"Formal change management process for all production systems",IT Operations,Administrative,Implemented
+CM-003,Software Inventory,"Maintains inventory of all authorized software",IT Operations,Technical,Partial
+IR-001,Incident Response Plan,"Documented incident response plan with defined roles",IT Security,Administrative,Implemented
+IR-002,Incident Detection,"Automated detection of security incidents through SIEM",IT Security,Technical,Implemented
+IR-003,Incident Reporting,"Process for reporting and escalating security incidents",IT Security,Administrative,Implemented
+RA-001,Risk Assessment Program,"Annual risk assessment program aligned with organizational objectives",Risk Management,Administrative,Implemented
+RA-002,Vulnerability Management,"Continuous vulnerability scanning and remediation program",IT Security,Technical,Implemented
+AT-001,Security Awareness Training,"Annual security awareness training for all employees",HR/IT Security,Administrative,Implemented
+AT-002,Role-Based Training,"Specialized security training for technical staff",HR/IT Security,Administrative,Partial
+PE-001,Physical Access Controls,"Badge access and monitoring for all facilities",Facilities,Technical,Implemented
+PE-002,Environmental Controls,"Fire suppression and climate control for data centers",Facilities,Technical,Implemented
+SA-001,Vendor Risk Management,"Third-party vendor risk assessment program",Procurement,Administrative,Partial
+SA-002,Secure Development,"Secure software development lifecycle practices",Development,Administrative,Partial
+CP-001,Business Continuity Plan,"Documented business continuity and disaster recovery plan",Business Operations,Administrative,Implemented
+CP-002,Backup and Recovery,"Regular backup and tested recovery procedures",IT Operations,Technical,Implemented

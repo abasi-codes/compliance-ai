@@ -58,3 +58,7 @@ class CSFSubcategory(Base):
     description: Mapped[str] = mapped_column(Text, nullable=False)
 
     category: Mapped["CSFCategory"] = relationship(back_populates="subcategories")
+    questions: Mapped[list["InterviewQuestion"]] = relationship(back_populates="subcategory")
+
+
+from app.models.interview import InterviewQuestion

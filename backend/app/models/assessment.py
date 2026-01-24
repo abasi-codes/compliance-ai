@@ -44,8 +44,18 @@ class Assessment(Base):
     created_by: Mapped["User"] = relationship()
     controls: Mapped[list["Control"]] = relationship(back_populates="assessment")
     policies: Mapped[list["Policy"]] = relationship(back_populates="assessment")
+    interview_sessions: Mapped[list["InterviewSession"]] = relationship(back_populates="assessment")
+    subcategory_scores: Mapped[list["SubcategoryScore"]] = relationship(back_populates="assessment")
+    category_scores: Mapped[list["CategoryScore"]] = relationship(back_populates="assessment")
+    function_scores: Mapped[list["FunctionScore"]] = relationship(back_populates="assessment")
+    deviations: Mapped[list["Deviation"]] = relationship(back_populates="assessment")
+    reports: Mapped[list["Report"]] = relationship(back_populates="assessment")
 
 
 from app.models.user import User
 from app.models.control import Control
 from app.models.policy import Policy
+from app.models.interview import InterviewSession
+from app.models.score import SubcategoryScore, CategoryScore, FunctionScore
+from app.models.deviation import Deviation
+from app.models.report import Report
