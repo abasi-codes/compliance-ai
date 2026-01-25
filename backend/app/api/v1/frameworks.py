@@ -97,7 +97,7 @@ async def list_frameworks(
             hierarchy_labels=f.hierarchy_labels,
             is_active=f.is_active,
             is_builtin=f.is_builtin,
-            metadata=f.metadata,
+            metadata=f.extra_metadata,
         )
         for f in frameworks
     ]
@@ -129,7 +129,7 @@ async def get_framework(
         hierarchy_labels=framework.hierarchy_labels,
         is_active=framework.is_active,
         is_builtin=framework.is_builtin,
-        metadata=framework.metadata,
+        metadata=framework.extra_metadata,
     )
 
 
@@ -170,7 +170,7 @@ async def create_framework(
         hierarchy_labels=framework.hierarchy_labels,
         is_active=framework.is_active,
         is_builtin=framework.is_builtin,
-        metadata=framework.metadata,
+        metadata=framework.extra_metadata,
     )
 
 
@@ -207,7 +207,7 @@ async def update_framework(
         hierarchy_labels=framework.hierarchy_labels,
         is_active=framework.is_active,
         is_builtin=framework.is_builtin,
-        metadata=framework.metadata,
+        metadata=framework.extra_metadata,
     )
 
 

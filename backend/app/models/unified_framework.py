@@ -67,7 +67,7 @@ class Framework(Base):
     # Labels for each hierarchy level (e.g., ["Function", "Category", "Subcategory"])
     hierarchy_labels: Mapped[Optional[list]] = mapped_column(JSON, nullable=True)
     # Additional framework metadata (e.g., publication date, official URL)
-    metadata: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    extra_metadata: Mapped[Optional[dict]] = mapped_column("metadata", JSON, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_builtin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
@@ -117,7 +117,7 @@ class FrameworkRequirement(Base):
     # Display order within parent
     display_order: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     # Additional metadata (e.g., implementation examples, references)
-    metadata: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    extra_metadata: Mapped[Optional[dict]] = mapped_column("metadata", JSON, nullable=True)
     # Vector embedding for similarity search (stored as list, indexed by pgvector)
     embedding: Mapped[Optional[list]] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
@@ -236,7 +236,7 @@ class RequirementCluster(Base):
     # Representative question that covers all cluster members
     interview_question: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     # Metadata (e.g., clustering parameters, quality metrics)
-    metadata: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    extra_metadata: Mapped[Optional[dict]] = mapped_column("metadata", JSON, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(

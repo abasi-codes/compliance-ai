@@ -123,7 +123,7 @@ class BaseFrameworkLoader(ABC):
             framework_type=framework_data.framework_type.value,
             hierarchy_levels=framework_data.hierarchy_levels,
             hierarchy_labels=framework_data.hierarchy_labels,
-            metadata=framework_data.metadata,
+            extra_metadata=framework_data.metadata,
             is_active=True,
             is_builtin=True,
         )
@@ -171,7 +171,7 @@ class BaseFrameworkLoader(ABC):
                 level=level,
                 is_assessable=req_data.is_assessable,
                 display_order=req_data.display_order or order,
-                metadata=req_data.metadata,
+                extra_metadata=req_data.metadata,
             )
             db.add(requirement)
             db.flush()

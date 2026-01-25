@@ -396,7 +396,7 @@ class RequirementService:
         if display_order is not None:
             requirement.display_order = display_order
         if metadata is not None:
-            requirement.metadata = {**(requirement.metadata or {}), **metadata}
+            requirement.extra_metadata = {**(requirement.extra_metadata or {}), **metadata}
 
         self.db.commit()
         return requirement

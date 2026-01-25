@@ -139,7 +139,7 @@ class FrameworkService:
         if is_active is not None:
             framework.is_active = is_active
         if metadata is not None:
-            framework.metadata = {**(framework.metadata or {}), **metadata}
+            framework.extra_metadata = {**(framework.extra_metadata or {}), **metadata}
 
         self.db.commit()
         return framework

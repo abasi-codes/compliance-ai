@@ -112,7 +112,7 @@ def upgrade() -> None:
                 fr.level,
                 fr.parent_id,
                 fr.is_assessable,
-                fr.code AS full_path,
+                fr.code::text AS full_path,
                 ARRAY[fr.id] AS path_ids
             FROM framework_requirements fr
             WHERE fr.parent_id IS NULL
@@ -129,7 +129,7 @@ def upgrade() -> None:
                 child.level,
                 child.parent_id,
                 child.is_assessable,
-                h.full_path || ' > ' || child.code AS full_path,
+                (h.full_path || ' > ' || child.code)::text AS full_path,
                 h.path_ids || child.id AS path_ids
             FROM framework_requirements child
             JOIN hierarchy h ON child.parent_id = h.id
