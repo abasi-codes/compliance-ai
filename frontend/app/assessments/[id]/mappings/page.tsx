@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
+import { Link2, Sparkles, AlertTriangle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components/ui';
 import { LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { MappingsList, GapsList } from '@/components/mappings';
@@ -14,6 +15,7 @@ import {
 } from '@/lib/api';
 import { useUserId } from '@/lib/hooks/useUserId';
 import { ControlMapping, PolicyMapping, GapListResponse } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 interface MappingsPageProps {
   params: Promise<{ id: string }>;
@@ -109,13 +111,28 @@ export default function MappingsPage({ params }: MappingsPageProps) {
     );
   }
 
+  const tabs = [
+    {
+      id: 'mappings',
+      label: 'Mappings',
+      icon: Link2,
+      count: controlMappings.length + policyMappings.length,
+    },
+    {
+      id: 'gaps',
+      label: 'Coverage Gaps',
+      icon: AlertTriangle,
+      count: gapData?.total_gaps || 0,
+    },
+  ];
+
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
+    <div className="space-y-6 animate-fadeIn">
+      <Card animated>
+        <CardHeader variant="gradient">
           <div className="flex justify-between items-center">
-            <CardTitle>AI Mapping Generation</CardTitle>
-            <Button onClick={handleGenerate} loading={generating}>
+            <CardTitle icon={<Sparkles className="h-5 w-5" />}>AI Mapping Generation</CardTitle>
+            <Button variant="gradient" onClick={handleGenerate} loading={generating}>
               {controlMappings.length + policyMappings.length > 0
                 ? 'Regenerate Mappings'
                 : 'Generate Mappings'}
@@ -123,7 +140,7 @@ export default function MappingsPage({ params }: MappingsPageProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-slate-600">
             Generate AI-powered mappings between your controls/policies and NIST CSF 2.0
             subcategories. Review and approve each suggestion to confirm the mappings.
           </p>
@@ -131,33 +148,44 @@ export default function MappingsPage({ params }: MappingsPageProps) {
         </CardContent>
       </Card>
 
-      <div className="border-b border-gray-200">
-        <nav className="-mb-px flex space-x-8">
-          <button
-            onClick={() => setActiveTab('mappings')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'mappings'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            Mappings ({controlMappings.length + policyMappings.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('gaps')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'gaps'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            Coverage Gaps {gapData && `(${gapData.total_gaps})`}
-          </button>
+      {/* Custom Tab Navigation */}
+      <div className="border-b border-slate-200">
+        <nav className="-mb-px flex space-x-4">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as 'mappings' | 'gaps')}
+                className={cn(
+                  'relative flex items-center gap-2 py-3 px-4 text-sm font-medium transition-all duration-200',
+                  isActive
+                    ? 'text-primary-600'
+                    : 'text-slate-500 hover:text-slate-700'
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                {tab.label}
+                <span className={cn(
+                  'px-2 py-0.5 text-xs font-semibold rounded-full',
+                  isActive
+                    ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white'
+                    : 'bg-slate-100 text-slate-600'
+                )}>
+                  {tab.count}
+                </span>
+                {isActive && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full" />
+                )}
+              </button>
+            );
+          })}
         </nav>
       </div>
 
       {activeTab === 'mappings' ? (
-        <Card>
+        <Card animated>
           <CardContent>
             <MappingsList
               controlMappings={controlMappings}
@@ -168,14 +196,19 @@ export default function MappingsPage({ params }: MappingsPageProps) {
           </CardContent>
         </Card>
       ) : (
-        <Card>
+        <Card animated>
           <CardContent>
             {gapData ? (
               <GapsList gapData={gapData} />
             ) : (
-              <p className="text-center py-8 text-gray-500">
-                Generate mappings first to analyze coverage gaps.
-              </p>
+              <div className="text-center py-8">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center">
+                  <Link2 className="h-8 w-8 text-primary-500" />
+                </div>
+                <p className="text-slate-500">
+                  Generate mappings first to analyze coverage gaps.
+                </p>
+              </div>
             )}
           </CardContent>
         </Card>

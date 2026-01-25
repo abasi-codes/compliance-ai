@@ -48,15 +48,21 @@ export function AssessmentTabs({ assessmentId }: AssessmentTabsProps) {
               key={tab.name}
               href={href}
               className={cn(
-                'inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium',
-                'transition-all duration-200 whitespace-nowrap',
+                'relative inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium',
+                'transition-all duration-200 whitespace-nowrap group',
                 isActive
-                  ? 'bg-primary-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-md'
+                  : 'text-slate-600 hover:bg-gradient-to-r hover:from-slate-50 hover:to-slate-100 hover:text-slate-900'
               )}
             >
-              <Icon className="h-4 w-4" />
+              <Icon className={cn(
+                'h-4 w-4 transition-transform duration-200',
+                !isActive && 'group-hover:scale-110'
+              )} />
               {tab.name}
+              {isActive && (
+                <span className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-primary-400 to-accent-400 rounded-full" />
+              )}
             </Link>
           );
         })}

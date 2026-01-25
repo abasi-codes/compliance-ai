@@ -29,11 +29,35 @@ interface Stats {
   overallScore: number | null;
 }
 
-const statIconColors = [
-  { bg: 'bg-blue-100', text: 'text-blue-600', gradient: 'from-blue-500 to-blue-600' },
-  { bg: 'bg-green-100', text: 'text-green-600', gradient: 'from-green-500 to-green-600' },
-  { bg: 'bg-purple-100', text: 'text-purple-600', gradient: 'from-purple-500 to-purple-600' },
-  { bg: 'bg-amber-100', text: 'text-amber-600', gradient: 'from-amber-500 to-amber-600' },
+const statConfig = [
+  {
+    name: 'Controls',
+    icon: Settings,
+    gradient: 'from-primary-500 to-primary-600',
+    bgGradient: 'from-primary-50 to-primary-100',
+    textColor: 'text-primary-600'
+  },
+  {
+    name: 'Policies',
+    icon: FileText,
+    gradient: 'from-accent-500 to-accent-600',
+    bgGradient: 'from-accent-50 to-accent-100',
+    textColor: 'text-accent-600'
+  },
+  {
+    name: 'Interviews',
+    icon: MessageSquare,
+    gradient: 'from-purple-500 to-purple-600',
+    bgGradient: 'from-purple-50 to-purple-100',
+    textColor: 'text-purple-600'
+  },
+  {
+    name: 'Maturity Score',
+    icon: BarChart3,
+    gradient: 'from-amber-500 to-amber-600',
+    bgGradient: 'from-amber-50 to-amber-100',
+    textColor: 'text-amber-600'
+  },
 ];
 
 export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
@@ -95,33 +119,13 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
   }
 
   const statCards = [
+    { ...statConfig[0], value: stats.controls, href: `/assessments/${id}/controls` },
+    { ...statConfig[1], value: stats.policies, href: `/assessments/${id}/policies` },
+    { ...statConfig[2], value: stats.interviews, href: `/assessments/${id}/interviews` },
     {
-      name: 'Controls',
-      value: stats.controls,
-      href: `/assessments/${id}/controls`,
-      icon: Settings,
-      color: statIconColors[0],
-    },
-    {
-      name: 'Policies',
-      value: stats.policies,
-      href: `/assessments/${id}/policies`,
-      icon: FileText,
-      color: statIconColors[1],
-    },
-    {
-      name: 'Interviews',
-      value: stats.interviews,
-      href: `/assessments/${id}/interviews`,
-      icon: MessageSquare,
-      color: statIconColors[2],
-    },
-    {
-      name: 'Maturity Score',
+      ...statConfig[3],
       value: stats.overallScore !== null ? stats.overallScore.toFixed(1) : '-',
       href: `/assessments/${id}/scores`,
-      icon: BarChart3,
-      color: statIconColors[3],
       suffix: stats.overallScore !== null ? '/4.0' : '',
     },
   ];
@@ -132,28 +136,32 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
       description: 'Import CSV/XLSX',
       href: `/assessments/${id}/controls`,
       icon: Settings,
-      color: { bg: 'bg-blue-100', text: 'text-blue-600' },
+      gradient: 'from-primary-500 to-primary-600',
+      bgGradient: 'from-primary-50 to-primary-100',
     },
     {
       title: 'Upload Policies',
       description: 'PDF, DOCX, TXT, MD',
       href: `/assessments/${id}/policies`,
       icon: FileText,
-      color: { bg: 'bg-green-100', text: 'text-green-600' },
+      gradient: 'from-accent-500 to-accent-600',
+      bgGradient: 'from-accent-50 to-accent-100',
     },
     {
       title: 'Generate Mappings',
       description: 'AI-powered analysis',
       href: `/assessments/${id}/mappings`,
       icon: Link2,
-      color: { bg: 'bg-purple-100', text: 'text-purple-600' },
+      gradient: 'from-purple-500 to-purple-600',
+      bgGradient: 'from-purple-50 to-purple-100',
     },
     {
       title: 'Start Interview',
       description: 'Guided questionnaire',
       href: `/assessments/${id}/interviews`,
       icon: MessageSquare,
-      color: { bg: 'bg-orange-100', text: 'text-orange-600' },
+      gradient: 'from-orange-500 to-orange-600',
+      bgGradient: 'from-orange-50 to-orange-100',
     },
   ];
 
@@ -165,19 +173,30 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
           const Icon = stat.icon;
           return (
             <Link key={stat.name} href={stat.href}>
-              <Card hover glow className="h-full">
+              <Card
+                hover
+                glow
+                className="h-full animate-slideInUp opacity-0"
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                  animationFillMode: 'forwards'
+                }}
+              >
                 <CardContent className="pt-5">
                   <div className="flex items-start justify-between">
-                    <div className={cn('p-3 rounded-xl', stat.color.bg)}>
-                      <Icon className={cn('h-6 w-6', stat.color.text)} />
+                    <div className={cn(
+                      'p-3 rounded-xl bg-gradient-to-br',
+                      stat.bgGradient
+                    )}>
+                      <Icon className={cn('h-6 w-6', stat.textColor)} />
                     </div>
                     <ArrowUpRight className="h-4 w-4 text-slate-400" />
                   </div>
                   <div className="mt-4">
                     <p className="text-sm font-medium text-slate-500">{stat.name}</p>
                     <p className="mt-1 flex items-baseline gap-1">
-                      <span className="text-3xl font-bold text-slate-900">{stat.value}</span>
-                      {stat.suffix && (
+                      <span className="text-3xl font-bold gradient-text">{stat.value}</span>
+                      {'suffix' in stat && stat.suffix && (
                         <span className="text-lg text-slate-400">{stat.suffix}</span>
                       )}
                     </p>
@@ -191,8 +210,8 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
 
       {/* Description */}
       {assessment?.description && (
-        <Card>
-          <CardHeader gradient>
+        <Card animated>
+          <CardHeader variant="gradient">
             <CardTitle icon={<TrendingUp className="h-5 w-5" />}>
               Description
             </CardTitle>
@@ -204,13 +223,13 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
       )}
 
       {/* Quick Actions */}
-      <Card>
-        <CardHeader gradient>
+      <Card animated>
+        <CardHeader variant="gradient">
           <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {quickActions.map((action) => {
+            {quickActions.map((action, index) => {
               const Icon = action.icon;
               return (
                 <Link
@@ -218,17 +237,27 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
                   href={action.href}
                   className={cn(
                     'flex items-center gap-4 p-4 rounded-xl',
-                    'bg-slate-50 hover:bg-slate-100',
+                    'bg-slate-50 hover:bg-white',
                     'border border-transparent hover:border-slate-200',
-                    'transition-all duration-200',
-                    'group'
+                    'hover:shadow-lg',
+                    'transition-all duration-300',
+                    'group animate-slideInUp opacity-0'
                   )}
+                  style={{
+                    animationDelay: `${(index + 4) * 75}ms`,
+                    animationFillMode: 'forwards'
+                  }}
                 >
                   <div className={cn(
                     'flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center',
-                    action.color.bg
+                    'bg-gradient-to-br',
+                    action.bgGradient,
+                    'group-hover:scale-110 transition-transform duration-300'
                   )}>
-                    <Icon className={cn('w-6 h-6', action.color.text)} />
+                    <Icon className={cn(
+                      'w-6 h-6',
+                      `bg-gradient-to-r ${action.gradient} bg-clip-text`
+                    )} style={{ color: 'var(--primary-600)' }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-slate-900 group-hover:text-primary-600 transition-colors">
@@ -236,7 +265,7 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
                     </p>
                     <p className="text-xs text-slate-500">{action.description}</p>
                   </div>
-                  <ArrowUpRight className="h-4 w-4 text-slate-300 group-hover:text-primary-500 transition-colors" />
+                  <ArrowUpRight className="h-4 w-4 text-slate-300 group-hover:text-primary-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                 </Link>
               );
             })}

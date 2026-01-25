@@ -1,12 +1,14 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
+import { AlertTriangle, Search, AlertCircle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components/ui';
 import { LoadingSpinner, ErrorMessage, EmptyState } from '@/components/ui';
 import { DeviationCard, DeviationFilters } from '@/components/deviations';
 import { detectDeviations, listDeviations, updateDeviation } from '@/lib/api';
 import { useUserId } from '@/lib/hooks/useUserId';
 import { DeviationListResponse } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 interface DeviationsPageProps {
   params: Promise<{ id: string }>;
@@ -32,7 +34,7 @@ export default function DeviationsPage({ params }: DeviationsPageProps) {
         userId
       );
       setData(result);
-    } catch (err) {
+    } catch {
       setData(null);
     } finally {
       setLoading(false);
@@ -81,19 +83,26 @@ export default function DeviationsPage({ params }: DeviationsPageProps) {
     );
   }
 
+  const severityConfig = [
+    { key: 'CRITICAL', label: 'Critical', bg: 'from-red-50 to-red-100', border: 'border-red-200', text: 'text-red-700' },
+    { key: 'HIGH', label: 'High', bg: 'from-orange-50 to-orange-100', border: 'border-orange-200', text: 'text-orange-700' },
+    { key: 'MEDIUM', label: 'Medium', bg: 'from-amber-50 to-amber-100', border: 'border-amber-200', text: 'text-amber-700' },
+    { key: 'LOW', label: 'Low', bg: 'from-accent-50 to-accent-100', border: 'border-accent-200', text: 'text-accent-700' },
+  ];
+
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
+    <div className="space-y-6 animate-fadeIn">
+      <Card animated>
+        <CardHeader variant="gradient">
           <div className="flex justify-between items-center">
-            <CardTitle>Deviations & Risk</CardTitle>
-            <Button onClick={handleDetect} loading={detecting}>
-              {data && data.total > 0 ? 'Re-detect Deviations' : 'Detect Deviations'}
+            <CardTitle icon={<AlertTriangle className="h-5 w-5" />}>Deviations & Risk</CardTitle>
+            <Button variant="gradient" onClick={handleDetect} loading={detecting} leftIcon={<Search className="h-4 w-4" />}>
+              {data && data.total > 0 ? 'Re-detect' : 'Detect Deviations'}
             </Button>
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-slate-600">
             Deviations identify gaps between your current security posture and NIST CSF 2.0
             requirements. Each deviation is risk-ranked based on impact and likelihood.
           </p>
@@ -103,34 +112,33 @@ export default function DeviationsPage({ params }: DeviationsPageProps) {
 
       {data && data.total > 0 && (
         <>
-          <Card>
+          <Card animated>
             <CardContent>
-              <div className="grid grid-cols-5 gap-4 text-center">
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <p className="text-2xl font-bold text-gray-900">{data.total}</p>
-                  <p className="text-sm text-gray-500">Total</p>
+              <div className="grid grid-cols-5 gap-4">
+                <div className="p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-slate-200 text-center">
+                  <p className="text-3xl font-bold gradient-text">{data.total}</p>
+                  <p className="text-sm text-slate-500 mt-1">Total</p>
                 </div>
-                <div className="p-4 bg-red-50 rounded-lg">
-                  <p className="text-2xl font-bold text-red-600">{data.by_severity.CRITICAL || 0}</p>
-                  <p className="text-sm text-gray-500">Critical</p>
-                </div>
-                <div className="p-4 bg-orange-50 rounded-lg">
-                  <p className="text-2xl font-bold text-orange-600">{data.by_severity.HIGH || 0}</p>
-                  <p className="text-sm text-gray-500">High</p>
-                </div>
-                <div className="p-4 bg-yellow-50 rounded-lg">
-                  <p className="text-2xl font-bold text-yellow-600">{data.by_severity.MEDIUM || 0}</p>
-                  <p className="text-sm text-gray-500">Medium</p>
-                </div>
-                <div className="p-4 bg-green-50 rounded-lg">
-                  <p className="text-2xl font-bold text-green-600">{data.by_severity.LOW || 0}</p>
-                  <p className="text-sm text-gray-500">Low</p>
-                </div>
+                {severityConfig.map((config) => (
+                  <div
+                    key={config.key}
+                    className={cn(
+                      'p-4 rounded-xl border text-center bg-gradient-to-br',
+                      config.bg,
+                      config.border
+                    )}
+                  >
+                    <p className={cn('text-3xl font-bold', config.text)}>
+                      {data.by_severity[config.key] || 0}
+                    </p>
+                    <p className="text-sm text-slate-500 mt-1">{config.label}</p>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card animated>
             <CardContent>
               <DeviationFilters
                 severity={severityFilter}
@@ -143,12 +151,20 @@ export default function DeviationsPage({ params }: DeviationsPageProps) {
           </Card>
 
           <div className="space-y-4">
-            {data.items.map((deviation) => (
-              <DeviationCard
+            {data.items.map((deviation, index) => (
+              <div
                 key={deviation.id}
-                deviation={deviation}
-                onUpdateStatus={handleUpdateStatus}
-              />
+                className="animate-slideInUp opacity-0"
+                style={{
+                  animationDelay: `${index * 75}ms`,
+                  animationFillMode: 'forwards'
+                }}
+              >
+                <DeviationCard
+                  deviation={deviation}
+                  onUpdateStatus={handleUpdateStatus}
+                />
+              </div>
             ))}
           </div>
         </>

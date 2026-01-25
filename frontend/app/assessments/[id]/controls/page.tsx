@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
+import { Settings, Upload, CheckCircle, XCircle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
 import { LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { ControlUploader, ControlTable } from '@/components/controls';
@@ -64,30 +65,45 @@ export default function ControlsPage({ params }: ControlsPageProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Upload Controls</CardTitle>
+    <div className="space-y-6 animate-fadeIn">
+      <Card animated>
+        <CardHeader variant="gradient">
+          <CardTitle icon={<Upload className="h-5 w-5" />}>Upload Controls</CardTitle>
         </CardHeader>
         <CardContent>
           <ControlUploader assessmentId={id} onUploadComplete={handleUploadComplete} />
 
           {uploadResult && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-              <h4 className="font-medium text-gray-900">Upload Result</h4>
-              <div className="mt-2 text-sm text-gray-600">
-                <p>Total rows: {uploadResult.total_rows}</p>
-                <p className="text-green-600">Successful: {uploadResult.successful}</p>
+            <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <h4 className="font-semibold text-slate-900 flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-accent-500" />
+                Upload Result
+              </h4>
+              <div className="mt-3 grid grid-cols-3 gap-4 text-sm">
+                <div className="p-3 bg-white rounded-lg border border-slate-200">
+                  <p className="text-slate-500">Total rows</p>
+                  <p className="text-xl font-semibold text-slate-900">{uploadResult.total_rows}</p>
+                </div>
+                <div className="p-3 bg-accent-50 rounded-lg border border-accent-200">
+                  <p className="text-accent-600">Successful</p>
+                  <p className="text-xl font-semibold text-accent-700">{uploadResult.successful}</p>
+                </div>
                 {uploadResult.failed > 0 && (
-                  <p className="text-red-600">Failed: {uploadResult.failed}</p>
+                  <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+                    <p className="text-red-600">Failed</p>
+                    <p className="text-xl font-semibold text-red-700">{uploadResult.failed}</p>
+                  </div>
                 )}
               </div>
               {uploadResult.errors && uploadResult.errors.length > 0 && (
-                <div className="mt-2">
-                  <p className="text-sm font-medium text-red-600">Errors:</p>
-                  <ul className="mt-1 text-sm text-red-500">
+                <div className="mt-4 p-3 bg-red-50 rounded-lg border border-red-200">
+                  <p className="text-sm font-medium text-red-700 flex items-center gap-2">
+                    <XCircle className="h-4 w-4" />
+                    Errors:
+                  </p>
+                  <ul className="mt-2 text-sm text-red-600 space-y-1">
                     {uploadResult.errors.slice(0, 5).map((err, i) => (
-                      <li key={i}>
+                      <li key={i} className="pl-4">
                         Row {err.row}: {err.message}
                       </li>
                     ))}
@@ -99,9 +115,11 @@ export default function ControlsPage({ params }: ControlsPageProps) {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Controls ({controls.length})</CardTitle>
+      <Card animated>
+        <CardHeader variant="gradient">
+          <CardTitle icon={<Settings className="h-5 w-5" />}>
+            Controls ({controls.length})
+          </CardTitle>
         </CardHeader>
         <CardContent>
           {error ? (

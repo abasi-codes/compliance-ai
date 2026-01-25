@@ -1,7 +1,9 @@
 'use client';
 
+import { FileText, Trash2, CheckCircle } from 'lucide-react';
 import { Policy } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui';
+import { cn } from '@/lib/utils';
 
 interface PolicyListProps {
   policies: Policy[];
@@ -11,40 +13,53 @@ interface PolicyListProps {
 export function PolicyList({ policies, onDelete }: PolicyListProps) {
   if (policies.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
-        No policies uploaded yet
+      <div className="text-center py-12">
+        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center">
+          <FileText className="h-8 w-8 text-primary-500" />
+        </div>
+        <p className="text-slate-500">No policies uploaded yet</p>
       </div>
     );
   }
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      {policies.map((policy) => (
-        <Card key={policy.id}>
+      {policies.map((policy, index) => (
+        <Card
+          key={policy.id}
+          hover
+          glow
+          className="animate-slideInUp opacity-0"
+          style={{
+            animationDelay: `${index * 75}ms`,
+            animationFillMode: 'forwards'
+          }}
+        >
           <CardContent>
             <div className="flex justify-between items-start">
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-medium text-gray-900 truncate">
+                <h3 className="text-lg font-semibold text-slate-900 truncate">
                   {policy.name}
                 </h3>
                 {policy.description && (
-                  <p className="mt-1 text-sm text-gray-500 line-clamp-2">
+                  <p className="mt-1 text-sm text-slate-500 line-clamp-2">
                     {policy.description}
                   </p>
                 )}
-                <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-500">
+                <div className="mt-3 flex flex-wrap gap-2">
                   {policy.version && (
-                    <span className="bg-gray-100 px-2 py-1 rounded">
+                    <span className="px-2.5 py-1 text-xs font-medium bg-slate-100 text-slate-700 rounded-full">
                       v{policy.version}
                     </span>
                   )}
                   {policy.owner && (
-                    <span className="bg-gray-100 px-2 py-1 rounded">
+                    <span className="px-2.5 py-1 text-xs font-medium bg-primary-50 text-primary-700 rounded-full">
                       {policy.owner}
                     </span>
                   )}
                   {policy.content_text && (
-                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
+                    <span className="px-2.5 py-1 text-xs font-medium bg-accent-50 text-accent-700 rounded-full flex items-center gap-1">
+                      <CheckCircle className="h-3 w-3" />
                       Text extracted
                     </span>
                   )}
@@ -53,9 +68,13 @@ export function PolicyList({ policies, onDelete }: PolicyListProps) {
               {onDelete && (
                 <button
                   onClick={() => onDelete(policy.id)}
-                  className="ml-4 text-red-600 hover:text-red-900 text-sm"
+                  className={cn(
+                    'ml-4 p-2 rounded-lg transition-all duration-200',
+                    'text-slate-400 hover:text-red-600',
+                    'hover:bg-red-50'
+                  )}
                 >
-                  Delete
+                  <Trash2 className="h-4 w-4" />
                 </button>
               )}
             </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
+import { FileDown, FileText } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
 import { LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { ReportList, GenerateButton, ReportViewer } from '@/components/reports';
@@ -70,13 +71,13 @@ export default function ReportsPage({ params }: ReportsPageProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Generate Report</CardTitle>
+    <div className="space-y-6 animate-fadeIn">
+      <Card animated>
+        <CardHeader variant="gradient">
+          <CardTitle icon={<FileDown className="h-5 w-5" />}>Generate Report</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-slate-600 mb-4">
             Generate comprehensive reports based on your assessment data. Reports include
             executive summaries, maturity scores, deviations, and recommendations.
           </p>
@@ -86,9 +87,9 @@ export default function ReportsPage({ params }: ReportsPageProps) {
 
       {error && <ErrorMessage message={error} onRetry={fetchReports} />}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Generated Reports</CardTitle>
+      <Card animated>
+        <CardHeader variant="gradient">
+          <CardTitle icon={<FileText className="h-5 w-5" />}>Generated Reports</CardTitle>
         </CardHeader>
         <CardContent>
           <ReportList reports={reports} onView={handleView} />

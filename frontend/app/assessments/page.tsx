@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Filter } from 'lucide-react';
-import { Button } from '@/components/ui';
+import { Plus, Filter, ClipboardList } from 'lucide-react';
+import { Button, PageHeader } from '@/components/ui';
 import { LoadingPage, ErrorMessage, EmptyState } from '@/components/ui';
 import { AssessmentCard } from '@/components/assessments';
 import { listAssessments } from '@/lib/api';
@@ -57,22 +57,22 @@ export default function AssessmentsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Assessments</h1>
-          <p className="mt-1 text-slate-500">Manage your NIST CSF 2.0 compliance assessments</p>
-        </div>
-        <Link href="/assessments/new">
-          <Button leftIcon={<Plus className="h-4 w-4" />}>
-            New Assessment
-          </Button>
-        </Link>
-      </div>
+      <PageHeader
+        title="Assessments"
+        description="Manage your NIST CSF 2.0 compliance assessments"
+        icon={ClipboardList}
+        actions={
+          <Link href="/assessments/new">
+            <Button variant="gradient" leftIcon={<Plus className="h-4 w-4" />}>
+              New Assessment
+            </Button>
+          </Link>
+        }
+      />
 
       {/* Filters */}
       <div className="mb-8">
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
           <span className="text-sm font-medium text-slate-500 flex items-center gap-1.5">
             <Filter className="h-4 w-4" />
             Filter:
@@ -85,8 +85,8 @@ export default function AssessmentsPage() {
                 className={cn(
                   'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200',
                   statusFilter === filter.value
-                    ? 'bg-primary-600 text-white shadow-sm'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-md'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:shadow-sm'
                 )}
               >
                 {filter.label}
@@ -119,12 +119,15 @@ export default function AssessmentsPage() {
           }
         />
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 animate-fadeIn">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {assessments.map((assessment, index) => (
             <div
               key={assessment.id}
-              className="animate-slideInUp"
-              style={{ animationDelay: `${index * 50}ms` }}
+              className="animate-slideInUp opacity-0"
+              style={{
+                animationDelay: `${index * 75}ms`,
+                animationFillMode: 'forwards'
+              }}
             >
               <AssessmentCard assessment={assessment} />
             </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
+import { MessageSquare, Plus } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components/ui';
 import { LoadingSpinner, ErrorMessage, EmptyState } from '@/components/ui';
 import { SessionCard, CreateSessionForm } from '@/components/interviews';
@@ -48,13 +49,13 @@ export default function InterviewsPage({ params }: InterviewsPageProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
+    <div className="space-y-6 animate-fadeIn">
+      <Card animated>
+        <CardHeader variant="gradient">
           <div className="flex justify-between items-center">
-            <CardTitle>Interview Sessions</CardTitle>
+            <CardTitle icon={<MessageSquare className="h-5 w-5" />}>Interview Sessions</CardTitle>
             {!showCreateForm && (
-              <Button onClick={() => setShowCreateForm(true)}>
+              <Button variant="gradient" onClick={() => setShowCreateForm(true)} leftIcon={<Plus className="h-4 w-4" />}>
                 New Interview
               </Button>
             )}
@@ -67,7 +68,7 @@ export default function InterviewsPage({ params }: InterviewsPageProps) {
               onCancel={() => setShowCreateForm(false)}
             />
           ) : (
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-slate-600">
               Conduct structured interviews to gather information about your security
               practices and validate control implementations.
             </p>
@@ -88,8 +89,17 @@ export default function InterviewsPage({ params }: InterviewsPageProps) {
         />
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {sessions.map((session) => (
-            <SessionCard key={session.id} session={session} assessmentId={id} />
+          {sessions.map((session, index) => (
+            <div
+              key={session.id}
+              className="animate-slideInUp opacity-0"
+              style={{
+                animationDelay: `${index * 75}ms`,
+                animationFillMode: 'forwards'
+              }}
+            >
+              <SessionCard session={session} assessmentId={id} />
+            </div>
           ))}
         </div>
       )}

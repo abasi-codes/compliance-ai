@@ -4,3 +4,4 @@ export * from './Input';
 export * from './LoadingSpinner';
 export * from './ErrorMessage';
 export * from './FileUpload';
+export * from './PageHeader';

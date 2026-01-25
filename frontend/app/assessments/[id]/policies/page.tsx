@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
+import { FileText, Upload, CheckCircle, AlertCircle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
 import { LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { PolicyUploader, PolicyList } from '@/components/policies';
@@ -64,25 +65,32 @@ export default function PoliciesPage({ params }: PoliciesPageProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Upload Policy Document</CardTitle>
+    <div className="space-y-6 animate-fadeIn">
+      <Card animated>
+        <CardHeader variant="gradient">
+          <CardTitle icon={<Upload className="h-5 w-5" />}>Upload Policy Document</CardTitle>
         </CardHeader>
         <CardContent>
           <PolicyUploader assessmentId={id} onUploadComplete={handleUploadComplete} />
 
           {uploadResult && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-              <h4 className="font-medium text-gray-900">Upload Result</h4>
-              <div className="mt-2 text-sm text-gray-600">
-                <p>Policy: {uploadResult.policy.name}</p>
+            <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <h4 className="font-semibold text-slate-900 flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-accent-500" />
+                Upload Result
+              </h4>
+              <div className="mt-3 space-y-2 text-sm">
+                <p className="text-slate-700">
+                  <span className="font-medium">Policy:</span> {uploadResult.policy.name}
+                </p>
                 {uploadResult.text_extracted ? (
-                  <p className="text-green-600">
-                    Text extracted ({uploadResult.text_length} characters)
+                  <p className="text-accent-600 flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4" />
+                    Text extracted ({uploadResult.text_length?.toLocaleString()} characters)
                   </p>
                 ) : (
-                  <p className="text-yellow-600">
+                  <p className="text-amber-600 flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4" />
                     Text extraction failed: {uploadResult.extraction_error}
                   </p>
                 )}
@@ -92,9 +100,11 @@ export default function PoliciesPage({ params }: PoliciesPageProps) {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Policies ({policies.length})</CardTitle>
+      <Card animated>
+        <CardHeader variant="gradient">
+          <CardTitle icon={<FileText className="h-5 w-5" />}>
+            Policies ({policies.length})
+          </CardTitle>
         </CardHeader>
         <CardContent>
           {error ? (

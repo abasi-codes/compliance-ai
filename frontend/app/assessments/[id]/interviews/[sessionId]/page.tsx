@@ -2,6 +2,7 @@
 
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
+import { CheckCircle, ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui';
 import { LoadingSpinner, ErrorMessage } from '@/components/ui';
 import { QuestionDisplay, ResponseForm, ProgressBar } from '@/components/interviews';
@@ -91,21 +92,22 @@ export default function InterviewSessionPage({ params }: InterviewSessionPagePro
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="space-y-6 animate-fadeIn">
+      <Card animated>
         <CardContent className="py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="font-medium text-gray-900">
+              <h2 className="font-semibold text-slate-900">
                 {session.interviewee_name || 'Interview Session'}
               </h2>
               {session.interviewee_role && (
-                <p className="text-sm text-gray-500">{session.interviewee_role}</p>
+                <p className="text-sm text-slate-500">{session.interviewee_role}</p>
               )}
             </div>
             <Button
               variant="secondary"
               onClick={() => router.push(`/assessments/${id}/interviews`)}
+              leftIcon={<ArrowLeft className="h-4 w-4" />}
             >
               Save & Exit
             </Button>
@@ -121,20 +123,22 @@ export default function InterviewSessionPage({ params }: InterviewSessionPagePro
       {error && <ErrorMessage message={error} />}
 
       {questionData.is_complete ? (
-        <Card>
+        <Card animated>
           <CardContent className="text-center py-12">
-            <div className="text-4xl mb-4">&#x2713;</div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-accent-100 to-accent-200 flex items-center justify-center animate-scaleIn">
+              <CheckCircle className="h-10 w-10 text-accent-600" />
+            </div>
+            <h2 className="text-2xl font-bold gradient-text mb-2">
               Interview Complete
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-slate-600 mb-8 max-w-md mx-auto">
               All questions have been answered. You can now complete this session.
             </p>
             <div className="flex justify-center gap-4">
               <Button variant="secondary" onClick={() => router.push(`/assessments/${id}/interviews`)}>
                 Review Later
               </Button>
-              <Button onClick={handleComplete}>
+              <Button variant="gradient" onClick={handleComplete}>
                 Complete Session
               </Button>
             </div>
@@ -148,8 +152,8 @@ export default function InterviewSessionPage({ params }: InterviewSessionPagePro
             totalQuestions={questionData.total_questions}
           />
 
-          <Card>
-            <CardHeader>
+          <Card animated>
+            <CardHeader variant="gradient">
               <CardTitle>Your Response</CardTitle>
             </CardHeader>
             <CardContent>
@@ -162,9 +166,9 @@ export default function InterviewSessionPage({ params }: InterviewSessionPagePro
           </Card>
         </>
       ) : (
-        <Card>
+        <Card animated>
           <CardContent className="text-center py-8">
-            <p className="text-gray-500">No more questions available.</p>
+            <p className="text-slate-500">No more questions available.</p>
           </CardContent>
         </Card>
       )}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
+import { BarChart3, Calculator } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components/ui';
 import { LoadingSpinner, ErrorMessage, EmptyState } from '@/components/ui';
 import { ScoreSummary, FunctionScoreCard } from '@/components/scores';
@@ -26,7 +27,7 @@ export default function ScoresPage({ params }: ScoresPageProps) {
     try {
       const data = await getScoreSummary(id, userId);
       setSummary(data);
-    } catch (err) {
+    } catch {
       // Scores may not exist yet
       setSummary(null);
     } finally {
@@ -65,18 +66,18 @@ export default function ScoresPage({ params }: ScoresPageProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
+    <div className="space-y-6 animate-fadeIn">
+      <Card animated>
+        <CardHeader variant="gradient">
           <div className="flex justify-between items-center">
-            <CardTitle>Maturity Scores</CardTitle>
-            <Button onClick={handleCalculate} loading={calculating}>
-              {summary ? 'Recalculate Scores' : 'Calculate Scores'}
+            <CardTitle icon={<BarChart3 className="h-5 w-5" />}>Maturity Scores</CardTitle>
+            <Button variant="gradient" onClick={handleCalculate} loading={calculating} leftIcon={<Calculator className="h-4 w-4" />}>
+              {summary ? 'Recalculate' : 'Calculate Scores'}
             </Button>
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-slate-600">
             Scores are calculated based on interview responses, control implementations,
             and policy coverage. Each function is scored from 0 (not implemented) to 4
             (fully optimized).
@@ -87,16 +88,25 @@ export default function ScoresPage({ params }: ScoresPageProps) {
 
       {summary ? (
         <>
-          <Card>
+          <Card animated>
             <CardContent>
               <ScoreSummary summary={summary} />
             </CardContent>
           </Card>
 
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-gray-900">Function Scores</h2>
-            {summary.function_scores.map((score) => (
-              <FunctionScoreCard key={score.id} score={score} />
+            <h2 className="text-lg font-semibold gradient-text">Function Scores</h2>
+            {summary.function_scores.map((score, index) => (
+              <div
+                key={score.id}
+                className="animate-slideInUp opacity-0"
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                  animationFillMode: 'forwards'
+                }}
+              >
+                <FunctionScoreCard score={score} />
+              </div>
             ))}
           </div>
         </>
