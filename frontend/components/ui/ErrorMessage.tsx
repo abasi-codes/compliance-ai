@@ -1,4 +1,6 @@
+import { AlertCircle, RefreshCw, FolderOpen } from 'lucide-react';
 import { Button } from './Button';
+import { cn } from '@/lib/utils';
 
 interface ErrorMessageProps {
   title?: string;
@@ -7,31 +9,32 @@ interface ErrorMessageProps {
   className?: string;
 }
 
-export function ErrorMessage({ title = 'Error', message, onRetry, className = '' }: ErrorMessageProps) {
+export function ErrorMessage({ title = 'Error', message, onRetry, className }: ErrorMessageProps) {
   return (
-    <div className={`rounded-md bg-red-50 p-4 ${className}`}>
+    <div className={cn(
+      'rounded-xl bg-red-50 border border-red-100 p-5',
+      'animate-fadeIn',
+      className
+    )}>
       <div className="flex">
         <div className="flex-shrink-0">
-          <svg
-            className="h-5 w-5 text-red-400"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
+            <AlertCircle className="h-5 w-5 text-red-600" />
+          </div>
         </div>
-        <div className="ml-3">
-          <h3 className="text-sm font-medium text-red-800">{title}</h3>
-          <div className="mt-2 text-sm text-red-700">
+        <div className="ml-4 flex-1">
+          <h3 className="text-sm font-semibold text-red-800">{title}</h3>
+          <div className="mt-1 text-sm text-red-700">
             <p>{message}</p>
           </div>
           {onRetry && (
             <div className="mt-4">
-              <Button variant="danger" size="sm" onClick={onRetry}>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={onRetry}
+                leftIcon={<RefreshCw className="h-4 w-4" />}
+              >
                 Try Again
               </Button>
             </div>
@@ -54,10 +57,14 @@ interface EmptyStateProps {
 
 export function EmptyState({ title, description, action, icon }: EmptyStateProps) {
   return (
-    <div className="text-center py-12">
-      {icon && <div className="mx-auto h-12 w-12 text-gray-400">{icon}</div>}
-      <h3 className="mt-2 text-sm font-semibold text-gray-900">{title}</h3>
-      {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
+    <div className="text-center py-16 animate-fadeIn">
+      <div className="mx-auto h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+        {icon || <FolderOpen className="h-8 w-8 text-slate-400" />}
+      </div>
+      <h3 className="text-base font-semibold text-slate-900">{title}</h3>
+      {description && (
+        <p className="mt-2 text-sm text-slate-500 max-w-sm mx-auto">{description}</p>
+      )}
       {action && (
         <div className="mt-6">
           <Button onClick={action.onClick}>{action.label}</Button>

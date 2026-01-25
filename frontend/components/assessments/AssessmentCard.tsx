@@ -1,7 +1,9 @@
 import Link from 'next/link';
+import { Building2, Calendar } from 'lucide-react';
 import { Assessment } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui';
 import { StatusBadge } from './StatusBadge';
+import { cn } from '@/lib/utils';
 
 interface AssessmentCardProps {
   assessment: Assessment;
@@ -16,23 +18,27 @@ export function AssessmentCard({ assessment }: AssessmentCardProps) {
 
   return (
     <Link href={`/assessments/${assessment.id}`}>
-      <Card className="hover:shadow-md transition-shadow cursor-pointer">
+      <Card hover glow className="h-full">
         <CardContent>
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between items-start gap-3">
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-semibold text-gray-900 truncate">
+              <h3 className="text-lg font-semibold text-slate-900 truncate">
                 {assessment.name}
               </h3>
-              <p className="mt-1 text-sm text-gray-600">{assessment.organization_name}</p>
+              <div className="mt-2 flex items-center gap-1.5 text-sm text-slate-600">
+                <Building2 className="h-4 w-4 text-slate-400 flex-shrink-0" />
+                <span className="truncate">{assessment.organization_name}</span>
+              </div>
               {assessment.description && (
-                <p className="mt-2 text-sm text-gray-500 line-clamp-2">
+                <p className="mt-3 text-sm text-slate-500 line-clamp-2">
                   {assessment.description}
                 </p>
               )}
             </div>
-            <StatusBadge status={assessment.status} />
+            <StatusBadge status={assessment.status} size="sm" />
           </div>
-          <div className="mt-4 flex items-center text-sm text-gray-500">
+          <div className="mt-4 pt-4 border-t border-slate-100 flex items-center text-sm text-slate-500">
+            <Calendar className="h-4 w-4 mr-1.5 text-slate-400" />
             <span>Created {formattedDate}</span>
           </div>
         </CardContent>

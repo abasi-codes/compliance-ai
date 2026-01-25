@@ -1,3 +1,5 @@
+import { cn } from '@/lib/utils';
+
 interface ProgressBarProps {
   current: number;
   total: number;
@@ -7,15 +9,18 @@ interface ProgressBarProps {
 export function ProgressBar({ current, total, percentage }: ProgressBarProps) {
   return (
     <div className="w-full">
-      <div className="flex justify-between text-sm text-gray-600 mb-2">
-        <span>
+      <div className="flex justify-between text-sm text-slate-600 mb-2">
+        <span className="font-medium">
           {current} of {total} questions answered
         </span>
-        <span>{percentage.toFixed(0)}% complete</span>
+        <span className="font-semibold text-primary-600">{percentage.toFixed(0)}% complete</span>
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-3">
+      <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
         <div
-          className="bg-blue-500 rounded-full h-3 transition-all duration-300"
+          className={cn(
+            'h-3 rounded-full transition-all duration-500 ease-out',
+            'gradient-primary-horizontal progress-shimmer'
+          )}
           style={{ width: `${percentage}%` }}
         />
       </div>

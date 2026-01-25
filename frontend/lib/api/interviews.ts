@@ -98,3 +98,16 @@ export async function resumeSession(
     }
   );
 }
+
+export async function completeSession(
+  sessionId: string,
+  userId?: string
+): Promise<InterviewSession> {
+  return apiRequest<InterviewSession>(
+    `/interviews/${sessionId}/complete`,
+    {
+      method: 'POST',
+      userId,
+    }
+  );
+}

@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { ChevronDown, CheckCircle2, XCircle, Save } from 'lucide-react';
 import { Deviation } from '@/lib/types';
 import { Card, CardContent, Button, Textarea } from '@/components/ui';
 import { SeverityBadge } from './SeverityBadge';
+import { cn } from '@/lib/utils';
 
 interface DeviationCardProps {
   deviation: Deviation;
@@ -11,11 +13,31 @@ interface DeviationCardProps {
 }
 
 const statusOptions = [
-  { value: 'OPEN', label: 'Open', color: 'text-red-600' },
-  { value: 'IN_REMEDIATION', label: 'In Remediation', color: 'text-yellow-600' },
-  { value: 'RESOLVED', label: 'Resolved', color: 'text-green-600' },
-  { value: 'ACCEPTED', label: 'Risk Accepted', color: 'text-blue-600' },
+  { value: 'OPEN', label: 'Open', styles: 'bg-red-100 text-red-700 hover:bg-red-200' },
+  { value: 'IN_REMEDIATION', label: 'In Remediation', styles: 'bg-amber-100 text-amber-700 hover:bg-amber-200' },
+  { value: 'RESOLVED', label: 'Resolved', styles: 'bg-green-100 text-green-700 hover:bg-green-200' },
+  { value: 'ACCEPTED', label: 'Risk Accepted', styles: 'bg-blue-100 text-blue-700 hover:bg-blue-200' },
 ];
+
+function getSeverityColor(severity: string): string {
+  switch (severity) {
+    case 'CRITICAL': return 'border-l-red-600';
+    case 'HIGH': return 'border-l-orange-500';
+    case 'MEDIUM': return 'border-l-amber-500';
+    case 'LOW': return 'border-l-green-500';
+    default: return 'border-l-slate-400';
+  }
+}
+
+function getStatusStyle(status: string): string {
+  switch (status) {
+    case 'OPEN': return 'bg-red-100 text-red-800';
+    case 'IN_REMEDIATION': return 'bg-amber-100 text-amber-800';
+    case 'RESOLVED': return 'bg-green-100 text-green-800';
+    case 'ACCEPTED': return 'bg-blue-100 text-blue-800';
+    default: return 'bg-slate-100 text-slate-800';
+  }
+}
 
 export function DeviationCard({ deviation, onUpdateStatus }: DeviationCardProps) {
   const [expanded, setExpanded] = useState(false);
@@ -31,87 +53,126 @@ export function DeviationCard({ deviation, onUpdateStatus }: DeviationCardProps)
     }
   };
 
+  const riskScorePercent = (deviation.risk_score / 25) * 100;
+
   return (
-    <Card className="border-l-4" style={{ borderLeftColor: getSeverityColor(deviation.severity) }}>
-      <CardContent>
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <SeverityBadge severity={deviation.severity} size="sm" />
-              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
-                Risk Score: {deviation.risk_score}
-              </span>
-              <span className={`text-xs px-2 py-0.5 rounded ${getStatusStyle(deviation.status)}`}>
-                {deviation.status.replace('_', ' ')}
-              </span>
+    <Card className={cn('border-l-4 overflow-hidden', getSeverityColor(deviation.severity))}>
+      <CardContent className="p-0">
+        <div className="p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <SeverityBadge severity={deviation.severity} size="sm" />
+                <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700">
+                  Risk Score: <span className="ml-1 font-bold">{deviation.risk_score}</span>
+                </span>
+                <span className={cn('px-2.5 py-1 text-xs font-medium rounded-lg', getStatusStyle(deviation.status))}>
+                  {deviation.status.replace('_', ' ')}
+                </span>
+              </div>
+              <h3 className="font-semibold text-slate-900">{deviation.title}</h3>
+              <p className="text-sm text-slate-600 mt-1">{deviation.subcategory_code}</p>
             </div>
-            <h3 className="font-medium text-gray-900">{deviation.title}</h3>
-            <p className="text-sm text-gray-600 mt-1">{deviation.subcategory_code}</p>
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-slate-900"
+            >
+              {expanded ? 'Less' : 'More'}
+              <ChevronDown className={cn('h-4 w-4 transition-transform', expanded && 'rotate-180')} />
+            </button>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => setExpanded(!expanded)}>
-            {expanded ? 'Less' : 'More'}
-          </Button>
+
+          {/* Risk score visualization */}
+          <div className="mt-4">
+            <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+              <div
+                className={cn(
+                  'h-1.5 rounded-full transition-all duration-500',
+                  deviation.severity === 'CRITICAL' ? 'bg-red-500' :
+                  deviation.severity === 'HIGH' ? 'bg-orange-500' :
+                  deviation.severity === 'MEDIUM' ? 'bg-amber-500' : 'bg-green-500'
+                )}
+                style={{ width: `${riskScorePercent}%` }}
+              />
+            </div>
+          </div>
         </div>
 
         {expanded && (
-          <div className="mt-4 pt-4 border-t border-gray-200 space-y-4">
+          <div className="border-t border-slate-100 p-5 bg-slate-50/50 space-y-5 animate-slideInUp">
             <div>
-              <h4 className="text-sm font-medium text-gray-700">Description</h4>
-              <p className="text-sm text-gray-600 mt-1">{deviation.description}</p>
+              <h4 className="text-sm font-semibold text-slate-700 mb-2">Description</h4>
+              <p className="text-sm text-slate-600">{deviation.description}</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-6">
               <div>
-                <h4 className="text-sm font-medium text-gray-700">Impact</h4>
-                <div className="flex items-center gap-1 mt-1">
+                <h4 className="text-sm font-semibold text-slate-700 mb-2">Impact</h4>
+                <div className="flex items-center gap-1.5">
                   {[1, 2, 3, 4, 5].map((n) => (
                     <div
                       key={n}
-                      className={`w-4 h-4 rounded ${
-                        n <= deviation.impact_score ? 'bg-red-500' : 'bg-gray-200'
-                      }`}
-                    />
+                      className={cn(
+                        'w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold transition-colors',
+                        n <= deviation.impact_score
+                          ? 'bg-red-500 text-white'
+                          : 'bg-slate-200 text-slate-400'
+                      )}
+                    >
+                      {n}
+                    </div>
                   ))}
-                  <span className="text-sm text-gray-600 ml-2">{deviation.impact_score}/5</span>
+                  <span className="text-sm text-slate-600 ml-2 font-medium">{deviation.impact_score}/5</span>
                 </div>
               </div>
               <div>
-                <h4 className="text-sm font-medium text-gray-700">Likelihood</h4>
-                <div className="flex items-center gap-1 mt-1">
+                <h4 className="text-sm font-semibold text-slate-700 mb-2">Likelihood</h4>
+                <div className="flex items-center gap-1.5">
                   {[1, 2, 3, 4, 5].map((n) => (
                     <div
                       key={n}
-                      className={`w-4 h-4 rounded ${
-                        n <= deviation.likelihood_score ? 'bg-orange-500' : 'bg-gray-200'
-                      }`}
-                    />
+                      className={cn(
+                        'w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold transition-colors',
+                        n <= deviation.likelihood_score
+                          ? 'bg-orange-500 text-white'
+                          : 'bg-slate-200 text-slate-400'
+                      )}
+                    >
+                      {n}
+                    </div>
                   ))}
-                  <span className="text-sm text-gray-600 ml-2">{deviation.likelihood_score}/5</span>
+                  <span className="text-sm text-slate-600 ml-2 font-medium">{deviation.likelihood_score}/5</span>
                 </div>
               </div>
             </div>
 
             {deviation.recommended_remediation && (
               <div>
-                <h4 className="text-sm font-medium text-gray-700">Recommended Remediation</h4>
-                <p className="text-sm text-gray-600 mt-1">{deviation.recommended_remediation}</p>
+                <h4 className="text-sm font-semibold text-slate-700 mb-2">Recommended Remediation</h4>
+                <p className="text-sm text-slate-600 bg-white p-3 rounded-lg border border-slate-200">
+                  {deviation.recommended_remediation}
+                </p>
               </div>
             )}
 
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Update Status</h4>
+              <h4 className="text-sm font-semibold text-slate-700 mb-3">Update Status</h4>
               <div className="flex gap-2 flex-wrap">
                 {statusOptions.map((option) => (
                   <button
                     key={option.value}
                     onClick={() => handleStatusChange(option.value)}
                     disabled={saving || deviation.status === option.value}
-                    className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                    className={cn(
+                      'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
                       deviation.status === option.value
-                        ? 'bg-gray-200 text-gray-600 cursor-default'
-                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                    }`}
+                        ? 'bg-slate-200 text-slate-500 cursor-default'
+                        : option.styles
+                    )}
                   >
+                    {deviation.status === option.value ? (
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                    ) : null}
                     {option.label}
                   </button>
                 ))}
@@ -126,11 +187,12 @@ export function DeviationCard({ deviation, onUpdateStatus }: DeviationCardProps)
                 placeholder="Document remediation actions taken..."
                 rows={3}
               />
-              <div className="mt-2">
+              <div className="mt-3">
                 <Button
                   size="sm"
                   onClick={() => handleStatusChange(deviation.status)}
                   loading={saving}
+                  leftIcon={<Save className="h-4 w-4" />}
                 >
                   Save Notes
                 </Button>
@@ -141,34 +203,4 @@ export function DeviationCard({ deviation, onUpdateStatus }: DeviationCardProps)
       </CardContent>
     </Card>
   );
-}
-
-function getSeverityColor(severity: string): string {
-  switch (severity) {
-    case 'CRITICAL':
-      return '#dc2626';
-    case 'HIGH':
-      return '#f97316';
-    case 'MEDIUM':
-      return '#eab308';
-    case 'LOW':
-      return '#22c55e';
-    default:
-      return '#6b7280';
-  }
-}
-
-function getStatusStyle(status: string): string {
-  switch (status) {
-    case 'OPEN':
-      return 'bg-red-100 text-red-800';
-    case 'IN_REMEDIATION':
-      return 'bg-yellow-100 text-yellow-800';
-    case 'RESOLVED':
-      return 'bg-green-100 text-green-800';
-    case 'ACCEPTED':
-      return 'bg-blue-100 text-blue-800';
-    default:
-      return 'bg-gray-100 text-gray-800';
-  }
 }

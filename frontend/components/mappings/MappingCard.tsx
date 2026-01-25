@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { Link2, FileText, Check, X, Loader2 } from 'lucide-react';
 import { Card, CardContent, Button } from '@/components/ui';
 import { ControlMapping, PolicyMapping } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 interface MappingCardProps {
   mapping: ControlMapping | PolicyMapping;
@@ -30,43 +32,81 @@ export function MappingCard({ mapping, type, onApprove }: MappingCardProps) {
     ? Math.round(mapping.confidence_score * 100)
     : 0;
 
-  const confidenceColor =
-    confidencePercent >= 80
-      ? 'bg-green-100 text-green-800'
-      : confidencePercent >= 60
-      ? 'bg-yellow-100 text-yellow-800'
-      : 'bg-red-100 text-red-800';
+  const getConfidenceColor = (percent: number) => {
+    if (percent >= 80) return {
+      bar: 'bg-gradient-to-r from-green-400 to-green-600',
+      text: 'text-green-700',
+      bg: 'bg-green-50',
+      border: 'border-green-200',
+    };
+    if (percent >= 60) return {
+      bar: 'bg-gradient-to-r from-amber-400 to-amber-600',
+      text: 'text-amber-700',
+      bg: 'bg-amber-50',
+      border: 'border-amber-200',
+    };
+    return {
+      bar: 'bg-gradient-to-r from-red-400 to-red-600',
+      text: 'text-red-700',
+      bg: 'bg-red-50',
+      border: 'border-red-200',
+    };
+  };
+
+  const colors = getConfidenceColor(confidencePercent);
+  const Icon = type === 'control' ? Link2 : FileText;
 
   return (
-    <Card className={mapping.is_approved ? 'border-green-200 bg-green-50' : ''}>
+    <Card className={cn(
+      'transition-all duration-200',
+      mapping.is_approved && 'border-green-200 bg-green-50/50'
+    )}>
       <CardContent>
-        <div className="flex justify-between items-start">
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <span
-                className={`px-2 py-0.5 text-xs font-medium rounded ${
-                  type === 'control' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
-                }`}
-              >
+        <div className="flex justify-between items-start gap-4">
+          <div className="flex-1 min-w-0">
+            {/* Type and Confidence badges */}
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              <span className={cn(
+                'inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg',
+                type === 'control'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'bg-purple-100 text-purple-700'
+              )}>
+                <Icon className="h-3.5 w-3.5" />
                 {type}
               </span>
-              <span className={`px-2 py-0.5 text-xs font-medium rounded ${confidenceColor}`}>
-                {confidencePercent}% confidence
-              </span>
             </div>
-            <h4 className="mt-2 font-medium text-gray-900">{name || 'Unknown'}</h4>
-            <p className="mt-1 text-sm text-gray-600">
-              Maps to: <span className="font-medium">{mapping.subcategory_code}</span>
+
+            {/* Mapping name */}
+            <h4 className="font-semibold text-slate-900">{name || 'Unknown'}</h4>
+            <p className="mt-1.5 text-sm text-slate-600">
+              Maps to: <span className="font-medium text-primary-600">{mapping.subcategory_code}</span>
             </p>
+
+            {/* Confidence meter */}
+            <div className="mt-4">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-xs font-medium text-slate-500">Confidence</span>
+                <span className={cn('text-sm font-bold', colors.text)}>{confidencePercent}%</span>
+              </div>
+              <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                <div
+                  className={cn('h-2 rounded-full transition-all duration-500', colors.bar)}
+                  style={{ width: `${confidencePercent}%` }}
+                />
+              </div>
+            </div>
           </div>
 
-          {!mapping.is_approved && (
-            <div className="flex gap-2 ml-4">
+          {/* Actions */}
+          {!mapping.is_approved ? (
+            <div className="flex flex-col gap-2">
               <Button
                 size="sm"
                 variant="primary"
                 onClick={() => handleAction(true)}
                 disabled={loading}
+                leftIcon={loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
               >
                 Approve
               </Button>
@@ -75,14 +115,16 @@ export function MappingCard({ mapping, type, onApprove }: MappingCardProps) {
                 variant="ghost"
                 onClick={() => handleAction(false)}
                 disabled={loading}
+                leftIcon={<X className="h-4 w-4" />}
               >
                 Reject
               </Button>
             </div>
-          )}
-
-          {mapping.is_approved && (
-            <span className="text-sm text-green-600 font-medium">Approved</span>
+          ) : (
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-100 text-green-700">
+              <Check className="h-4 w-4" />
+              <span className="text-sm font-medium">Approved</span>
+            </div>
           )}
         </div>
       </CardContent>

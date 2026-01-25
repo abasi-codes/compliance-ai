@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Plus, Filter } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { LoadingPage, ErrorMessage, EmptyState } from '@/components/ui';
 import { AssessmentCard } from '@/components/assessments';
 import { listAssessments } from '@/lib/api';
 import { useUserId } from '@/lib/hooks/useUserId';
 import { Assessment } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 const statusFilters: Array<{ value: string; label: string }> = [
   { value: '', label: 'All' },
@@ -55,34 +57,46 @@ export default function AssessmentsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Assessments</h1>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Assessments</h1>
+          <p className="mt-1 text-slate-500">Manage your NIST CSF 2.0 compliance assessments</p>
+        </div>
         <Link href="/assessments/new">
-          <Button>New Assessment</Button>
+          <Button leftIcon={<Plus className="h-4 w-4" />}>
+            New Assessment
+          </Button>
         </Link>
       </div>
 
-      <div className="mb-6">
-        <div className="flex gap-2">
-          {statusFilters.map((filter) => (
-            <button
-              key={filter.value}
-              onClick={() => setStatusFilter(filter.value)}
-              className={`
-                px-3 py-1.5 rounded-full text-sm font-medium transition-colors
-                ${
+      {/* Filters */}
+      <div className="mb-8">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm font-medium text-slate-500 flex items-center gap-1.5">
+            <Filter className="h-4 w-4" />
+            Filter:
+          </span>
+          <div className="flex gap-2 flex-wrap">
+            {statusFilters.map((filter) => (
+              <button
+                key={filter.value}
+                onClick={() => setStatusFilter(filter.value)}
+                className={cn(
+                  'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200',
                   statusFilter === filter.value
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }
-              `}
-            >
-              {filter.label}
-            </button>
-          ))}
+                    ? 'bg-primary-600 text-white shadow-sm'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                )}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
+      {/* Content */}
       {loading ? (
         <LoadingPage message="Loading assessments..." />
       ) : error ? (
@@ -105,9 +119,15 @@ export default function AssessmentsPage() {
           }
         />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {assessments.map((assessment) => (
-            <AssessmentCard key={assessment.id} assessment={assessment} />
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 animate-fadeIn">
+          {assessments.map((assessment, index) => (
+            <div
+              key={assessment.id}
+              className="animate-slideInUp"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <AssessmentCard assessment={assessment} />
+            </div>
           ))}
         </div>
       )}
