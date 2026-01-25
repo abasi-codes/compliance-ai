@@ -1,0 +1,63 @@
+import { UUID } from './common';
+
+export type EntityType = 'policy' | 'control';
+export type GapType = 'unmapped_subcategory' | 'policy_only' | 'control_only';
+
+export interface MappingGenerateRequest {
+  include_policies?: boolean;
+  include_controls?: boolean;
+  confidence_threshold?: number;
+}
+
+export interface MappingSuggestion {
+  entity_type: EntityType;
+  entity_id: UUID;
+  entity_name: string;
+  subcategory_id: UUID;
+  subcategory_code: string;
+  confidence_score: number;
+  reasoning: string | null;
+}
+
+export interface MappingGenerateResponse {
+  assessment_id: UUID;
+  suggestions_count: number;
+  policy_mappings: number;
+  control_mappings: number;
+  suggestions: MappingSuggestion[];
+}
+
+export interface MappingApproveRequest {
+  is_approved: boolean;
+  notes?: string;
+}
+
+export interface MappingApproveResponse {
+  mapping_id: UUID;
+  mapping_type: EntityType;
+  is_approved: boolean;
+  approved_at: string | null;
+}
+
+export interface Gap {
+  gap_type: GapType;
+  subcategory_id: UUID;
+  subcategory_code: string;
+  subcategory_description: string;
+  function_code: string;
+  category_code: string;
+  has_policy: boolean;
+  has_control: boolean;
+  policy_names: string[] | null;
+  control_names: string[] | null;
+}
+
+export interface GapListResponse {
+  assessment_id: UUID;
+  total_gaps: number;
+  unmapped_subcategories: number;
+  policy_only_count: number;
+  control_only_count: number;
+  coverage_percentage: number;
+  gaps: Gap[];
+}
