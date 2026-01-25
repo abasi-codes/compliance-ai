@@ -9,9 +9,13 @@ from app.api.v1.scores import router as scores_router
 from app.api.v1.deviations import router as deviations_router
 from app.api.v1.reports import router as reports_router
 from app.api.v1.framework import router as framework_router
+from app.api.v1.frameworks import router as frameworks_router
+from app.api.v1.crosswalks import router as crosswalks_router
+from app.api.v1.clusters import router as clusters_router
 
 api_router = APIRouter()
 
+# Existing endpoints
 api_router.include_router(assessments_router, prefix="/assessments", tags=["assessments"])
 api_router.include_router(controls_router, tags=["controls"])
 api_router.include_router(policies_router, tags=["policies"])
@@ -21,3 +25,8 @@ api_router.include_router(scores_router, prefix="/scores", tags=["scores"])
 api_router.include_router(deviations_router, tags=["deviations"])
 api_router.include_router(reports_router, prefix="/reports", tags=["reports"])
 api_router.include_router(framework_router, prefix="/framework", tags=["framework"])
+
+# Multi-framework endpoints
+api_router.include_router(frameworks_router, prefix="/frameworks", tags=["frameworks"])
+api_router.include_router(crosswalks_router, prefix="/crosswalks", tags=["crosswalks"])
+api_router.include_router(clusters_router, prefix="/clusters", tags=["clusters"])

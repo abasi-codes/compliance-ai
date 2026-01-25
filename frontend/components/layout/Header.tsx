@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Shield, LayoutDashboard, BookOpen, Menu, X } from 'lucide-react';
+import { Shield, LayoutDashboard, BookOpen, Layers, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: 'Assessments', href: '/assessments', icon: LayoutDashboard },
-  { name: 'Framework', href: '/framework', icon: BookOpen },
+  { name: 'Frameworks', href: '/frameworks', icon: Layers },
+  { name: 'NIST CSF', href: '/framework', icon: BookOpen },
 ];
 
 interface HeaderProps {
@@ -101,7 +102,7 @@ export function Header({ variant = 'default' }: HeaderProps) {
                   : 'bg-white/10 text-white border-white/20'
               )}
             >
-              NIST CSF 2.0
+              Multi-Framework
             </span>
 
             {/* Mobile menu button */}

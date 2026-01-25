@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Layers } from 'lucide-react';
 import { Button, Input, Textarea } from '@/components/ui';
-import { createAssessment } from '@/lib/api';
+import { FrameworkSelector } from '@/components/frameworks';
+import { createAssessment, setAssessmentScope } from '@/lib/api';
 import { useUserId } from '@/lib/hooks/useUserId';
 
 export function AssessmentForm() {
@@ -11,6 +13,7 @@ export function AssessmentForm() {
   const userId = useUserId();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedFrameworks, setSelectedFrameworks] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     organization_name: '',
@@ -21,11 +24,25 @@ export function AssessmentForm() {
     e.preventDefault();
     if (!userId) return;
 
+    if (selectedFrameworks.length === 0) {
+      setError('Please select at least one compliance framework');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     try {
       const assessment = await createAssessment(formData, userId);
+
+      // Set up framework scope for the assessment
+      for (const frameworkId of selectedFrameworks) {
+        await setAssessmentScope(assessment.id, {
+          framework_id: frameworkId,
+          include_all: true,
+        });
+      }
+
       router.push(`/assessments/${assessment.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create assessment');
@@ -66,7 +83,29 @@ export function AssessmentForm() {
         rows={4}
       />
 
-      <div className="flex justify-end gap-3">
+      <div>
+        <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-3">
+          <Layers className="w-4 h-4" />
+          Compliance Frameworks
+          <span className="text-red-500">*</span>
+        </label>
+        <p className="text-sm text-slate-500 mb-4">
+          Select the compliance frameworks to include in this assessment. You can select multiple
+          frameworks for a comprehensive multi-framework assessment.
+        </p>
+        <FrameworkSelector
+          selectedIds={selectedFrameworks}
+          onChange={setSelectedFrameworks}
+          multiple={true}
+        />
+        {selectedFrameworks.length > 0 && (
+          <p className="text-sm text-accent-600 mt-3">
+            {selectedFrameworks.length} framework{selectedFrameworks.length !== 1 ? 's' : ''} selected
+          </p>
+        )}
+      </div>
+
+      <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
         <Button
           type="button"
           variant="secondary"
@@ -75,7 +114,11 @@ export function AssessmentForm() {
         >
           Cancel
         </Button>
-        <Button type="submit" loading={loading} disabled={!userId}>
+        <Button
+          type="submit"
+          loading={loading}
+          disabled={!userId || selectedFrameworks.length === 0}
+        >
           Create Assessment
         </Button>
       </div>

@@ -18,6 +18,15 @@ class Settings(BaseSettings):
     ai_max_tokens: int = 4096
     ai_temperature: float = 0.3
 
+    # OpenAI (for embeddings)
+    openai_api_key: str | None = None
+    embedding_model: str = "text-embedding-3-small"
+    embedding_dimensions: int = 1536
+
+    # Clustering
+    similarity_threshold: float = 0.85
+    clustering_min_cluster_size: int = 2
+
     # File uploads
     max_upload_size_mb: int = 10
     allowed_control_extensions: list[str] = [".csv", ".xlsx", ".xls"]

@@ -8,3 +8,6 @@ export * from './scores';
 export * from './deviations';
 export * from './reports';
 export * from './framework';
+export * from './frameworks';
+export * from './crosswalks';
+export * from './clusters';

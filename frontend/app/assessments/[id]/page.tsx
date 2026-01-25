@@ -10,12 +10,13 @@ import {
   BarChart3,
   ArrowUpRight,
   TrendingUp,
+  Layers,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { LoadingSpinner } from '@/components/ui';
-import { getAssessment, listControls, listPolicies, listSessions, getScoreSummary } from '@/lib/api';
+import { getAssessment, listControls, listPolicies, listSessions, getScoreSummary, getAssessmentScope, listFrameworks } from '@/lib/api';
 import { useUserId } from '@/lib/hooks/useUserId';
-import { Assessment } from '@/lib/types';
+import { Assessment, AssessmentScope, Framework } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 interface OverviewPageProps {
@@ -27,6 +28,13 @@ interface Stats {
   policies: number;
   interviews: number;
   overallScore: number | null;
+}
+
+interface FrameworkInfo {
+  id: string;
+  code: string;
+  name: string;
+  framework_type: string;
 }
 
 const statConfig = [
@@ -70,6 +78,7 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
     interviews: 0,
     overallScore: null,
   });
+  const [frameworksInScope, setFrameworksInScope] = useState<FrameworkInfo[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -92,6 +101,26 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
           overallScore = scoreSummary.overall_maturity;
         } catch {
           // Scores may not be calculated yet
+        }
+
+        // Fetch framework scope
+        try {
+          const [scope, allFrameworks] = await Promise.all([
+            getAssessmentScope(id),
+            listFrameworks(),
+          ]);
+          const frameworkIds = scope.map((s) => s.framework_id);
+          const scopedFrameworks = allFrameworks
+            .filter((f) => frameworkIds.includes(f.id))
+            .map((f) => ({
+              id: f.id,
+              code: f.code,
+              name: f.name,
+              framework_type: f.framework_type,
+            }));
+          setFrameworksInScope(scopedFrameworks);
+        } catch {
+          // Scope may not be set
         }
 
         setStats({
@@ -207,6 +236,41 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
           );
         })}
       </div>
+
+      {/* Frameworks in Scope */}
+      {frameworksInScope.length > 0 && (
+        <Card animated>
+          <CardHeader variant="gradient">
+            <CardTitle icon={<Layers className="h-5 w-5" />}>
+              Frameworks in Scope ({frameworksInScope.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-3">
+              {frameworksInScope.map((framework) => {
+                const typeColors: Record<string, string> = {
+                  nist_csf: 'bg-blue-100 text-blue-700 border-blue-200',
+                  iso_27001: 'bg-green-100 text-green-700 border-green-200',
+                  soc2_tsc: 'bg-purple-100 text-purple-700 border-purple-200',
+                  custom: 'bg-orange-100 text-orange-700 border-orange-200',
+                };
+                return (
+                  <Link
+                    key={framework.id}
+                    href={`/frameworks/${framework.id}`}
+                    className={cn(
+                      'px-4 py-2 rounded-lg border text-sm font-medium transition-all hover:shadow-md',
+                      typeColors[framework.framework_type] || typeColors.custom
+                    )}
+                  >
+                    {framework.name}
+                  </Link>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Description */}
       {assessment?.description && (

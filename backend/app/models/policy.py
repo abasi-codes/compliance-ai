@@ -37,7 +37,10 @@ class Policy(Base):
 
 
 class PolicyMapping(Base):
-    """Mapping between a policy and a CSF subcategory"""
+    """Mapping between a policy and a framework requirement.
+
+    Supports both legacy CSF subcategory mappings and new unified requirement mappings.
+    """
 
     __tablename__ = "policy_mappings"
 
@@ -47,8 +50,13 @@ class PolicyMapping(Base):
     policy_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("policies.id"), nullable=False
     )
+    # Legacy: CSF subcategory reference (will be deprecated)
     subcategory_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("csf_subcategories.id"), nullable=False
+    )
+    # New: Unified requirement reference (use this for new code)
+    requirement_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("framework_requirements.id"), nullable=True
     )
     confidence_score: Mapped[float | None] = mapped_column()
     is_approved: Mapped[bool] = mapped_column(default=False, nullable=False)
@@ -62,9 +70,11 @@ class PolicyMapping(Base):
 
     policy: Mapped["Policy"] = relationship(back_populates="mappings")
     subcategory: Mapped["CSFSubcategory"] = relationship()
+    requirement: Mapped["FrameworkRequirement | None"] = relationship()
     approved_by: Mapped["User | None"] = relationship()
 
 
 from app.models.assessment import Assessment
 from app.models.framework import CSFSubcategory
+from app.models.unified_framework import FrameworkRequirement
 from app.models.user import User

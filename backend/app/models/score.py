@@ -13,10 +13,15 @@ from app.db.base import Base
 if TYPE_CHECKING:
     from app.models.assessment import Assessment
     from app.models.framework import CSFSubcategory, CSFCategory, CSFFunction
+    from app.models.unified_framework import FrameworkRequirement
 
 
 class SubcategoryScore(Base):
-    """Score for a specific CSF subcategory in an assessment."""
+    """Score for a specific requirement in an assessment.
+
+    Note: Named SubcategoryScore for backward compatibility.
+    Supports both legacy CSF subcategory scores and new unified requirement scores.
+    """
     __tablename__ = "subcategory_scores"
 
     id: Mapped[uuid.UUID] = mapped_column(
@@ -25,8 +30,14 @@ class SubcategoryScore(Base):
     assessment_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("assessments.id"), index=True
     )
+    # Legacy: CSF subcategory reference (will be deprecated)
     subcategory_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("csf_subcategories.id"), index=True
+    )
+    # New: Unified requirement reference
+    requirement_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("framework_requirements.id"),
+        index=True, nullable=True
     )
     score: Mapped[int] = mapped_column(nullable=False)  # 0-4 aligned with NIST tiers
     explanation_payload: Mapped[dict] = mapped_column(JSON, nullable=False)
@@ -37,6 +48,7 @@ class SubcategoryScore(Base):
     # Relationships
     assessment: Mapped["Assessment"] = relationship(back_populates="subcategory_scores")
     subcategory: Mapped["CSFSubcategory"] = relationship()
+    requirement: Mapped[Optional["FrameworkRequirement"]] = relationship()
 
 
 class CategoryScore(Base):

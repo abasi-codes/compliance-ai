@@ -14,6 +14,7 @@ from app.db.base import Base
 if TYPE_CHECKING:
     from app.models.assessment import Assessment
     from app.models.framework import CSFSubcategory
+    from app.models.unified_framework import FrameworkRequirement
 
 
 class DeviationType(str, Enum):
@@ -45,7 +46,10 @@ class DeviationStatus(str, Enum):
 
 
 class Deviation(Base):
-    """A detected deviation from expected compliance state."""
+    """A detected deviation from expected compliance state.
+
+    Supports both legacy CSF subcategory deviations and new unified requirement deviations.
+    """
     __tablename__ = "deviations"
 
     id: Mapped[uuid.UUID] = mapped_column(
@@ -54,8 +58,14 @@ class Deviation(Base):
     assessment_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("assessments.id"), index=True
     )
+    # Legacy: CSF subcategory reference (will be deprecated)
     subcategory_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("csf_subcategories.id"), index=True
+    )
+    # New: Unified requirement reference
+    requirement_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("framework_requirements.id"),
+        index=True, nullable=True
     )
     deviation_type: Mapped[str] = mapped_column(String(50), nullable=False)
     severity: Mapped[str] = mapped_column(String(20), nullable=False)
@@ -78,3 +88,4 @@ class Deviation(Base):
     # Relationships
     assessment: Mapped["Assessment"] = relationship(back_populates="deviations")
     subcategory: Mapped["CSFSubcategory"] = relationship()
+    requirement: Mapped[Optional["FrameworkRequirement"]] = relationship()

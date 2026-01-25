@@ -1,25 +1,31 @@
-"""AI-powered mapping service for policies and controls to CSF subcategories."""
+"""AI-powered mapping service for policies and controls to framework requirements."""
 
 import uuid
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
 
 from sqlalchemy.orm import Session
 
 from app.models.control import Control, ControlMapping
 from app.models.policy import Policy, PolicyMapping
 from app.models.framework import CSFSubcategory
+from app.models.unified_framework import FrameworkRequirement, AssessmentFrameworkScope
 from app.core.ai_client import ai_client
 from app.core.config import settings
 from app.services.audit.audit_service import AuditService
+from app.services.frameworks.requirement_service import RequirementService
 
 
 class AIMappingService:
-    """Service for generating AI-powered mapping suggestions."""
+    """Service for generating AI-powered mapping suggestions.
+
+    Supports mapping to both legacy CSF subcategories and unified framework requirements.
+    """
 
     def __init__(self, db: Session):
         self.db = db
         self.audit_service = AuditService(db)
+        self.requirement_service = RequirementService(db)
 
     def generate_mappings_for_assessment(
         self,
@@ -28,6 +34,7 @@ class AIMappingService:
         include_policies: bool = True,
         include_controls: bool = True,
         confidence_threshold: float | None = None,
+        use_unified_framework: bool = True,
     ) -> dict[str, Any]:
         """
         Generate mapping suggestions for all policies and controls in an assessment.
@@ -38,6 +45,7 @@ class AIMappingService:
             include_policies: Whether to generate policy mappings
             include_controls: Whether to generate control mappings
             confidence_threshold: Minimum confidence score (default from settings)
+            use_unified_framework: If True, map to unified requirements; else legacy CSF
 
         Returns:
             Summary of generated mappings
@@ -45,12 +53,25 @@ class AIMappingService:
         if confidence_threshold is None:
             confidence_threshold = settings.default_confidence_threshold
 
-        # Get all subcategories
-        subcategories = self.db.query(CSFSubcategory).all()
-        subcat_data = [
-            {"code": sc.code, "description": sc.description, "id": sc.id}
-            for sc in subcategories
-        ]
+        # Get requirements to map to
+        if use_unified_framework:
+            requirements = self._get_assessment_requirements(assessment_id)
+            req_data = [
+                {
+                    "code": req.code,
+                    "description": req.description or req.name,
+                    "id": req.id,
+                    "framework_id": req.framework_id,
+                }
+                for req in requirements
+            ]
+        else:
+            # Legacy: use CSF subcategories
+            subcategories = self.db.query(CSFSubcategory).all()
+            req_data = [
+                {"code": sc.code, "description": sc.description, "id": sc.id}
+                for sc in subcategories
+            ]
 
         suggestions = []
         policy_mappings_count = 0
@@ -69,7 +90,7 @@ class AIMappingService:
                 policy_suggestions = self._generate_mappings_for_entity(
                     entity=policy,
                     entity_type="policy",
-                    subcategories=subcat_data,
+                    requirements=req_data,
                     confidence_threshold=confidence_threshold,
                 )
 
@@ -78,7 +99,8 @@ class AIMappingService:
                     mapping = PolicyMapping(
                         id=uuid.uuid4(),
                         policy_id=policy.id,
-                        subcategory_id=suggestion["subcategory_id"],
+                        subcategory_id=suggestion["requirement_id"],  # For backward compat
+                        requirement_id=suggestion["requirement_id"] if use_unified_framework else None,
                         confidence_score=suggestion["confidence_score"],
                         is_approved=False,
                         created_at=datetime.utcnow(),
@@ -90,8 +112,8 @@ class AIMappingService:
                         "entity_type": "policy",
                         "entity_id": policy.id,
                         "entity_name": policy.name,
-                        "subcategory_id": suggestion["subcategory_id"],
-                        "subcategory_code": suggestion["subcategory_code"],
+                        "requirement_id": suggestion["requirement_id"],
+                        "requirement_code": suggestion["requirement_code"],
                         "confidence_score": suggestion["confidence_score"],
                         "reasoning": suggestion.get("reasoning"),
                     })
@@ -110,7 +132,7 @@ class AIMappingService:
                 control_suggestions = self._generate_mappings_for_entity(
                     entity=control,
                     entity_type="control",
-                    subcategories=subcat_data,
+                    requirements=req_data,
                     confidence_threshold=confidence_threshold,
                 )
 
@@ -119,7 +141,8 @@ class AIMappingService:
                     mapping = ControlMapping(
                         id=uuid.uuid4(),
                         control_id=control.id,
-                        subcategory_id=suggestion["subcategory_id"],
+                        subcategory_id=suggestion["requirement_id"],  # For backward compat
+                        requirement_id=suggestion["requirement_id"] if use_unified_framework else None,
                         confidence_score=suggestion["confidence_score"],
                         is_approved=False,
                         created_at=datetime.utcnow(),
@@ -131,8 +154,8 @@ class AIMappingService:
                         "entity_type": "control",
                         "entity_id": control.id,
                         "entity_name": control.name,
-                        "subcategory_id": suggestion["subcategory_id"],
-                        "subcategory_code": suggestion["subcategory_code"],
+                        "requirement_id": suggestion["requirement_id"],
+                        "requirement_code": suggestion["requirement_code"],
                         "confidence_score": suggestion["confidence_score"],
                         "reasoning": suggestion.get("reasoning"),
                     })
@@ -158,11 +181,34 @@ class AIMappingService:
             "suggestions": suggestions,
         }
 
+    def _get_assessment_requirements(
+        self,
+        assessment_id: uuid.UUID,
+    ) -> list[FrameworkRequirement]:
+        """Get all assessable requirements in scope for an assessment."""
+        # Check if assessment has explicit scope defined
+        scopes = (
+            self.db.query(AssessmentFrameworkScope)
+            .filter(AssessmentFrameworkScope.assessment_id == assessment_id)
+            .all()
+        )
+
+        if scopes:
+            # Use the requirement service to get in-scope requirements
+            return self.requirement_service.get_requirements_in_scope(assessment_id)
+        else:
+            # Fall back to all assessable requirements from all active frameworks
+            return (
+                self.db.query(FrameworkRequirement)
+                .filter(FrameworkRequirement.is_assessable == True)
+                .all()
+            )
+
     def _generate_mappings_for_entity(
         self,
         entity: Policy | Control,
         entity_type: str,
-        subcategories: list[dict],
+        requirements: list[dict],
         confidence_threshold: float,
     ) -> list[dict[str, Any]]:
         """Generate mapping suggestions for a single entity."""
@@ -179,8 +225,8 @@ class AIMappingService:
                 entity_text=text,
                 entity_type=entity_type,
                 subcategories=[
-                    {"code": sc["code"], "description": sc["description"]}
-                    for sc in subcategories
+                    {"code": req["code"], "description": req["description"]}
+                    for req in requirements
                 ],
             )
         except Exception:
@@ -188,7 +234,7 @@ class AIMappingService:
             return []
 
         # Map AI suggestions to internal format
-        code_to_id = {sc["code"]: sc["id"] for sc in subcategories}
+        code_to_id = {req["code"]: req["id"] for req in requirements}
         suggestions = []
 
         for suggestion in ai_suggestions:
@@ -202,8 +248,8 @@ class AIMappingService:
                 continue
 
             suggestions.append({
-                "subcategory_id": code_to_id[code],
-                "subcategory_code": code,
+                "requirement_id": code_to_id[code],
+                "requirement_code": code,
                 "confidence_score": confidence,
                 "reasoning": suggestion.get("reasoning"),
             })
@@ -262,15 +308,28 @@ class AIMappingService:
         self,
         entity_id: uuid.UUID,
         entity_type: str,
-        subcategory_id: uuid.UUID,
+        requirement_id: uuid.UUID,
         user_id: uuid.UUID,
+        use_unified_framework: bool = True,
     ) -> dict[str, Any]:
-        """Create a manual mapping (auto-approved)."""
+        """Create a manual mapping (auto-approved).
+
+        Args:
+            entity_id: ID of the policy or control
+            entity_type: "policy" or "control"
+            requirement_id: ID of the requirement to map to
+            user_id: User creating the mapping
+            use_unified_framework: If True, set requirement_id; else only subcategory_id
+
+        Returns:
+            Created mapping information
+        """
         if entity_type == "policy":
             mapping = PolicyMapping(
                 id=uuid.uuid4(),
                 policy_id=entity_id,
-                subcategory_id=subcategory_id,
+                subcategory_id=requirement_id,  # For backward compat
+                requirement_id=requirement_id if use_unified_framework else None,
                 confidence_score=1.0,
                 is_approved=True,
                 approved_by_id=user_id,
@@ -281,7 +340,8 @@ class AIMappingService:
             mapping = ControlMapping(
                 id=uuid.uuid4(),
                 control_id=entity_id,
-                subcategory_id=subcategory_id,
+                subcategory_id=requirement_id,  # For backward compat
+                requirement_id=requirement_id if use_unified_framework else None,
                 confidence_score=1.0,
                 is_approved=True,
                 approved_by_id=user_id,
@@ -296,7 +356,7 @@ class AIMappingService:
             entity_id=mapping.id,
             new_values={
                 "entity_id": str(entity_id),
-                "subcategory_id": str(subcategory_id),
+                "requirement_id": str(requirement_id),
                 "is_manual": True,
             },
             user_id=user_id,
@@ -308,4 +368,78 @@ class AIMappingService:
             "mapping_id": mapping.id,
             "entity_type": entity_type,
             "is_approved": True,
+        }
+
+    def get_mapping_coverage(
+        self,
+        assessment_id: uuid.UUID,
+        framework_id: Optional[uuid.UUID] = None,
+    ) -> dict[str, Any]:
+        """Get mapping coverage statistics for an assessment.
+
+        Args:
+            assessment_id: Assessment to analyze
+            framework_id: Optional filter to specific framework
+
+        Returns:
+            Coverage statistics
+        """
+        # Get requirements in scope
+        if framework_id:
+            requirements = self.requirement_service.get_assessable_requirements(framework_id)
+        else:
+            requirements = self._get_assessment_requirements(assessment_id)
+
+        requirement_ids = {str(req.id) for req in requirements}
+
+        # Get approved mappings
+        control_mappings = (
+            self.db.query(ControlMapping)
+            .join(Control)
+            .filter(
+                Control.assessment_id == assessment_id,
+                ControlMapping.is_approved == True,
+            )
+            .all()
+        )
+
+        policy_mappings = (
+            self.db.query(PolicyMapping)
+            .join(Policy)
+            .filter(
+                Policy.assessment_id == assessment_id,
+                PolicyMapping.is_approved == True,
+            )
+            .all()
+        )
+
+        # Count covered requirements
+        covered_by_control = set()
+        covered_by_policy = set()
+
+        for mapping in control_mappings:
+            req_id = str(mapping.requirement_id or mapping.subcategory_id)
+            if req_id in requirement_ids:
+                covered_by_control.add(req_id)
+
+        for mapping in policy_mappings:
+            req_id = str(mapping.requirement_id or mapping.subcategory_id)
+            if req_id in requirement_ids:
+                covered_by_policy.add(req_id)
+
+        covered = covered_by_control | covered_by_policy
+        uncovered = requirement_ids - covered
+
+        return {
+            "total_requirements": len(requirements),
+            "covered_requirements": len(covered),
+            "uncovered_requirements": len(uncovered),
+            "coverage_percentage": (
+                len(covered) / len(requirements) * 100
+                if requirements else 0
+            ),
+            "covered_by_control_only": len(covered_by_control - covered_by_policy),
+            "covered_by_policy_only": len(covered_by_policy - covered_by_control),
+            "covered_by_both": len(covered_by_control & covered_by_policy),
+            "uncovered_requirement_ids": list(uncovered),
         }

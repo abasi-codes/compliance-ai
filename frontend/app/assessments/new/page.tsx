@@ -4,10 +4,10 @@ import { AssessmentForm } from '@/components/assessments';
 
 export default function NewAssessmentPage() {
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <PageHeader
         title="Create Assessment"
-        description="Start a new NIST CSF 2.0 compliance assessment"
+        description="Start a new multi-framework compliance assessment"
         icon={FilePlus}
       />
 

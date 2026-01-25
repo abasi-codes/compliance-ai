@@ -14,6 +14,7 @@ from app.db.base import Base
 if TYPE_CHECKING:
     from app.models.assessment import Assessment
     from app.models.framework import CSFSubcategory
+    from app.models.unified_framework import FrameworkRequirement, RequirementCluster
     from app.models.user import User
 
 
@@ -36,14 +37,29 @@ class InterviewSessionStatus(str, Enum):
 
 
 class InterviewQuestion(Base):
-    """Questions in the interview question bank."""
+    """Questions in the interview question bank.
+
+    Supports both legacy CSF subcategory questions and new unified requirement questions.
+    Questions can also be grouped into clusters for interview optimization.
+    """
     __tablename__ = "interview_questions"
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
+    # Legacy: CSF subcategory reference (will be deprecated)
     subcategory_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("csf_subcategories.id"), index=True
+    )
+    # New: Unified requirement reference
+    requirement_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("framework_requirements.id"),
+        index=True, nullable=True
+    )
+    # New: Cluster reference for optimized interviews
+    cluster_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("requirement_clusters.id"),
+        index=True, nullable=True
     )
     question_text: Mapped[str] = mapped_column(Text, nullable=False)
     question_type: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -60,6 +76,8 @@ class InterviewQuestion(Base):
 
     # Relationships
     subcategory: Mapped["CSFSubcategory"] = relationship(back_populates="questions")
+    requirement: Mapped[Optional["FrameworkRequirement"]] = relationship()
+    cluster: Mapped[Optional["RequirementCluster"]] = relationship()
     follow_up_on_yes: Mapped[Optional["InterviewQuestion"]] = relationship(
         "InterviewQuestion",
         foreign_keys=[follow_up_on_yes_id],

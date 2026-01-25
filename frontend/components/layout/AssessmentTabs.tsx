@@ -11,6 +11,7 @@ import {
   BarChart3,
   AlertTriangle,
   FileDown,
+  Layers,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -20,6 +21,7 @@ interface AssessmentTabsProps {
 
 const tabs = [
   { name: 'Overview', path: '', icon: Home },
+  { name: 'Scope', path: '/scope', icon: Layers },
   { name: 'Controls', path: '/controls', icon: Settings },
   { name: 'Policies', path: '/policies', icon: FileText },
   { name: 'Mappings', path: '/mappings', icon: Link2 },

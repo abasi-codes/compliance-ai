@@ -19,14 +19,42 @@ from app.models.deviation import (
     DeviationStatus,
 )
 from app.models.report import Report, ReportType
+from app.models.unified_framework import (
+    Framework,
+    FrameworkType,
+    FrameworkRequirement,
+    RequirementCrosswalk,
+    MappingType,
+    MappingSource,
+    RequirementCluster,
+    RequirementClusterMember,
+    ClusterType,
+    CompanyFramework,
+    AssessmentFrameworkScope,
+)
 
 __all__ = [
+    # User & RBAC
     "User",
     "Role",
     "user_roles",
+    # Legacy CSF framework (to be deprecated)
     "CSFFunction",
     "CSFCategory",
     "CSFSubcategory",
+    # Unified multi-framework support
+    "Framework",
+    "FrameworkType",
+    "FrameworkRequirement",
+    "RequirementCrosswalk",
+    "MappingType",
+    "MappingSource",
+    "RequirementCluster",
+    "RequirementClusterMember",
+    "ClusterType",
+    "CompanyFramework",
+    "AssessmentFrameworkScope",
+    # Assessment
     "Assessment",
     "AssessmentStatus",
     "Control",
@@ -34,18 +62,22 @@ __all__ = [
     "Policy",
     "PolicyMapping",
     "AuditLog",
+    # Interview
     "InterviewQuestion",
     "InterviewSession",
     "InterviewResponse",
     "QuestionType",
     "InterviewSessionStatus",
+    # Scoring
     "SubcategoryScore",
     "CategoryScore",
     "FunctionScore",
+    # Deviations
     "Deviation",
     "DeviationType",
     "DeviationSeverity",
     "DeviationStatus",
+    # Reports
     "Report",
     "ReportType",
 ]
