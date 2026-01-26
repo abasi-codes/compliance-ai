@@ -11,7 +11,7 @@ const trustItems = [
 
 export function TrustBar() {
   return (
-    <section className="py-8 bg-gray-50">
+    <section className="py-8 bg-neutral-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Gradient divider */}
         <div className="trust-divider mb-8" />

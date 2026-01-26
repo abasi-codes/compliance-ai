@@ -46,6 +46,12 @@
   --neutral-800: #544d44;
   --neutral-900: #46403a;
 
+  /* Dark surface colors (fixed, do not invert in dark mode) */
+  --surface-dark: #23282d;
+  --on-dark-primary: #ffffff;
+  --on-dark-secondary: #d5cfc4;  /* ~7:1 contrast on dark */
+  --on-dark-tertiary: #a3b1ba;   /* ~5.5:1 contrast on dark */
+
   /* Semantic colors */
   --success-50: #f0f9f4;
   --success-100: #daf1e4;
@@ -127,6 +133,12 @@
   --color-neutral-700: var(--neutral-700);
   --color-neutral-800: var(--neutral-800);
   --color-neutral-900: var(--neutral-900);
+
+  /* Dark surface colors */
+  --color-surface-dark: var(--surface-dark);
+  --color-on-dark-primary: var(--on-dark-primary);
+  --color-on-dark-secondary: var(--on-dark-secondary);
+  --color-on-dark-tertiary: var(--on-dark-tertiary);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -482,7 +494,7 @@ body {
 
 /* CTA section */
 .cta-section {
-  background: #23282d;  /* Fixed dark instead of var(--primary-900) */
+  background: var(--surface-dark);
   position: relative;
 }
 

@@ -34,7 +34,7 @@ export function Hero() {
           </h1>
 
           {/* Subheadline */}
-          <p className="max-w-2xl mx-auto text-lg sm:text-xl text-neutral-400 mb-10 animate-fadeInUp delay-300">
+          <p className="max-w-2xl mx-auto text-lg sm:text-xl text-on-dark-secondary mb-10 animate-fadeInUp delay-300">
             Transform your compliance program with AI-powered automation.
             NIST CSF, ISO 27001, and SOC 2 assessments with explainable scoring
             and comprehensive audit documentation.
