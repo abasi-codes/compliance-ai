@@ -482,7 +482,7 @@ body {
 
 /* CTA section */
 .cta-section {
-  background: var(--primary-900);
+  background: #23282d;  /* Fixed dark instead of var(--primary-900) */
   position: relative;
 }
 
