@@ -58,7 +58,8 @@ class InterviewReductionResponse(BaseModel):
     reduction_percentage: float
 
 
-# Endpoints
+# Endpoints - specific paths MUST come before parameterized paths
+
 @router.get("", response_model=list[ClusterResponse])
 async def list_clusters(
     cluster_type: Optional[str] = None,
@@ -97,60 +98,72 @@ async def list_clusters(
     ]
 
 
-@router.get("/{cluster_id}", response_model=ClusterResponse)
-async def get_cluster(
-    cluster_id: str,
+@router.get("/interview-reduction", response_model=InterviewReductionResponse)
+async def estimate_interview_reduction(
+    framework_ids: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
-    """Get a cluster by ID."""
+    """Estimate interview question reduction from clustering."""
     service = ClusteringService(db)
-    cluster = service.get_cluster(uuid.UUID(cluster_id))
 
-    if not cluster:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Cluster {cluster_id} not found",
-        )
+    fids = None
+    if framework_ids:
+        fids = [uuid.UUID(fid.strip()) for fid in framework_ids.split(",")]
 
-    return ClusterResponse(
-        id=str(cluster.id),
-        name=cluster.name,
-        description=cluster.description,
-        cluster_type=cluster.cluster_type,
-        member_count=len(cluster.members) if cluster.members else 0,
-        is_active=cluster.is_active,
-        interview_question=cluster.interview_question,
+    estimate = service.estimate_interview_reduction(framework_ids=fids)
+    return InterviewReductionResponse(**estimate)
+
+
+@router.get("/embeddings/stats", response_model=EmbeddingStatsResponse)
+async def get_embedding_stats(
+    framework_id: Optional[str] = None,
+    db: Session = Depends(get_db),
+):
+    """Get embedding coverage statistics."""
+    from app.models.unified_framework import FrameworkRequirement
+
+    query = db.query(FrameworkRequirement).filter(
+        FrameworkRequirement.is_assessable == True
+    )
+
+    if framework_id:
+        query = query.filter(FrameworkRequirement.framework_id == uuid.UUID(framework_id))
+
+    total = query.count()
+    with_embeddings = query.filter(
+        FrameworkRequirement.embedding.isnot(None)
+    ).count()
+
+    return EmbeddingStatsResponse(
+        total_requirements=total,
+        with_embeddings=with_embeddings,
+        without_embeddings=total - with_embeddings,
+        coverage_percentage=(with_embeddings / total * 100) if total > 0 else 0,
     )
 
 
-@router.get("/{cluster_id}/members", response_model=list[ClusterMemberResponse])
-async def get_cluster_members(
-    cluster_id: str,
+@router.post("/embeddings/generate")
+async def generate_embeddings(
+    framework_id: Optional[str] = None,
+    force: bool = False,
     db: Session = Depends(get_db),
 ):
-    """Get all requirements in a cluster."""
-    service = ClusteringService(db)
-    members = service.get_cluster_members(uuid.UUID(cluster_id))
+    """Generate embeddings for requirements."""
+    service = EmbeddingService(db)
 
-    if not members:
-        # Check if cluster exists
-        cluster = service.get_cluster(uuid.UUID(cluster_id))
-        if not cluster:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Cluster {cluster_id} not found",
-            )
+    fid = uuid.UUID(framework_id) if framework_id else None
 
-    return [
-        ClusterMemberResponse(
-            requirement_id=str(req.id),
-            requirement_code=req.code,
-            requirement_name=req.name,
-            framework_id=str(req.framework_id),
-            similarity_score=score,
-        )
-        for req, score in members
-    ]
+    stats = service.embed_all_requirements(
+        framework_id=fid,
+        force=force,
+    )
+
+    return {
+        "message": "Embedding generation complete",
+        "processed": stats["processed"],
+        "skipped": stats["skipped"],
+        "failed": stats["failed"],
+    }
 
 
 @router.post("/generate")
@@ -214,22 +227,6 @@ async def delete_clusters(
     return {"message": f"Deleted {count} clusters"}
 
 
-@router.get("/interview-reduction", response_model=InterviewReductionResponse)
-async def estimate_interview_reduction(
-    framework_ids: Optional[str] = None,
-    db: Session = Depends(get_db),
-):
-    """Estimate interview question reduction from clustering."""
-    service = ClusteringService(db)
-
-    fids = None
-    if framework_ids:
-        fids = [uuid.UUID(fid.strip()) for fid in framework_ids.split(",")]
-
-    estimate = service.estimate_interview_reduction(framework_ids=fids)
-    return InterviewReductionResponse(**estimate)
-
-
 @router.get("/requirement/{requirement_id}/cluster")
 async def get_requirement_cluster(
     requirement_id: str,
@@ -268,54 +265,58 @@ async def get_requirement_cluster(
     }
 
 
-# Embedding management endpoints
-@router.post("/embeddings/generate")
-async def generate_embeddings(
-    framework_id: Optional[str] = None,
-    force: bool = False,
+# Parameterized routes MUST come after specific paths
+@router.get("/{cluster_id}", response_model=ClusterResponse)
+async def get_cluster(
+    cluster_id: str,
     db: Session = Depends(get_db),
 ):
-    """Generate embeddings for requirements."""
-    service = EmbeddingService(db)
+    """Get a cluster by ID."""
+    service = ClusteringService(db)
+    cluster = service.get_cluster(uuid.UUID(cluster_id))
 
-    fid = uuid.UUID(framework_id) if framework_id else None
+    if not cluster:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Cluster {cluster_id} not found",
+        )
 
-    stats = service.embed_all_requirements(
-        framework_id=fid,
-        force=force,
+    return ClusterResponse(
+        id=str(cluster.id),
+        name=cluster.name,
+        description=cluster.description,
+        cluster_type=cluster.cluster_type,
+        member_count=len(cluster.members) if cluster.members else 0,
+        is_active=cluster.is_active,
+        interview_question=cluster.interview_question,
     )
 
-    return {
-        "message": "Embedding generation complete",
-        "processed": stats["processed"],
-        "skipped": stats["skipped"],
-        "failed": stats["failed"],
-    }
 
-
-@router.get("/embeddings/stats", response_model=EmbeddingStatsResponse)
-async def get_embedding_stats(
-    framework_id: Optional[str] = None,
+@router.get("/{cluster_id}/members", response_model=list[ClusterMemberResponse])
+async def get_cluster_members(
+    cluster_id: str,
     db: Session = Depends(get_db),
 ):
-    """Get embedding coverage statistics."""
-    from app.models.unified_framework import FrameworkRequirement
+    """Get all requirements in a cluster."""
+    service = ClusteringService(db)
+    members = service.get_cluster_members(uuid.UUID(cluster_id))
 
-    query = db.query(FrameworkRequirement).filter(
-        FrameworkRequirement.is_assessable == True
-    )
+    if not members:
+        # Check if cluster exists
+        cluster = service.get_cluster(uuid.UUID(cluster_id))
+        if not cluster:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Cluster {cluster_id} not found",
+            )
 
-    if framework_id:
-        query = query.filter(FrameworkRequirement.framework_id == uuid.UUID(framework_id))
-
-    total = query.count()
-    with_embeddings = query.filter(
-        FrameworkRequirement.embedding.isnot(None)
-    ).count()
-
-    return EmbeddingStatsResponse(
-        total_requirements=total,
-        with_embeddings=with_embeddings,
-        without_embeddings=total - with_embeddings,
-        coverage_percentage=(with_embeddings / total * 100) if total > 0 else 0,
-    )
+    return [
+        ClusterMemberResponse(
+            requirement_id=str(req.id),
+            requirement_code=req.code,
+            requirement_name=req.name,
+            framework_id=str(req.framework_id),
+            similarity_score=score,
+        )
+        for req, score in members
+    ]
