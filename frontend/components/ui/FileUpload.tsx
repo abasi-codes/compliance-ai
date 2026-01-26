@@ -66,7 +66,7 @@ export function FileUpload({
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-slate-700 mb-2">
+        <label className="block text-sm font-medium text-neutral-700 mb-2">
           {label}
         </label>
       )}
@@ -77,7 +77,7 @@ export function FileUpload({
           'hover:border-primary-400 hover:bg-primary-50/50',
           dragActive
             ? 'border-primary-500 bg-primary-50 scale-[1.02]'
-            : 'border-slate-300',
+            : 'border-neutral-300',
           error && 'border-red-500 bg-red-50',
           uploading && 'pointer-events-none opacity-60'
         )}
@@ -98,7 +98,7 @@ export function FileUpload({
           <div className={cn(
             'mx-auto h-14 w-14 rounded-full flex items-center justify-center mb-4',
             'transition-colors duration-200',
-            dragActive ? 'bg-primary-100' : 'bg-slate-100',
+            dragActive ? 'bg-primary-100' : 'bg-neutral-100',
             error && 'bg-red-100'
           )}>
             {uploading ? (
@@ -108,30 +108,30 @@ export function FileUpload({
             ) : (
               <Upload className={cn(
                 'h-7 w-7',
-                dragActive ? 'text-primary-600' : 'text-slate-400',
+                dragActive ? 'text-primary-600' : 'text-neutral-400',
                 error && 'text-red-500'
               )} />
             )}
           </div>
 
-          <div className="flex text-sm text-slate-600 justify-center">
+          <div className="flex text-sm text-neutral-600 justify-center">
             <span className={cn(
               'font-semibold',
               dragActive ? 'text-primary-600' : 'text-primary-600 hover:text-primary-700'
             )}>
               Click to upload
             </span>
-            <span className="pl-1 text-slate-500">or drag and drop</span>
+            <span className="pl-1 text-neutral-500">or drag and drop</span>
           </div>
 
           {helperText && (
-            <p className="mt-2 text-xs text-slate-500">{helperText}</p>
+            <p className="mt-2 text-xs text-neutral-500">{helperText}</p>
           )}
 
           {selectedFile && !uploading && (
-            <div className="mt-4 inline-flex items-center gap-2 px-3 py-2 bg-slate-100 rounded-lg">
-              <File className="h-4 w-4 text-slate-600" />
-              <span className="text-sm text-slate-700 font-medium">
+            <div className="mt-4 inline-flex items-center gap-2 px-3 py-2 bg-neutral-100 rounded-lg">
+              <File className="h-4 w-4 text-neutral-600" />
+              <span className="text-sm text-neutral-700 font-medium">
                 {selectedFile.name}
               </span>
             </div>

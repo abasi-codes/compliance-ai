@@ -68,7 +68,7 @@ export function FrameworkSelector({
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-8 text-slate-400">
+      <div className="flex items-center justify-center p-8 text-neutral-400">
         <Layers className="w-5 h-5 animate-pulse mr-2" />
         Loading frameworks...
       </div>
@@ -91,7 +91,7 @@ export function FrameworkSelector({
               'relative p-4 rounded-lg border-2 cursor-pointer transition-all',
               isSelected
                 ? frameworkTypeColors[framework.framework_type] || frameworkTypeColors.custom
-                : 'border-slate-200 hover:border-slate-300',
+                : 'border-neutral-200 hover:border-neutral-300',
               disabled && 'opacity-50 cursor-not-allowed'
             )}
           >
@@ -104,16 +104,16 @@ export function FrameworkSelector({
               <span
                 className={cn(
                   'px-2 py-0.5 text-xs font-semibold rounded',
-                  isSelected ? 'bg-white/50 text-slate-700' : 'bg-slate-100 text-slate-600'
+                  isSelected ? 'bg-white/50 text-neutral-700' : 'bg-neutral-100 text-neutral-600'
                 )}
               >
                 {frameworkTypeLabels[framework.framework_type] || 'Custom'}
               </span>
             </div>
-            <h3 className="font-medium text-slate-900">{framework.name}</h3>
-            <p className="text-xs text-slate-500 mt-1">Version {framework.version}</p>
+            <h3 className="font-medium text-neutral-900">{framework.name}</h3>
+            <p className="text-xs text-neutral-500 mt-1">Version {framework.version}</p>
             {framework.description && (
-              <p className="text-sm text-slate-500 mt-2 line-clamp-2">{framework.description}</p>
+              <p className="text-sm text-neutral-500 mt-2 line-clamp-2">{framework.description}</p>
             )}
           </div>
         );

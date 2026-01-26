@@ -19,14 +19,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-slate-700 mb-1.5"
+            className="block text-sm font-medium text-primary-800 mb-1.5"
           >
             {label}
           </label>
         )}
         <div className="relative">
           {leftIcon && (
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-neutral-500">
               {leftIcon}
             </div>
           )}
@@ -34,14 +34,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              'w-full px-3 py-2.5 border rounded-lg shadow-sm',
-              'text-slate-900 placeholder:text-slate-400',
+              'w-full px-3 py-2.5 border rounded-md',
+              'text-primary-900 placeholder:text-neutral-400 bg-background',
               'transition-all duration-200',
-              'focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500',
-              'disabled:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-500',
+              'focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20',
+              'disabled:bg-neutral-100 disabled:cursor-not-allowed disabled:text-neutral-500',
               error
-                ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500 pr-10'
-                : 'border-slate-300',
+                ? 'border-danger-500 focus:border-danger-500 focus:ring-danger-500/20 pr-10'
+                : 'border-neutral-300',
               leftIcon && 'pl-10',
               rightIcon && !error && 'pr-10',
               className
@@ -50,21 +50,21 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           />
           {error ? (
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <AlertCircle className="h-5 w-5 text-red-500" />
+              <AlertCircle className="h-5 w-5 text-danger-500" />
             </div>
           ) : rightIcon ? (
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-neutral-500">
               {rightIcon}
             </div>
           ) : null}
         </div>
         {error && (
-          <p className="mt-1.5 text-sm text-red-600 flex items-center gap-1">
+          <p className="mt-1.5 text-sm text-danger-600 flex items-center gap-1">
             {error}
           </p>
         )}
         {helperText && !error && (
-          <p className="mt-1.5 text-sm text-slate-500">{helperText}</p>
+          <p className="mt-1.5 text-sm text-neutral-500">{helperText}</p>
         )}
       </div>
     );
@@ -88,7 +88,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-slate-700 mb-1.5"
+            className="block text-sm font-medium text-primary-800 mb-1.5"
           >
             {label}
           </label>
@@ -97,26 +97,26 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            'w-full px-3 py-2.5 border rounded-lg shadow-sm',
-            'text-slate-900 placeholder:text-slate-400',
+            'w-full px-3 py-2.5 border rounded-md',
+            'text-primary-900 placeholder:text-neutral-400 bg-background',
             'transition-all duration-200',
-            'focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500',
-            'disabled:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-500',
+            'focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20',
+            'disabled:bg-neutral-100 disabled:cursor-not-allowed disabled:text-neutral-500',
             error
-              ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500'
-              : 'border-slate-300',
+              ? 'border-danger-500 focus:border-danger-500 focus:ring-danger-500/20'
+              : 'border-neutral-300',
             className
           )}
           {...props}
         />
         {error && (
-          <p className="mt-1.5 text-sm text-red-600 flex items-center gap-1">
+          <p className="mt-1.5 text-sm text-danger-600 flex items-center gap-1">
             <AlertCircle className="h-4 w-4" />
             {error}
           </p>
         )}
         {helperText && !error && (
-          <p className="mt-1.5 text-sm text-slate-500">{helperText}</p>
+          <p className="mt-1.5 text-sm text-neutral-500">{helperText}</p>
         )}
       </div>
     );
@@ -140,7 +140,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-slate-700 mb-1.5"
+            className="block text-sm font-medium text-primary-800 mb-1.5"
           >
             {label}
           </label>
@@ -149,14 +149,14 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            'w-full px-3 py-2.5 border rounded-lg shadow-sm',
-            'text-slate-900 bg-white',
+            'w-full px-3 py-2.5 border rounded-md',
+            'text-primary-900 bg-background',
             'transition-all duration-200',
-            'focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500',
-            'disabled:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-500',
+            'focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20',
+            'disabled:bg-neutral-100 disabled:cursor-not-allowed disabled:text-neutral-500',
             error
-              ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500'
-              : 'border-slate-300',
+              ? 'border-danger-500 focus:border-danger-500 focus:ring-danger-500/20'
+              : 'border-neutral-300',
             className
           )}
           {...props}
@@ -168,7 +168,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ))}
         </select>
         {error && (
-          <p className="mt-1.5 text-sm text-red-600 flex items-center gap-1">
+          <p className="mt-1.5 text-sm text-danger-600 flex items-center gap-1">
             <AlertCircle className="h-4 w-4" />
             {error}
           </p>

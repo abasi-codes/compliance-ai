@@ -1,7 +1,7 @@
 import { apiRequest } from './client';
 import { CSFFunction, FrameworkSummary } from '../types';
 
-export async function getFramework(userId?: string): Promise<CSFFunction[]> {
+export async function getCSFFunctions(userId?: string): Promise<CSFFunction[]> {
   return apiRequest<CSFFunction[]>('/framework/functions', { userId });
 }
 

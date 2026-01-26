@@ -93,23 +93,23 @@ export function CrosswalkViewer({
   const targetOf = mappings.filter((m) => m.direction === 'target');
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 p-4">
+    <div className="bg-white rounded-lg border border-neutral-200 p-4">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <ArrowRightLeft className="w-5 h-5 text-primary-500" />
-          <h3 className="font-medium text-slate-900">
+          <h3 className="font-medium text-neutral-900">
             Cross-Framework Mappings for {requirementCode}
           </h3>
         </div>
         {onClose && (
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
+          <button onClick={onClose} className="text-neutral-400 hover:text-neutral-600">
             <X className="w-5 h-5" />
           </button>
         )}
       </div>
 
       {mappings.length === 0 ? (
-        <p className="text-center text-slate-500 py-4">
+        <p className="text-center text-neutral-500 py-4">
           No cross-framework mappings found for this requirement.
         </p>
       ) : (
@@ -117,7 +117,7 @@ export function CrosswalkViewer({
           {/* Maps to other requirements */}
           {sourceOf.length > 0 && (
             <div>
-              <p className="text-xs font-medium text-slate-500 mb-2">
+              <p className="text-xs font-medium text-neutral-500 mb-2">
                 Maps to ({sourceOf.length})
               </p>
               <div className="space-y-2">
@@ -138,7 +138,7 @@ export function CrosswalkViewer({
           {/* Mapped from other requirements */}
           {targetOf.length > 0 && (
             <div>
-              <p className="text-xs font-medium text-slate-500 mb-2">
+              <p className="text-xs font-medium text-neutral-500 mb-2">
                 Mapped from ({targetOf.length})
               </p>
               <div className="space-y-2">
@@ -180,23 +180,23 @@ function MappingRow({
     <div
       className={cn(
         'flex items-center justify-between p-2 rounded border',
-        mapping.is_approved ? 'bg-white border-slate-200' : 'bg-yellow-50 border-yellow-200'
+        mapping.is_approved ? 'bg-white border-neutral-200' : 'bg-yellow-50 border-yellow-200'
       )}
     >
       <div className="flex items-center gap-3">
-        <span className="px-2 py-1 bg-slate-100 text-slate-700 text-sm font-mono rounded">
+        <span className="px-2 py-1 bg-neutral-100 text-neutral-700 text-sm font-mono rounded">
           {targetCode || 'Unknown'}
         </span>
         <span
           className={cn(
             'px-2 py-0.5 text-xs font-medium rounded',
             mappingTypeColors[mapping.mapping_type as MappingType] ||
-              'bg-slate-100 text-slate-600'
+              'bg-neutral-100 text-neutral-600'
           )}
         >
           {mapping.mapping_type}
         </span>
-        <span className="text-xs text-slate-400">
+        <span className="text-xs text-neutral-400">
           {Math.round(mapping.confidence_score * 100)}%
         </span>
       </div>

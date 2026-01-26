@@ -146,12 +146,16 @@
     --primary-800: #e4e8eb;
     --primary-900: #f4f6f7;
 
-    /* Lighten neutral colors for dark mode */
+    /* Invert neutral colors for dark mode */
     --neutral-50: #1a1917;
     --neutral-100: #2a2825;
     --neutral-200: #3a3835;
+    --neutral-300: #4a4843;
+    --neutral-400: #6a665f;
     --neutral-500: #9a9183;
     --neutral-600: #b8b0a2;
+    --neutral-700: #d5cfc4;
+    --neutral-800: #e8e4dd;
     --neutral-900: #f3f1ed;
   }
 }

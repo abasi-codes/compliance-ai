@@ -30,7 +30,7 @@ export function RequirementCard({
   return (
     <div
       className={cn(
-        'p-3 bg-white rounded-lg border border-slate-200 transition-all hover:border-slate-300',
+        'p-3 bg-white rounded-lg border border-neutral-200 transition-all hover:border-neutral-300',
         depth > 0 && 'ml-4 border-l-2 border-l-slate-300'
       )}
     >
@@ -45,9 +45,9 @@ export function RequirementCard({
             {requirement.code}
           </span>
           <div className="flex-1 min-w-0">
-            <h4 className="font-medium text-slate-900">{requirement.name}</h4>
+            <h4 className="font-medium text-neutral-900">{requirement.name}</h4>
             {requirement.description && (
-              <p className="text-sm text-slate-500 mt-1">{requirement.description}</p>
+              <p className="text-sm text-neutral-500 mt-1">{requirement.description}</p>
             )}
           </div>
         </div>
@@ -60,7 +60,7 @@ export function RequirementCard({
           {showCrosswalkButton && onViewCrosswalks && (
             <button
               onClick={() => onViewCrosswalks(requirement.id)}
-              className="p-1 text-slate-400 hover:text-primary-600 transition-colors"
+              className="p-1 text-neutral-400 hover:text-primary-600 transition-colors"
               title="View cross-framework mappings"
             >
               <LinkIcon className="w-4 h-4" />
@@ -69,7 +69,7 @@ export function RequirementCard({
           {requirement.guidance && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="p-1 text-slate-400 hover:text-slate-600 transition-colors"
+              className="p-1 text-neutral-400 hover:text-neutral-600 transition-colors"
             >
               <ChevronDown
                 className={cn('w-4 h-4 transition-transform', expanded && 'rotate-180')}

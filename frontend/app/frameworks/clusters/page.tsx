@@ -154,7 +154,7 @@ export default function ClustersPage() {
       <div className="mb-6">
         <Link
           href="/frameworks"
-          className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1"
+          className="text-sm text-neutral-500 hover:text-neutral-700 flex items-center gap-1"
         >
           <ChevronLeft className="w-4 h-4" />
           Back to Frameworks
@@ -185,28 +185,28 @@ export default function ClustersPage() {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="text-center">
-                <p className="text-3xl font-bold text-slate-900">
+                <p className="text-3xl font-bold text-neutral-900">
                   {interviewReduction.questions_without_clustering}
                 </p>
-                <p className="text-sm text-slate-500">Questions Without Clustering</p>
+                <p className="text-sm text-neutral-500">Questions Without Clustering</p>
               </div>
               <div className="text-center">
                 <p className="text-3xl font-bold text-primary-600">
                   {interviewReduction.questions_with_clustering}
                 </p>
-                <p className="text-sm text-slate-500">Questions With Clustering</p>
+                <p className="text-sm text-neutral-500">Questions With Clustering</p>
               </div>
               <div className="text-center">
                 <p className="text-3xl font-bold text-green-600">
                   {Math.round(interviewReduction.reduction_percentage)}%
                 </p>
-                <p className="text-sm text-slate-500">Reduction</p>
+                <p className="text-sm text-neutral-500">Reduction</p>
               </div>
               <div className="text-center">
                 <p className="text-3xl font-bold text-accent-600">
                   {interviewReduction.total_clusters}
                 </p>
-                <p className="text-sm text-slate-500">Active Clusters</p>
+                <p className="text-sm text-neutral-500">Active Clusters</p>
               </div>
             </div>
             <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
@@ -231,7 +231,7 @@ export default function ClustersPage() {
           <CardContent>
             <div className="flex items-center gap-6">
               <div className="flex-1">
-                <div className="h-4 bg-slate-200 rounded-full overflow-hidden">
+                <div className="h-4 bg-neutral-200 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-primary-500 to-accent-500 transition-all"
                     style={{ width: `${embeddingStats.coverage_percentage}%` }}
@@ -239,10 +239,10 @@ export default function ClustersPage() {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-bold text-slate-900">
+                <p className="text-2xl font-bold text-neutral-900">
                   {Math.round(embeddingStats.coverage_percentage)}%
                 </p>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-neutral-500">
                   {embeddingStats.with_embeddings} / {embeddingStats.total_requirements} requirements
                 </p>
               </div>
@@ -267,13 +267,13 @@ export default function ClustersPage() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-medium text-neutral-700 mb-1">
                 Cluster Type
               </label>
               <select
                 value={clusterType}
                 onChange={(e) => setClusterType(e.target.value as ClusterType)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg"
+                className="w-full px-3 py-2 border border-neutral-300 rounded-lg"
               >
                 <option value="semantic">Semantic</option>
                 <option value="topic">Topic</option>
@@ -281,7 +281,7 @@ export default function ClustersPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-medium text-neutral-700 mb-1">
                 Similarity Threshold
               </label>
               <input
@@ -291,11 +291,11 @@ export default function ClustersPage() {
                 step="0.05"
                 value={threshold}
                 onChange={(e) => setThreshold(parseFloat(e.target.value))}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg"
+                className="w-full px-3 py-2 border border-neutral-300 rounded-lg"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-medium text-neutral-700 mb-1">
                 Frameworks (optional)
               </label>
               <select
@@ -306,7 +306,7 @@ export default function ClustersPage() {
                     Array.from(e.target.selectedOptions, (option) => option.value)
                   )
                 }
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg h-[42px]"
+                className="w-full px-3 py-2 border border-neutral-300 rounded-lg h-[42px]"
               >
                 {frameworks.map((f) => (
                   <option key={f.id} value={f.id}>
@@ -338,7 +338,7 @@ export default function ClustersPage() {
         </CardHeader>
         <CardContent>
           {clusters.length === 0 ? (
-            <p className="text-center text-slate-500 py-8">
+            <p className="text-center text-neutral-500 py-8">
               No clusters found. Generate embeddings first, then create clusters.
             </p>
           ) : (
@@ -346,21 +346,21 @@ export default function ClustersPage() {
               {clusters.map((cluster, index) => (
                 <div
                   key={cluster.id}
-                  className="bg-white rounded-lg border border-slate-200 overflow-hidden animate-slideInUp opacity-0"
+                  className="bg-white rounded-lg border border-neutral-200 overflow-hidden animate-slideInUp opacity-0"
                   style={{
                     animationDelay: `${index * 50}ms`,
                     animationFillMode: 'forwards',
                   }}
                 >
                   <div
-                    className="p-4 cursor-pointer hover:bg-slate-50 transition-colors"
+                    className="p-4 cursor-pointer hover:bg-neutral-50 transition-colors"
                     onClick={() => handleExpandCluster(cluster.id)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <ChevronDown
                           className={cn(
-                            'w-4 h-4 text-slate-400 transition-transform',
+                            'w-4 h-4 text-neutral-400 transition-transform',
                             expandedCluster === cluster.id && 'rotate-180'
                           )}
                         />
@@ -372,8 +372,8 @@ export default function ClustersPage() {
                         >
                           {cluster.cluster_type}
                         </span>
-                        <span className="font-medium text-slate-900">{cluster.name}</span>
-                        <span className="text-sm text-slate-500">
+                        <span className="font-medium text-neutral-900">{cluster.name}</span>
+                        <span className="text-sm text-neutral-500">
                           ({cluster.member_count} requirements)
                         </span>
                       </div>
@@ -382,12 +382,12 @@ export default function ClustersPage() {
                       )}
                     </div>
                     {cluster.description && (
-                      <p className="text-sm text-slate-500 mt-2 ml-7">{cluster.description}</p>
+                      <p className="text-sm text-neutral-500 mt-2 ml-7">{cluster.description}</p>
                     )}
                   </div>
 
                   {expandedCluster === cluster.id && (
-                    <div className="border-t border-slate-200 bg-slate-50 p-4">
+                    <div className="border-t border-neutral-200 bg-neutral-50 p-4">
                       {cluster.interview_question && (
                         <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
                           <p className="text-xs font-medium text-green-700 mb-1">
@@ -397,28 +397,28 @@ export default function ClustersPage() {
                         </div>
                       )}
 
-                      <p className="text-xs font-medium text-slate-500 mb-2">Cluster Members</p>
+                      <p className="text-xs font-medium text-neutral-500 mb-2">Cluster Members</p>
                       {clusterMembers[cluster.id] ? (
                         <div className="space-y-2">
                           {clusterMembers[cluster.id].map((member) => (
                             <div
                               key={member.requirement_id}
-                              className="p-2 bg-white rounded border border-slate-200 text-sm"
+                              className="p-2 bg-white rounded border border-neutral-200 text-sm"
                             >
                               <div className="flex items-center justify-between">
                                 <span className="font-mono text-primary-600">
                                   {member.requirement_code}
                                 </span>
-                                <span className="text-slate-400">
+                                <span className="text-neutral-400">
                                   {Math.round(member.similarity_score * 100)}% similarity
                                 </span>
                               </div>
-                              <p className="text-slate-600 mt-1">{member.requirement_name}</p>
+                              <p className="text-neutral-600 mt-1">{member.requirement_name}</p>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-sm text-slate-400">Loading members...</p>
+                        <p className="text-sm text-neutral-400">Loading members...</p>
                       )}
                     </div>
                   )}

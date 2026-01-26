@@ -37,7 +37,7 @@ export function LoadingPage({ message = 'Loading...' }: LoadingPageProps) {
         <div className="absolute inset-0 rounded-full bg-primary-200 animate-ping opacity-25" />
         <LoadingSpinner size="lg" />
       </div>
-      <p className="mt-6 text-slate-600 font-medium">{message}</p>
+      <p className="mt-6 text-neutral-600 font-medium">{message}</p>
     </div>
   );
 }

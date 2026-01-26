@@ -74,15 +74,15 @@ export default function ControlsPage({ params }: ControlsPageProps) {
           <ControlUploader assessmentId={id} onUploadComplete={handleUploadComplete} />
 
           {uploadResult && (
-            <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
-              <h4 className="font-semibold text-slate-900 flex items-center gap-2">
+            <div className="mt-4 p-4 bg-neutral-50 rounded-xl border border-neutral-200">
+              <h4 className="font-semibold text-neutral-900 flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-accent-500" />
                 Upload Result
               </h4>
               <div className="mt-3 grid grid-cols-3 gap-4 text-sm">
-                <div className="p-3 bg-white rounded-lg border border-slate-200">
-                  <p className="text-slate-500">Total rows</p>
-                  <p className="text-xl font-semibold text-slate-900">{uploadResult.total_rows}</p>
+                <div className="p-3 bg-white rounded-lg border border-neutral-200">
+                  <p className="text-neutral-500">Total rows</p>
+                  <p className="text-xl font-semibold text-neutral-900">{uploadResult.total_rows}</p>
                 </div>
                 <div className="p-3 bg-accent-50 rounded-lg border border-accent-200">
                   <p className="text-accent-600">Successful</p>

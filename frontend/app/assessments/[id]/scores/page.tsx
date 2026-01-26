@@ -77,7 +77,7 @@ export default function ScoresPage({ params }: ScoresPageProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-neutral-600">
             Scores are calculated based on interview responses, control implementations,
             and policy coverage. Each function is scored from 0 (not implemented) to 4
             (fully optimized).

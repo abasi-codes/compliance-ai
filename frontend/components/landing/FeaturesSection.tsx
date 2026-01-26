@@ -14,7 +14,7 @@ const features = [
   {
     icon: FileCheck,
     title: 'Policy Mapping',
-    description: 'AI-powered mapping of your policies to NIST CSF 2.0 controls with confidence scores and human approval workflow.',
+    description: 'AI-powered mapping of your policies to framework controls with confidence scores and human approval workflow.',
   },
   {
     icon: MessageSquareText,
@@ -45,15 +45,16 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
+        <div className="mb-16">
+          <h2 className="font-display text-3xl sm:text-4xl text-primary-900 mb-4">
             Complete Compliance Toolkit
           </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Everything you need to assess, document, and improve your NIST CSF 2.0 compliance posture.
+          <p className="text-lg text-neutral-600 max-w-2xl">
+            Everything you need to assess, document, and improve your compliance posture across multiple frameworks.
           </p>
+          <div className="mt-4 w-20 h-0.5 bg-accent-500" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -67,11 +67,11 @@ function RequirementNode({
   ];
 
   return (
-    <div className={cn('border-l-2', depth > 0 ? 'border-slate-200 ml-4' : 'border-transparent')}>
+    <div className={cn('border-l-2', depth > 0 ? 'border-neutral-200 ml-4' : 'border-transparent')}>
       <div
         className={cn(
-          'p-3 bg-white rounded-lg border border-slate-200 mb-2',
-          hasChildren && 'cursor-pointer hover:bg-slate-50'
+          'p-3 bg-white rounded-lg border border-neutral-200 mb-2',
+          hasChildren && 'cursor-pointer hover:bg-neutral-50'
         )}
         onClick={() => hasChildren && toggleNode(node.id)}
       >
@@ -79,7 +79,7 @@ function RequirementNode({
           {hasChildren && (
             <ChevronDown
               className={cn(
-                'w-4 h-4 text-slate-400 transition-transform',
+                'w-4 h-4 text-neutral-400 transition-transform',
                 isExpanded && 'rotate-180'
               )}
             />
@@ -92,7 +92,7 @@ function RequirementNode({
           >
             {node.code}
           </span>
-          <span className="font-medium text-slate-900 flex-1">{node.name}</span>
+          <span className="font-medium text-neutral-900 flex-1">{node.name}</span>
           {node.is_assessable && (
             <span className="px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded">
               Assessable
@@ -100,7 +100,7 @@ function RequirementNode({
           )}
         </div>
         {node.description && (
-          <p className="text-sm text-slate-500 mt-2 ml-7">{node.description}</p>
+          <p className="text-sm text-neutral-500 mt-2 ml-7">{node.description}</p>
         )}
         {node.guidance && isExpanded && (
           <div className="mt-3 ml-7 p-3 bg-blue-50 rounded-lg border border-blue-100">
@@ -240,7 +240,7 @@ export default function FrameworkDetailPage() {
       <div className="mb-6">
         <Link
           href="/frameworks"
-          className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1"
+          className="text-sm text-neutral-500 hover:text-neutral-700 flex items-center gap-1"
         >
           <ChevronLeft className="w-4 h-4" />
           Back to Frameworks
@@ -251,14 +251,14 @@ export default function FrameworkDetailPage() {
         title={framework.name}
         description={framework.description || `${frameworkTypeLabels[framework.framework_type] || 'Custom'} compliance framework`}
         icon={BookOpen}
-        action={
+        actions={
           <div className="flex gap-3">
-            <Button variant="outline" onClick={handleToggleActive}>
+            <Button variant="ghost" onClick={handleToggleActive}>
               <Settings className="w-4 h-4 mr-2" />
               {framework.is_active ? 'Deactivate' : 'Activate'}
             </Button>
             {!framework.is_builtin && (
-              <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
+              <Button variant="danger" onClick={handleDelete} disabled={deleting}>
                 <Trash2 className="w-4 h-4 mr-2" />
                 {deleting ? 'Deleting...' : 'Delete'}
               </Button>
@@ -280,29 +280,29 @@ export default function FrameworkDetailPage() {
               >
                 {frameworkTypeLabels[framework.framework_type] || 'Custom'}
               </span>
-              <span className="text-slate-500">v{framework.version}</span>
+              <span className="text-neutral-500">v{framework.version}</span>
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-slate-500">Status</span>
+                <span className="text-neutral-500">Status</span>
                 <span
                   className={cn(
                     'font-medium',
-                    framework.is_active ? 'text-green-600' : 'text-slate-400'
+                    framework.is_active ? 'text-green-600' : 'text-neutral-400'
                   )}
                 >
                   {framework.is_active ? 'Active' : 'Inactive'}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Type</span>
-                <span className="font-medium text-slate-900">
+                <span className="text-neutral-500">Type</span>
+                <span className="font-medium text-neutral-900">
                   {framework.is_builtin ? 'Built-in' : 'Custom'}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Hierarchy Levels</span>
-                <span className="font-medium text-slate-900">{framework.hierarchy_levels}</span>
+                <span className="text-neutral-500">Hierarchy Levels</span>
+                <span className="font-medium text-neutral-900">{framework.hierarchy_levels}</span>
               </div>
             </div>
           </CardContent>
@@ -314,7 +314,7 @@ export default function FrameworkDetailPage() {
               <CardContent className="pt-6 text-center">
                 <BarChart2 className="w-8 h-8 text-primary-500 mx-auto mb-2" />
                 <p className="text-3xl font-bold gradient-text">{stats.total_requirements}</p>
-                <p className="text-sm text-slate-500">Total Requirements</p>
+                <p className="text-sm text-neutral-500">Total Requirements</p>
               </CardContent>
             </Card>
 
@@ -322,10 +322,10 @@ export default function FrameworkDetailPage() {
               <CardContent className="pt-6 text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <span className="w-3 h-3 bg-green-500 rounded-full" />
-                  <span className="text-sm text-slate-500">Assessable</span>
+                  <span className="text-sm text-neutral-500">Assessable</span>
                 </div>
                 <p className="text-3xl font-bold text-green-600">{stats.assessable_requirements}</p>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-neutral-500">
                   {Math.round((stats.assessable_requirements / stats.total_requirements) * 100)}% of
                   total
                 </p>
@@ -345,11 +345,11 @@ export default function FrameworkDetailPage() {
             <div className="flex items-center gap-2 flex-wrap">
               {framework.hierarchy_labels.map((label, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <span className="px-3 py-1 bg-slate-100 text-slate-700 text-sm rounded-full">
+                  <span className="px-3 py-1 bg-neutral-100 text-neutral-700 text-sm rounded-full">
                     {label}
                   </span>
                   {index < framework.hierarchy_labels!.length - 1 && (
-                    <ArrowRight className="w-4 h-4 text-slate-400" />
+                    <ArrowRight className="w-4 h-4 text-neutral-400" />
                   )}
                 </div>
               ))}
@@ -373,7 +373,7 @@ export default function FrameworkDetailPage() {
         </CardHeader>
         <CardContent>
           {hierarchy.length === 0 ? (
-            <p className="text-center text-slate-500 py-8">No requirements found</p>
+            <p className="text-center text-neutral-500 py-8">No requirements found</p>
           ) : (
             <div className="space-y-2">
               {hierarchy.map((node) => (

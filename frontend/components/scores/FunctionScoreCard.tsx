@@ -62,7 +62,7 @@ export function FunctionScoreCard({ score }: FunctionScoreCardProps) {
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-3">
-                  <h3 className="font-semibold text-slate-900 text-lg">
+                  <h3 className="font-semibold text-neutral-900 text-lg">
                     {score.function_code}: {score.function_name}
                   </h3>
                   <span className={cn(
@@ -73,7 +73,7 @@ export function FunctionScoreCard({ score }: FunctionScoreCardProps) {
                     {score.score.toFixed(1)}
                   </span>
                 </div>
-                <p className="text-sm text-slate-500 mt-1">
+                <p className="text-sm text-neutral-500 mt-1">
                   {functionDescriptions[score.function_code || ''] || 'CSF Function'}
                 </p>
               </div>
@@ -82,7 +82,7 @@ export function FunctionScoreCard({ score }: FunctionScoreCardProps) {
 
           {/* Progress bar */}
           <div className="mt-4">
-            <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+            <div className="w-full bg-neutral-100 rounded-full h-2 overflow-hidden">
               <div
                 className={cn('h-2 rounded-full bg-gradient-to-r', colors.gradient)}
                 style={{ width: `${(score.score / 4) * 100}%` }}
@@ -96,23 +96,23 @@ export function FunctionScoreCard({ score }: FunctionScoreCardProps) {
           onClick={() => setShowExplanation(!showExplanation)}
           className={cn(
             'w-full px-5 py-3 flex items-center justify-between text-sm font-medium',
-            'border-t border-slate-100 bg-slate-50/50 hover:bg-slate-50',
+            'border-t border-neutral-100 bg-neutral-50/50 hover:bg-neutral-50',
             'transition-colors duration-200'
           )}
         >
-          <span className="text-slate-600">
+          <span className="text-neutral-600">
             {showExplanation ? 'Hide Details' : 'View Details'}
           </span>
           <ChevronDown
             className={cn(
-              'h-4 w-4 text-slate-400 transition-transform duration-200',
+              'h-4 w-4 text-neutral-400 transition-transform duration-200',
               showExplanation && 'rotate-180'
             )}
           />
         </button>
 
         {showExplanation && (
-          <div className="px-5 py-4 border-t border-slate-100 bg-slate-50/30 animate-slideInUp">
+          <div className="px-5 py-4 border-t border-neutral-100 bg-neutral-50/30 animate-slideInUp">
             <ScoreExplanation explanation={score.explanation_payload} />
           </div>
         )}

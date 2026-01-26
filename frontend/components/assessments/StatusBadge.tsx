@@ -15,9 +15,9 @@ const statusConfig: Record<string, {
 }> = {
   DRAFT: {
     label: 'Draft',
-    styles: 'bg-slate-100 text-slate-700 border-slate-200',
+    styles: 'bg-neutral-100 text-neutral-700 border-neutral-200',
     icon: Circle,
-    dotColor: 'bg-slate-400',
+    dotColor: 'bg-neutral-400',
   },
   IN_PROGRESS: {
     label: 'In Progress',
@@ -33,9 +33,9 @@ const statusConfig: Record<string, {
   },
   ARCHIVED: {
     label: 'Archived',
-    styles: 'bg-slate-100 text-slate-600 border-slate-200',
+    styles: 'bg-neutral-100 text-neutral-600 border-neutral-200',
     icon: Archive,
-    dotColor: 'bg-slate-400',
+    dotColor: 'bg-neutral-400',
   },
 };
 

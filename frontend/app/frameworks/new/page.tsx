@@ -80,7 +80,7 @@ export default function NewFrameworkPage() {
       <div className="mb-6">
         <Link
           href="/frameworks"
-          className="inline-flex items-center text-sm text-slate-600 hover:text-slate-900"
+          className="inline-flex items-center text-sm text-neutral-600 hover:text-neutral-900"
         >
           <ArrowLeft className="w-4 h-4 mr-1" />
           Back to Frameworks
@@ -107,7 +107,7 @@ export default function NewFrameworkPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className="block text-sm font-medium text-neutral-700 mb-1">
                   Framework Code *
                 </label>
                 <Input
@@ -117,13 +117,13 @@ export default function NewFrameworkPage() {
                   placeholder="e.g., CUSTOM-SEC"
                   className="uppercase"
                 />
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-neutral-500 mt-1">
                   A unique identifier for this framework
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className="block text-sm font-medium text-neutral-700 mb-1">
                   Version *
                 </label>
                 <Input
@@ -136,7 +136,7 @@ export default function NewFrameworkPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-medium text-neutral-700 mb-1">
                 Framework Name *
               </label>
               <Input
@@ -148,7 +148,7 @@ export default function NewFrameworkPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-medium text-neutral-700 mb-1">
                 Description
               </label>
               <textarea
@@ -156,18 +156,18 @@ export default function NewFrameworkPage() {
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Describe the purpose and scope of this framework..."
                 rows={3}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+                className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-medium text-neutral-700 mb-1">
                 Hierarchy Levels
               </label>
               <select
                 value={formData.hierarchy_levels}
                 onChange={(e) => handleLevelCountChange(parseInt(e.target.value))}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+                className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
               >
                 {[1, 2, 3, 4, 5].map((n) => (
                   <option key={n} value={n}>
@@ -175,19 +175,19 @@ export default function NewFrameworkPage() {
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-neutral-500 mt-1">
                 How many levels deep your requirements hierarchy goes
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-3">
+              <label className="block text-sm font-medium text-neutral-700 mb-3">
                 Hierarchy Labels
               </label>
               <div className="space-y-2">
                 {formData.hierarchy_labels.map((label, index) => (
                   <div key={index} className="flex items-center gap-3">
-                    <span className="text-sm text-slate-500 w-20">Level {index + 1}:</span>
+                    <span className="text-sm text-neutral-500 w-20">Level {index + 1}:</span>
                     <Input
                       type="text"
                       value={label}
@@ -198,12 +198,12 @@ export default function NewFrameworkPage() {
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-slate-500 mt-2">
+              <p className="text-xs text-neutral-500 mt-2">
                 Names for each level (e.g., Domain, Category, Control)
               </p>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
+            <div className="flex justify-end gap-3 pt-4 border-t border-neutral-200">
               <Link href="/frameworks">
                 <Button type="button" variant="ghost">
                   Cancel

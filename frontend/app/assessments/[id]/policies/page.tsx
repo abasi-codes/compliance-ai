@@ -74,13 +74,13 @@ export default function PoliciesPage({ params }: PoliciesPageProps) {
           <PolicyUploader assessmentId={id} onUploadComplete={handleUploadComplete} />
 
           {uploadResult && (
-            <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
-              <h4 className="font-semibold text-slate-900 flex items-center gap-2">
+            <div className="mt-4 p-4 bg-neutral-50 rounded-xl border border-neutral-200">
+              <h4 className="font-semibold text-neutral-900 flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-accent-500" />
                 Upload Result
               </h4>
               <div className="mt-3 space-y-2 text-sm">
-                <p className="text-slate-700">
+                <p className="text-neutral-700">
                   <span className="font-medium">Policy:</span> {uploadResult.policy.name}
                 </p>
                 {uploadResult.text_extracted ? (

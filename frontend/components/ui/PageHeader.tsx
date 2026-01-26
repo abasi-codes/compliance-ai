@@ -7,7 +7,7 @@ interface PageHeaderProps {
   description?: string;
   icon?: LucideIcon;
   actions?: ReactNode;
-  gradient?: boolean;
+  serif?: boolean;
   className?: string;
 }
 
@@ -16,7 +16,7 @@ export function PageHeader({
   description,
   icon: Icon,
   actions,
-  gradient = true,
+  serif = true,
   className,
 }: PageHeaderProps) {
   return (
@@ -24,20 +24,22 @@ export function PageHeader({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-start gap-4">
           {Icon && (
-            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center border border-primary-100">
-              <Icon className="w-6 h-6 text-primary-600" />
+            <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-accent-50 border border-accent-200 flex items-center justify-center">
+              <Icon className="w-6 h-6 text-accent-600" />
             </div>
           )}
           <div>
             <h1 className={cn(
-              'text-3xl font-bold',
-              gradient ? 'gradient-text' : 'text-slate-900'
+              'text-3xl font-bold text-primary-900',
+              serif && 'font-display'
             )}>
               {title}
             </h1>
             {description && (
-              <p className="mt-1 text-slate-500">{description}</p>
+              <p className="mt-1.5 text-neutral-600">{description}</p>
             )}
+            {/* Underline accent */}
+            <div className="mt-3 w-16 h-0.5 bg-accent-500" />
           </div>
         </div>
         {actions && (

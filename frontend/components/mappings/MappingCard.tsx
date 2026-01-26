@@ -78,18 +78,18 @@ export function MappingCard({ mapping, type, onApprove }: MappingCardProps) {
             </div>
 
             {/* Mapping name */}
-            <h4 className="font-semibold text-slate-900">{name || 'Unknown'}</h4>
-            <p className="mt-1.5 text-sm text-slate-600">
+            <h4 className="font-semibold text-neutral-900">{name || 'Unknown'}</h4>
+            <p className="mt-1.5 text-sm text-neutral-600">
               Maps to: <span className="font-medium text-primary-600">{mapping.subcategory_code}</span>
             </p>
 
             {/* Confidence meter */}
             <div className="mt-4">
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-xs font-medium text-slate-500">Confidence</span>
+                <span className="text-xs font-medium text-neutral-500">Confidence</span>
                 <span className={cn('text-sm font-bold', colors.text)}>{confidencePercent}%</span>
               </div>
-              <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+              <div className="w-full bg-neutral-100 rounded-full h-2 overflow-hidden">
                 <div
                   className={cn('h-2 rounded-full transition-all duration-500', colors.bar)}
                   style={{ width: `${confidencePercent}%` }}

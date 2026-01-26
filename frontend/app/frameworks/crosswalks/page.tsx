@@ -86,7 +86,7 @@ export default function CrosswalksPage() {
           source_framework_id: sourceFrameworkId,
           target_framework_id: targetFrameworkId,
         },
-        userId
+        userId ?? undefined
       );
       await fetchData();
     } catch (err) {
@@ -125,7 +125,7 @@ export default function CrosswalksPage() {
       <div className="mb-6">
         <Link
           href="/frameworks"
-          className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1"
+          className="text-sm text-neutral-500 hover:text-neutral-700 flex items-center gap-1"
         >
           <ChevronLeft className="w-4 h-4" />
           Back to Frameworks
@@ -151,21 +151,21 @@ export default function CrosswalksPage() {
             <div className="grid grid-cols-4 gap-6 text-center">
               <div className="p-4 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200">
                 <p className="text-3xl font-bold gradient-text">{stats.total_crosswalks}</p>
-                <p className="text-sm text-slate-600 mt-1">Total Mappings</p>
+                <p className="text-sm text-neutral-600 mt-1">Total Mappings</p>
               </div>
               <div className="p-4 rounded-xl bg-gradient-to-br from-green-50 to-green-100 border border-green-200">
                 <p className="text-3xl font-bold text-green-600">{stats.approved}</p>
-                <p className="text-sm text-slate-600 mt-1">Approved</p>
+                <p className="text-sm text-neutral-600 mt-1">Approved</p>
               </div>
               <div className="p-4 rounded-xl bg-gradient-to-br from-yellow-50 to-yellow-100 border border-yellow-200">
                 <p className="text-3xl font-bold text-yellow-600">{stats.pending_review}</p>
-                <p className="text-sm text-slate-600 mt-1">Pending Review</p>
+                <p className="text-sm text-neutral-600 mt-1">Pending Review</p>
               </div>
               <div className="p-4 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200">
                 <p className="text-3xl font-bold text-blue-600">
                   {Math.round(stats.average_confidence * 100)}%
                 </p>
-                <p className="text-sm text-slate-600 mt-1">Avg Confidence</p>
+                <p className="text-sm text-neutral-600 mt-1">Avg Confidence</p>
               </div>
             </div>
           </CardContent>
@@ -180,13 +180,13 @@ export default function CrosswalksPage() {
         <CardContent>
           <div className="flex flex-wrap items-end gap-4">
             <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-medium text-neutral-700 mb-1">
                 Source Framework
               </label>
               <select
                 value={sourceFrameworkId}
                 onChange={(e) => setSourceFrameworkId(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="">Select framework...</option>
                 {frameworks.map((f) => (
@@ -197,13 +197,13 @@ export default function CrosswalksPage() {
               </select>
             </div>
             <div className="flex-1 min-w-[200px]">
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-medium text-neutral-700 mb-1">
                 Target Framework
               </label>
               <select
                 value={targetFrameworkId}
                 onChange={(e) => setTargetFrameworkId(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="">Select framework...</option>
                 {frameworks.map((f) => (
@@ -232,11 +232,11 @@ export default function CrosswalksPage() {
         <CardContent>
           <div className="flex flex-wrap gap-4">
             <div className="min-w-[150px]">
-              <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
+              <label className="block text-sm font-medium text-neutral-700 mb-1">Status</label>
               <select
                 value={approvalFilter}
                 onChange={(e) => setApprovalFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
+                className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm"
               >
                 <option value="">All</option>
                 <option value="approved">Approved</option>
@@ -244,11 +244,11 @@ export default function CrosswalksPage() {
               </select>
             </div>
             <div className="min-w-[150px]">
-              <label className="block text-sm font-medium text-slate-700 mb-1">Mapping Type</label>
+              <label className="block text-sm font-medium text-neutral-700 mb-1">Mapping Type</label>
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
+                className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm"
               >
                 <option value="">All</option>
                 <option value="equivalent">Equivalent</option>
@@ -267,7 +267,7 @@ export default function CrosswalksPage() {
         </CardHeader>
         <CardContent>
           {crosswalks.length === 0 ? (
-            <p className="text-center text-slate-500 py-8">
+            <p className="text-center text-neutral-500 py-8">
               No crosswalks found. Generate mappings between frameworks to get started.
             </p>
           ) : (
@@ -276,7 +276,7 @@ export default function CrosswalksPage() {
                 <div
                   key={crosswalk.id}
                   className={cn(
-                    'p-4 bg-white rounded-lg border border-slate-200 hover:border-slate-300 transition-all animate-slideInUp opacity-0',
+                    'p-4 bg-white rounded-lg border border-neutral-200 hover:border-neutral-300 transition-all animate-slideInUp opacity-0',
                     !crosswalk.is_approved && 'border-l-4 border-l-yellow-400'
                   )}
                   style={{
@@ -286,11 +286,11 @@ export default function CrosswalksPage() {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 flex-1">
-                      <span className="px-2 py-1 bg-slate-100 text-slate-700 text-sm font-mono rounded">
+                      <span className="px-2 py-1 bg-neutral-100 text-neutral-700 text-sm font-mono rounded">
                         {crosswalk.source_requirement_code}
                       </span>
-                      <ArrowRightLeft className="w-4 h-4 text-slate-400" />
-                      <span className="px-2 py-1 bg-slate-100 text-slate-700 text-sm font-mono rounded">
+                      <ArrowRightLeft className="w-4 h-4 text-neutral-400" />
+                      <span className="px-2 py-1 bg-neutral-100 text-neutral-700 text-sm font-mono rounded">
                         {crosswalk.target_requirement_code}
                       </span>
                       <span
@@ -301,7 +301,7 @@ export default function CrosswalksPage() {
                       >
                         {mappingTypeLabels[crosswalk.mapping_type]}
                       </span>
-                      <span className="text-sm text-slate-500">
+                      <span className="text-sm text-neutral-500">
                         {Math.round(crosswalk.confidence_score * 100)}% confidence
                       </span>
                     </div>
@@ -333,7 +333,7 @@ export default function CrosswalksPage() {
                     </div>
                   </div>
                   {crosswalk.reasoning && (
-                    <p className="text-sm text-slate-500 mt-2 pl-2 border-l-2 border-slate-200">
+                    <p className="text-sm text-neutral-500 mt-2 pl-2 border-l-2 border-neutral-200">
                       {crosswalk.reasoning}
                     </p>
                   )}

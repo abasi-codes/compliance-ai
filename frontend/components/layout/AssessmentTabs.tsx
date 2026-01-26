@@ -36,7 +36,7 @@ export function AssessmentTabs({ assessmentId }: AssessmentTabsProps) {
   const basePath = `/assessments/${assessmentId}`;
 
   return (
-    <div className="border-b border-slate-200 bg-white">
+    <div className="border-b border-neutral-200 bg-white">
       <nav className="-mb-px flex space-x-1 overflow-x-auto px-1 py-2" aria-label="Tabs">
         {tabs.map((tab) => {
           const href = `${basePath}${tab.path}`;
@@ -54,7 +54,7 @@ export function AssessmentTabs({ assessmentId }: AssessmentTabsProps) {
                 'transition-all duration-200 whitespace-nowrap group',
                 isActive
                   ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-md'
-                  : 'text-slate-600 hover:bg-gradient-to-r hover:from-slate-50 hover:to-slate-100 hover:text-slate-900'
+                  : 'text-neutral-600 hover:bg-gradient-to-r hover:from-slate-50 hover:to-slate-100 hover:text-neutral-900'
               )}
             >
               <Icon className={cn(

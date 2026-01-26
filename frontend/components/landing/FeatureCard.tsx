@@ -12,14 +12,14 @@ interface FeatureCardProps {
 export function FeatureCard({ icon: Icon, title, description, delay = 0 }: FeatureCardProps) {
   return (
     <div
-      className="feature-card p-6 shadow-sm scroll-reveal"
+      className="ledger-card rounded-lg p-6 scroll-reveal"
       style={{ transitionDelay: `${delay}ms` }}
     >
-      <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center mb-4">
-        <Icon className="h-6 w-6 text-primary-600" />
+      <div className="h-10 w-10 rounded-md bg-accent-50 border border-accent-200 flex items-center justify-center mb-4">
+        <Icon className="h-5 w-5 text-accent-600" />
       </div>
-      <h3 className="text-lg font-semibold text-slate-900 mb-2">{title}</h3>
-      <p className="text-slate-600 text-sm leading-relaxed">{description}</p>
+      <h3 className="text-lg font-semibold text-primary-900 mb-2">{title}</h3>
+      <p className="text-neutral-600 text-sm leading-relaxed">{description}</p>
     </div>
   );
 }

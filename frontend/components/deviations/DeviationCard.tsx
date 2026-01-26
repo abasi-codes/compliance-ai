@@ -35,7 +35,7 @@ function getStatusStyle(status: string): string {
     case 'IN_REMEDIATION': return 'bg-amber-100 text-amber-800';
     case 'RESOLVED': return 'bg-green-100 text-green-800';
     case 'ACCEPTED': return 'bg-blue-100 text-blue-800';
-    default: return 'bg-slate-100 text-slate-800';
+    default: return 'bg-neutral-100 text-neutral-800';
   }
 }
 
@@ -63,19 +63,19 @@ export function DeviationCard({ deviation, onUpdateStatus }: DeviationCardProps)
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <SeverityBadge severity={deviation.severity} size="sm" />
-                <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-700">
+                <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-lg bg-neutral-100 text-neutral-700">
                   Risk Score: <span className="ml-1 font-bold">{deviation.risk_score}</span>
                 </span>
                 <span className={cn('px-2.5 py-1 text-xs font-medium rounded-lg', getStatusStyle(deviation.status))}>
                   {deviation.status.replace('_', ' ')}
                 </span>
               </div>
-              <h3 className="font-semibold text-slate-900">{deviation.title}</h3>
-              <p className="text-sm text-slate-600 mt-1">{deviation.subcategory_code}</p>
+              <h3 className="font-semibold text-neutral-900">{deviation.title}</h3>
+              <p className="text-sm text-neutral-600 mt-1">{deviation.subcategory_code}</p>
             </div>
             <button
               onClick={() => setExpanded(!expanded)}
-              className="flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-slate-900"
+              className="flex items-center gap-1 text-sm font-medium text-neutral-600 hover:text-neutral-900"
             >
               {expanded ? 'Less' : 'More'}
               <ChevronDown className={cn('h-4 w-4 transition-transform', expanded && 'rotate-180')} />
@@ -84,7 +84,7 @@ export function DeviationCard({ deviation, onUpdateStatus }: DeviationCardProps)
 
           {/* Risk score visualization */}
           <div className="mt-4">
-            <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+            <div className="w-full bg-neutral-100 rounded-full h-1.5 overflow-hidden">
               <div
                 className={cn(
                   'h-1.5 rounded-full transition-all duration-500',
@@ -99,15 +99,15 @@ export function DeviationCard({ deviation, onUpdateStatus }: DeviationCardProps)
         </div>
 
         {expanded && (
-          <div className="border-t border-slate-100 p-5 bg-slate-50/50 space-y-5 animate-slideInUp">
+          <div className="border-t border-neutral-100 p-5 bg-neutral-50/50 space-y-5 animate-slideInUp">
             <div>
-              <h4 className="text-sm font-semibold text-slate-700 mb-2">Description</h4>
-              <p className="text-sm text-slate-600">{deviation.description}</p>
+              <h4 className="text-sm font-semibold text-neutral-700 mb-2">Description</h4>
+              <p className="text-sm text-neutral-600">{deviation.description}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <h4 className="text-sm font-semibold text-slate-700 mb-2">Impact</h4>
+                <h4 className="text-sm font-semibold text-neutral-700 mb-2">Impact</h4>
                 <div className="flex items-center gap-1.5">
                   {[1, 2, 3, 4, 5].map((n) => (
                     <div
@@ -116,17 +116,17 @@ export function DeviationCard({ deviation, onUpdateStatus }: DeviationCardProps)
                         'w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold transition-colors',
                         n <= deviation.impact_score
                           ? 'bg-red-500 text-white'
-                          : 'bg-slate-200 text-slate-400'
+                          : 'bg-neutral-200 text-neutral-400'
                       )}
                     >
                       {n}
                     </div>
                   ))}
-                  <span className="text-sm text-slate-600 ml-2 font-medium">{deviation.impact_score}/5</span>
+                  <span className="text-sm text-neutral-600 ml-2 font-medium">{deviation.impact_score}/5</span>
                 </div>
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-slate-700 mb-2">Likelihood</h4>
+                <h4 className="text-sm font-semibold text-neutral-700 mb-2">Likelihood</h4>
                 <div className="flex items-center gap-1.5">
                   {[1, 2, 3, 4, 5].map((n) => (
                     <div
@@ -135,28 +135,28 @@ export function DeviationCard({ deviation, onUpdateStatus }: DeviationCardProps)
                         'w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold transition-colors',
                         n <= deviation.likelihood_score
                           ? 'bg-orange-500 text-white'
-                          : 'bg-slate-200 text-slate-400'
+                          : 'bg-neutral-200 text-neutral-400'
                       )}
                     >
                       {n}
                     </div>
                   ))}
-                  <span className="text-sm text-slate-600 ml-2 font-medium">{deviation.likelihood_score}/5</span>
+                  <span className="text-sm text-neutral-600 ml-2 font-medium">{deviation.likelihood_score}/5</span>
                 </div>
               </div>
             </div>
 
             {deviation.recommended_remediation && (
               <div>
-                <h4 className="text-sm font-semibold text-slate-700 mb-2">Recommended Remediation</h4>
-                <p className="text-sm text-slate-600 bg-white p-3 rounded-lg border border-slate-200">
+                <h4 className="text-sm font-semibold text-neutral-700 mb-2">Recommended Remediation</h4>
+                <p className="text-sm text-neutral-600 bg-white p-3 rounded-lg border border-neutral-200">
                   {deviation.recommended_remediation}
                 </p>
               </div>
             )}
 
             <div>
-              <h4 className="text-sm font-semibold text-slate-700 mb-3">Update Status</h4>
+              <h4 className="text-sm font-semibold text-neutral-700 mb-3">Update Status</h4>
               <div className="flex gap-2 flex-wrap">
                 {statusOptions.map((option) => (
                   <button
@@ -166,7 +166,7 @@ export function DeviationCard({ deviation, onUpdateStatus }: DeviationCardProps)
                     className={cn(
                       'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
                       deviation.status === option.value
-                        ? 'bg-slate-200 text-slate-500 cursor-default'
+                        ? 'bg-neutral-200 text-neutral-500 cursor-default'
                         : option.styles
                     )}
                   >

@@ -65,12 +65,12 @@ export default function AssessmentLayout({ children, params }: AssessmentLayoutP
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header with gradient accent */}
-      <div className="mb-6 pb-6 border-b border-slate-200 relative">
+      <div className="mb-6 pb-6 border-b border-neutral-200 relative">
         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-500 via-accent-500 to-transparent" />
         <div className="flex items-center justify-between animate-fadeIn">
           <div>
             <h1 className="text-2xl font-bold gradient-text">{assessment.name}</h1>
-            <p className="mt-1 text-sm text-slate-500">{assessment.organization_name}</p>
+            <p className="mt-1 text-sm text-neutral-500">{assessment.organization_name}</p>
           </div>
           <StatusBadge status={assessment.status} />
         </div>

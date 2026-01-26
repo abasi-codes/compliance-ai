@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { BookOpen, ChevronDown } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, PageHeader } from '@/components/ui';
 import { LoadingPage, ErrorMessage } from '@/components/ui';
-import { getFramework, getFrameworkSummary } from '@/lib/api';
+import { getCSFFunctions, getFrameworkSummary } from '@/lib/api';
 import { useUserId } from '@/lib/hooks/useUserId';
 import { CSFFunction, FrameworkSummary } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -24,7 +24,7 @@ export default function FrameworkPage() {
     const fetchFramework = async () => {
       try {
         const [functionsData, summaryData] = await Promise.all([
-          getFramework(userId),
+          getCSFFunctions(userId),
           getFrameworkSummary(userId),
         ]);
         setFunctions(functionsData);
@@ -65,15 +65,15 @@ export default function FrameworkPage() {
             <div className="grid grid-cols-3 gap-6 text-center">
               <div className="p-4 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200">
                 <p className="text-4xl font-bold gradient-text">{summary.functions_count}</p>
-                <p className="text-sm text-slate-600 mt-1">Functions</p>
+                <p className="text-sm text-neutral-600 mt-1">Functions</p>
               </div>
               <div className="p-4 rounded-xl bg-gradient-to-br from-accent-50 to-accent-100 border border-accent-200">
                 <p className="text-4xl font-bold text-accent-600">{summary.categories_count}</p>
-                <p className="text-sm text-slate-600 mt-1">Categories</p>
+                <p className="text-sm text-neutral-600 mt-1">Categories</p>
               </div>
               <div className="p-4 rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200">
                 <p className="text-4xl font-bold text-purple-600">{summary.subcategories_count}</p>
-                <p className="text-sm text-slate-600 mt-1">Subcategories</p>
+                <p className="text-sm text-neutral-600 mt-1">Subcategories</p>
               </div>
             </div>
           </CardContent>
@@ -91,7 +91,7 @@ export default function FrameworkPage() {
             }}
           >
             <CardHeader
-              className="cursor-pointer hover:bg-slate-50 transition-colors"
+              className="cursor-pointer hover:bg-neutral-50 transition-colors"
               onClick={() => setExpandedFunction(expandedFunction === func.id ? null : func.id)}
             >
               <div className="flex items-center justify-between">
@@ -103,23 +103,23 @@ export default function FrameworkPage() {
                 </div>
                 <ChevronDown
                   className={cn(
-                    'w-5 h-5 text-slate-400 transition-transform duration-300',
+                    'w-5 h-5 text-neutral-400 transition-transform duration-300',
                     expandedFunction === func.id && 'rotate-180'
                   )}
                 />
               </div>
               {func.description && (
-                <p className="text-sm text-slate-500 mt-2 ml-14">{func.description}</p>
+                <p className="text-sm text-neutral-500 mt-2 ml-14">{func.description}</p>
               )}
             </CardHeader>
 
             {expandedFunction === func.id && func.categories && (
-              <CardContent className="bg-slate-50/50 border-t border-slate-100">
+              <CardContent className="bg-neutral-50/50 border-t border-neutral-100">
                 <div className="space-y-3">
                   {func.categories.map((category) => (
-                    <div key={category.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                    <div key={category.id} className="bg-white rounded-xl border border-neutral-200 overflow-hidden">
                       <div
-                        className="p-4 cursor-pointer hover:bg-slate-50 transition-colors"
+                        className="p-4 cursor-pointer hover:bg-neutral-50 transition-colors"
                         onClick={() =>
                           setExpandedCategory(expandedCategory === category.id ? null : category.id)
                         }
@@ -129,11 +129,11 @@ export default function FrameworkPage() {
                             <span className="px-2.5 py-1 bg-gradient-to-r from-accent-500 to-accent-600 text-white text-sm font-medium rounded-lg">
                               {category.code}
                             </span>
-                            <span className="font-medium text-slate-900">{category.name}</span>
+                            <span className="font-medium text-neutral-900">{category.name}</span>
                           </div>
                           <ChevronDown
                             className={cn(
-                              'w-4 h-4 text-slate-400 transition-transform duration-300',
+                              'w-4 h-4 text-neutral-400 transition-transform duration-300',
                               expandedCategory === category.id && 'rotate-180'
                             )}
                           />
@@ -141,12 +141,12 @@ export default function FrameworkPage() {
                       </div>
 
                       {expandedCategory === category.id && category.subcategories && (
-                        <div className="border-t border-slate-200 bg-slate-50 p-4">
+                        <div className="border-t border-neutral-200 bg-neutral-50 p-4">
                           <div className="space-y-2">
                             {category.subcategories.map((subcategory, subIndex) => (
                               <div
                                 key={subcategory.id}
-                                className="p-3 bg-white rounded-lg border border-slate-200 text-sm animate-fadeIn"
+                                className="p-3 bg-white rounded-lg border border-neutral-200 text-sm animate-fadeIn"
                                 style={{
                                   animationDelay: `${subIndex * 50}ms`
                                 }}
@@ -154,7 +154,7 @@ export default function FrameworkPage() {
                                 <span className="font-semibold text-purple-600">
                                   {subcategory.code}
                                 </span>
-                                <p className="text-slate-600 mt-1">{subcategory.description}</p>
+                                <p className="text-neutral-600 mt-1">{subcategory.description}</p>
                               </div>
                             ))}
                           </div>

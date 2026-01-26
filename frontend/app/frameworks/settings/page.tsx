@@ -114,7 +114,7 @@ export default function FrameworkSettingsPage() {
       <div className="mb-6">
         <Link
           href="/frameworks"
-          className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1"
+          className="text-sm text-neutral-500 hover:text-neutral-700 flex items-center gap-1"
         >
           <ChevronLeft className="w-4 h-4" />
           Back to Frameworks
@@ -144,7 +144,7 @@ export default function FrameworkSettingsPage() {
               <select
                 value={selectedFrameworkId}
                 onChange={(e) => setSelectedFrameworkId(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 disabled={availableFrameworks.length === 0}
               >
                 <option value="">
@@ -174,7 +174,7 @@ export default function FrameworkSettingsPage() {
         </CardHeader>
         <CardContent>
           {companyFrameworks.length === 0 ? (
-            <p className="text-center text-slate-500 py-8">
+            <p className="text-center text-neutral-500 py-8">
               No frameworks selected. Add frameworks above to get started with multi-framework
               assessments.
             </p>
@@ -183,14 +183,14 @@ export default function FrameworkSettingsPage() {
               {selectedFrameworksWithDetails.map((cf, index) => (
                 <div
                   key={cf.id}
-                  className="flex items-center gap-4 p-4 bg-white rounded-lg border border-slate-200 hover:border-slate-300 transition-all animate-slideInUp opacity-0"
+                  className="flex items-center gap-4 p-4 bg-white rounded-lg border border-neutral-200 hover:border-neutral-300 transition-all animate-slideInUp opacity-0"
                   style={{
                     animationDelay: `${index * 50}ms`,
                     animationFillMode: 'forwards',
                   }}
                 >
-                  <GripVertical className="w-5 h-5 text-slate-300 cursor-grab" />
-                  <span className="w-8 h-8 flex items-center justify-center bg-slate-100 text-slate-600 text-sm font-medium rounded-full">
+                  <GripVertical className="w-5 h-5 text-neutral-300 cursor-grab" />
+                  <span className="w-8 h-8 flex items-center justify-center bg-neutral-100 text-neutral-600 text-sm font-medium rounded-full">
                     {index + 1}
                   </span>
                   <div className="flex-1">
@@ -206,17 +206,17 @@ export default function FrameworkSettingsPage() {
                           {frameworkTypeLabels[cf.framework.framework_type] || 'Custom'}
                         </span>
                       )}
-                      <span className="font-medium text-slate-900">
+                      <span className="font-medium text-neutral-900">
                         {cf.framework_name || cf.framework?.name || 'Unknown Framework'}
                       </span>
                     </div>
-                    {cf.notes && <p className="text-sm text-slate-500 mt-1">{cf.notes}</p>}
+                    {cf.notes && <p className="text-sm text-neutral-500 mt-1">{cf.notes}</p>}
                   </div>
                   <div className="flex items-center gap-2">
                     <span
                       className={cn(
                         'px-2 py-1 text-xs rounded',
-                        cf.is_active ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'
+                        cf.is_active ? 'bg-green-100 text-green-700' : 'bg-neutral-100 text-neutral-500'
                       )}
                     >
                       {cf.is_active ? 'Active' : 'Inactive'}
@@ -226,7 +226,7 @@ export default function FrameworkSettingsPage() {
                       size="sm"
                       onClick={() => handleRemoveFramework(cf.framework_id)}
                     >
-                      <Trash2 className="w-4 h-4 text-slate-400 hover:text-red-500" />
+                      <Trash2 className="w-4 h-4 text-neutral-400 hover:text-red-500" />
                     </Button>
                   </div>
                 </div>

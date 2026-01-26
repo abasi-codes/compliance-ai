@@ -140,7 +140,7 @@ export default function MappingsPage({ params }: MappingsPageProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-neutral-600">
             Generate AI-powered mappings between your controls/policies and NIST CSF 2.0
             subcategories. Review and approve each suggestion to confirm the mappings.
           </p>
@@ -149,7 +149,7 @@ export default function MappingsPage({ params }: MappingsPageProps) {
       </Card>
 
       {/* Custom Tab Navigation */}
-      <div className="border-b border-slate-200">
+      <div className="border-b border-neutral-200">
         <nav className="-mb-px flex space-x-4">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -162,7 +162,7 @@ export default function MappingsPage({ params }: MappingsPageProps) {
                   'relative flex items-center gap-2 py-3 px-4 text-sm font-medium transition-all duration-200',
                   isActive
                     ? 'text-primary-600'
-                    : 'text-slate-500 hover:text-slate-700'
+                    : 'text-neutral-500 hover:text-neutral-700'
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -171,7 +171,7 @@ export default function MappingsPage({ params }: MappingsPageProps) {
                   'px-2 py-0.5 text-xs font-semibold rounded-full',
                   isActive
                     ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white'
-                    : 'bg-slate-100 text-slate-600'
+                    : 'bg-neutral-100 text-neutral-600'
                 )}>
                   {tab.count}
                 </span>
@@ -205,7 +205,7 @@ export default function MappingsPage({ params }: MappingsPageProps) {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center">
                   <Link2 className="h-8 w-8 text-primary-500" />
                 </div>
-                <p className="text-slate-500">
+                <p className="text-neutral-500">
                   Generate mappings first to analyze coverage gaps.
                 </p>
               </div>

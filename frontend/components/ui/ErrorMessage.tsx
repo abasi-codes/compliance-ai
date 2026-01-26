@@ -58,12 +58,12 @@ interface EmptyStateProps {
 export function EmptyState({ title, description, action, icon }: EmptyStateProps) {
   return (
     <div className="text-center py-16 animate-fadeIn">
-      <div className="mx-auto h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
-        {icon || <FolderOpen className="h-8 w-8 text-slate-400" />}
+      <div className="mx-auto h-16 w-16 rounded-full bg-neutral-100 flex items-center justify-center mb-4">
+        {icon || <FolderOpen className="h-8 w-8 text-neutral-400" />}
       </div>
-      <h3 className="text-base font-semibold text-slate-900">{title}</h3>
+      <h3 className="text-base font-semibold text-neutral-900">{title}</h3>
       {description && (
-        <p className="mt-2 text-sm text-slate-500 max-w-sm mx-auto">{description}</p>
+        <p className="mt-2 text-sm text-neutral-500 max-w-sm mx-auto">{description}</p>
       )}
       {action && (
         <div className="mt-6">

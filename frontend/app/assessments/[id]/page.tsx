@@ -219,14 +219,14 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
                     )}>
                       <Icon className={cn('h-6 w-6', stat.textColor)} />
                     </div>
-                    <ArrowUpRight className="h-4 w-4 text-slate-400" />
+                    <ArrowUpRight className="h-4 w-4 text-neutral-400" />
                   </div>
                   <div className="mt-4">
-                    <p className="text-sm font-medium text-slate-500">{stat.name}</p>
+                    <p className="text-sm font-medium text-neutral-500">{stat.name}</p>
                     <p className="mt-1 flex items-baseline gap-1">
                       <span className="text-3xl font-bold gradient-text">{stat.value}</span>
                       {'suffix' in stat && stat.suffix && (
-                        <span className="text-lg text-slate-400">{stat.suffix}</span>
+                        <span className="text-lg text-neutral-400">{stat.suffix}</span>
                       )}
                     </p>
                   </div>
@@ -281,7 +281,7 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-slate-700 leading-relaxed">{assessment.description}</p>
+            <p className="text-neutral-700 leading-relaxed">{assessment.description}</p>
           </CardContent>
         </Card>
       )}
@@ -301,8 +301,8 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
                   href={action.href}
                   className={cn(
                     'flex items-center gap-4 p-4 rounded-xl',
-                    'bg-slate-50 hover:bg-white',
-                    'border border-transparent hover:border-slate-200',
+                    'bg-neutral-50 hover:bg-white',
+                    'border border-transparent hover:border-neutral-200',
                     'hover:shadow-lg',
                     'transition-all duration-300',
                     'group animate-slideInUp opacity-0'
@@ -324,12 +324,12 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
                     )} style={{ color: 'var(--primary-600)' }} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-900 group-hover:text-primary-600 transition-colors">
+                    <p className="text-sm font-semibold text-neutral-900 group-hover:text-primary-600 transition-colors">
                       {action.title}
                     </p>
-                    <p className="text-xs text-slate-500">{action.description}</p>
+                    <p className="text-xs text-neutral-500">{action.description}</p>
                   </div>
-                  <ArrowUpRight className="h-4 w-4 text-slate-300 group-hover:text-primary-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  <ArrowUpRight className="h-4 w-4 text-neutral-300 group-hover:text-primary-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                 </Link>
               );
             })}

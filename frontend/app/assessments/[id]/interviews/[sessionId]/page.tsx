@@ -97,11 +97,11 @@ export default function InterviewSessionPage({ params }: InterviewSessionPagePro
         <CardContent className="py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="font-semibold text-slate-900">
+              <h2 className="font-semibold text-neutral-900">
                 {session.interviewee_name || 'Interview Session'}
               </h2>
               {session.interviewee_role && (
-                <p className="text-sm text-slate-500">{session.interviewee_role}</p>
+                <p className="text-sm text-neutral-500">{session.interviewee_role}</p>
               )}
             </div>
             <Button
@@ -131,7 +131,7 @@ export default function InterviewSessionPage({ params }: InterviewSessionPagePro
             <h2 className="text-2xl font-bold gradient-text mb-2">
               Interview Complete
             </h2>
-            <p className="text-slate-600 mb-8 max-w-md mx-auto">
+            <p className="text-neutral-600 mb-8 max-w-md mx-auto">
               All questions have been answered. You can now complete this session.
             </p>
             <div className="flex justify-center gap-4">
@@ -168,7 +168,7 @@ export default function InterviewSessionPage({ params }: InterviewSessionPagePro
       ) : (
         <Card animated>
           <CardContent className="text-center py-8">
-            <p className="text-slate-500">No more questions available.</p>
+            <p className="text-neutral-500">No more questions available.</p>
           </CardContent>
         </Card>
       )}

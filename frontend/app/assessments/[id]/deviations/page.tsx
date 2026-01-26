@@ -102,7 +102,7 @@ export default function DeviationsPage({ params }: DeviationsPageProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-neutral-600">
             Deviations identify gaps between your current security posture and NIST CSF 2.0
             requirements. Each deviation is risk-ranked based on impact and likelihood.
           </p>
@@ -115,9 +115,9 @@ export default function DeviationsPage({ params }: DeviationsPageProps) {
           <Card animated>
             <CardContent>
               <div className="grid grid-cols-5 gap-4">
-                <div className="p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-slate-200 text-center">
+                <div className="p-4 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border border-neutral-200 text-center">
                   <p className="text-3xl font-bold gradient-text">{data.total}</p>
-                  <p className="text-sm text-slate-500 mt-1">Total</p>
+                  <p className="text-sm text-neutral-500 mt-1">Total</p>
                 </div>
                 {severityConfig.map((config) => (
                   <div
@@ -131,7 +131,7 @@ export default function DeviationsPage({ params }: DeviationsPageProps) {
                     <p className={cn('text-3xl font-bold', config.text)}>
                       {data.by_severity[config.key] || 0}
                     </p>
-                    <p className="text-sm text-slate-500 mt-1">{config.label}</p>
+                    <p className="text-sm text-neutral-500 mt-1">{config.label}</p>
                   </div>
                 ))}
               </div>

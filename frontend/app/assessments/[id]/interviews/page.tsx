@@ -68,7 +68,7 @@ export default function InterviewsPage({ params }: InterviewsPageProps) {
               onCancel={() => setShowCreateForm(false)}
             />
           ) : (
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-neutral-600">
               Conduct structured interviews to gather information about your security
               practices and validate control implementations.
             </p>

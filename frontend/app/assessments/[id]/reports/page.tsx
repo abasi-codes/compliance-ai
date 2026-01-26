@@ -77,7 +77,7 @@ export default function ReportsPage({ params }: ReportsPageProps) {
           <CardTitle icon={<FileDown className="h-5 w-5" />}>Generate Report</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-slate-600 mb-4">
+          <p className="text-sm text-neutral-600 mb-4">
             Generate comprehensive reports based on your assessment data. Reports include
             executive summaries, maturity scores, deviations, and recommendations.
           </p>

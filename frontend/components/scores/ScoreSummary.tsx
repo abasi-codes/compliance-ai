@@ -39,7 +39,7 @@ export function ScoreSummary({ summary }: ScoreSummaryProps) {
       <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary-100/50 to-transparent rounded-full -translate-y-1/2 translate-x-1/2" />
 
       <div className="relative">
-        <p className="text-sm font-medium text-slate-500 mb-4 flex items-center gap-2">
+        <p className="text-sm font-medium text-neutral-500 mb-4 flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
           Overall Maturity Score
         </p>
@@ -56,7 +56,7 @@ export function ScoreSummary({ summary }: ScoreSummaryProps) {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="12"
-                className="text-slate-200"
+                className="text-neutral-200"
               />
               <circle
                 cx="96"
@@ -81,7 +81,7 @@ export function ScoreSummary({ summary }: ScoreSummaryProps) {
               <span className={cn('text-5xl font-bold', getScoreColor(summary.overall_maturity))}>
                 {summary.overall_maturity.toFixed(1)}
               </span>
-              <span className="text-slate-500 text-sm mt-1">out of 4.0</span>
+              <span className="text-neutral-500 text-sm mt-1">out of 4.0</span>
             </div>
           </div>
 
@@ -95,7 +95,7 @@ export function ScoreSummary({ summary }: ScoreSummaryProps) {
         </div>
 
         {/* Timestamp */}
-        <div className="mt-6 flex items-center justify-center gap-1.5 text-xs text-slate-400">
+        <div className="mt-6 flex items-center justify-center gap-1.5 text-xs text-neutral-400">
           <Clock className="h-3.5 w-3.5" />
           <span>Calculated {new Date(summary.calculated_at).toLocaleString()}</span>
         </div>

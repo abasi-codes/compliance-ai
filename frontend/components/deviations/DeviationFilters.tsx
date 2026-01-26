@@ -39,7 +39,7 @@ export function DeviationFilters({
   return (
     <div className="flex flex-wrap gap-6">
       <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-2">Severity</label>
+        <label className="block text-sm font-semibold text-neutral-700 mb-2">Severity</label>
         <div className="flex gap-1.5 flex-wrap">
           {severityOptions.map((option) => (
             <button
@@ -49,7 +49,7 @@ export function DeviationFilters({
                 'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200',
                 severity === option.value
                   ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-md'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:shadow-sm'
+                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200 hover:shadow-sm'
               )}
             >
               {option.label}
@@ -67,7 +67,7 @@ export function DeviationFilters({
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-2">Status</label>
+        <label className="block text-sm font-semibold text-neutral-700 mb-2">Status</label>
         <div className="flex gap-1.5 flex-wrap">
           {statusOptions.map((option) => (
             <button
@@ -77,7 +77,7 @@ export function DeviationFilters({
                 'px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200',
                 status === option.value
                   ? 'bg-gradient-to-r from-accent-500 to-accent-600 text-white shadow-md'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:shadow-sm'
+                  : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200 hover:shadow-sm'
               )}
             >
               {option.label}

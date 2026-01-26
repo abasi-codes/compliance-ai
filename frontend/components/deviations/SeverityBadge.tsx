@@ -32,7 +32,7 @@ const severityConfig: Record<string, {
 
 export function SeverityBadge({ severity, size = 'md' }: SeverityBadgeProps) {
   const config = severityConfig[severity] || {
-    styles: 'bg-slate-500 text-white',
+    styles: 'bg-neutral-500 text-white',
     icon: Info,
   };
   const Icon = config.icon;

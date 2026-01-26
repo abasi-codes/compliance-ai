@@ -113,11 +113,11 @@ export default function AssessmentScopePage({ params }: ScopePageProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-neutral-900 flex items-center gap-2">
             <Layers className="w-6 h-6 text-primary-500" />
             Framework Scope
           </h1>
-          <p className="text-slate-500 mt-1">
+          <p className="text-neutral-500 mt-1">
             Configure which compliance frameworks are included in this assessment
           </p>
         </div>
@@ -140,7 +140,7 @@ export default function AssessmentScopePage({ params }: ScopePageProps) {
               <select
                 value={selectedFrameworkId}
                 onChange={(e) => setSelectedFrameworkId(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 disabled={availableFrameworks.length === 0}
               >
                 <option value="">
@@ -170,7 +170,7 @@ export default function AssessmentScopePage({ params }: ScopePageProps) {
         </CardHeader>
         <CardContent>
           {scopes.length === 0 ? (
-            <p className="text-center text-slate-500 py-8">
+            <p className="text-center text-neutral-500 py-8">
               No frameworks in scope. Add frameworks above to define the assessment coverage.
             </p>
           ) : (
@@ -178,7 +178,7 @@ export default function AssessmentScopePage({ params }: ScopePageProps) {
               {scopedFrameworksWithDetails.map((scope, index) => (
                 <div
                   key={scope.id}
-                  className="flex items-center justify-between p-4 bg-white rounded-lg border border-slate-200 hover:border-slate-300 transition-all animate-slideInUp opacity-0"
+                  className="flex items-center justify-between p-4 bg-white rounded-lg border border-neutral-200 hover:border-neutral-300 transition-all animate-slideInUp opacity-0"
                   style={{
                     animationDelay: `${index * 50}ms`,
                     animationFillMode: 'forwards',
@@ -197,10 +197,10 @@ export default function AssessmentScopePage({ params }: ScopePageProps) {
                       </span>
                     )}
                     <div>
-                      <h3 className="font-medium text-slate-900">
+                      <h3 className="font-medium text-neutral-900">
                         {scope.framework_code || scope.framework?.name || 'Unknown Framework'}
                       </h3>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-neutral-500">
                         {scope.include_all
                           ? 'All requirements included'
                           : 'Custom requirement selection'}
@@ -223,7 +223,7 @@ export default function AssessmentScopePage({ params }: ScopePageProps) {
                       size="sm"
                       onClick={() => handleRemoveFramework(scope.framework_id)}
                     >
-                      <Trash2 className="w-4 h-4 text-slate-400 hover:text-red-500" />
+                      <Trash2 className="w-4 h-4 text-neutral-400 hover:text-red-500" />
                     </Button>
                   </div>
                 </div>

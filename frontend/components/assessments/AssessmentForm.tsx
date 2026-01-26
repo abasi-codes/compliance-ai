@@ -84,12 +84,12 @@ export function AssessmentForm() {
       />
 
       <div>
-        <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-3">
+        <label className="flex items-center gap-2 text-sm font-medium text-neutral-700 mb-3">
           <Layers className="w-4 h-4" />
           Compliance Frameworks
           <span className="text-red-500">*</span>
         </label>
-        <p className="text-sm text-slate-500 mb-4">
+        <p className="text-sm text-neutral-500 mb-4">
           Select the compliance frameworks to include in this assessment. You can select multiple
           frameworks for a comprehensive multi-framework assessment.
         </p>
@@ -105,7 +105,7 @@ export function AssessmentForm() {
         )}
       </div>
 
-      <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
+      <div className="flex justify-end gap-3 pt-4 border-t border-neutral-200">
         <Button
           type="button"
           variant="secondary"

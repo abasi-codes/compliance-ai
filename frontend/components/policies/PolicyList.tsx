@@ -17,7 +17,7 @@ export function PolicyList({ policies, onDelete }: PolicyListProps) {
         <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center">
           <FileText className="h-8 w-8 text-primary-500" />
         </div>
-        <p className="text-slate-500">No policies uploaded yet</p>
+        <p className="text-neutral-500">No policies uploaded yet</p>
       </div>
     );
   }
@@ -38,17 +38,17 @@ export function PolicyList({ policies, onDelete }: PolicyListProps) {
           <CardContent>
             <div className="flex justify-between items-start">
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-semibold text-slate-900 truncate">
+                <h3 className="text-lg font-semibold text-neutral-900 truncate">
                   {policy.name}
                 </h3>
                 {policy.description && (
-                  <p className="mt-1 text-sm text-slate-500 line-clamp-2">
+                  <p className="mt-1 text-sm text-neutral-500 line-clamp-2">
                     {policy.description}
                   </p>
                 )}
                 <div className="mt-3 flex flex-wrap gap-2">
                   {policy.version && (
-                    <span className="px-2.5 py-1 text-xs font-medium bg-slate-100 text-slate-700 rounded-full">
+                    <span className="px-2.5 py-1 text-xs font-medium bg-neutral-100 text-neutral-700 rounded-full">
                       v{policy.version}
                     </span>
                   )}
@@ -70,7 +70,7 @@ export function PolicyList({ policies, onDelete }: PolicyListProps) {
                   onClick={() => onDelete(policy.id)}
                   className={cn(
                     'ml-4 p-2 rounded-lg transition-all duration-200',
-                    'text-slate-400 hover:text-red-600',
+                    'text-neutral-400 hover:text-red-600',
                     'hover:bg-red-50'
                   )}
                 >

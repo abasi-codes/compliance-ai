@@ -22,7 +22,7 @@ export function TrustBar() {
             return (
               <div
                 key={item.label}
-                className="flex items-center gap-3 text-slate-600"
+                className="flex items-center gap-3 text-neutral-600"
               >
                 <div className="h-10 w-10 rounded-lg bg-primary-50 flex items-center justify-center">
                   <Icon className="h-5 w-5 text-primary-600" />

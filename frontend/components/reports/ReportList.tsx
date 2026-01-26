@@ -13,11 +13,11 @@ export function ReportList({ reports, onView }: ReportListProps) {
   if (reports.length === 0) {
     return (
       <div className="text-center py-16 animate-fadeIn">
-        <div className="mx-auto h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
-          <FolderOpen className="h-8 w-8 text-slate-400" />
+        <div className="mx-auto h-16 w-16 rounded-full bg-neutral-100 flex items-center justify-center mb-4">
+          <FolderOpen className="h-8 w-8 text-neutral-400" />
         </div>
-        <h3 className="text-base font-semibold text-slate-900">No reports generated yet</h3>
-        <p className="mt-2 text-sm text-slate-500">Generate a report to see it listed here</p>
+        <h3 className="text-base font-semibold text-neutral-900">No reports generated yet</h3>
+        <p className="mt-2 text-sm text-neutral-500">Generate a report to see it listed here</p>
       </div>
     );
   }
@@ -36,7 +36,7 @@ export function ReportList({ reports, onView }: ReportListProps) {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-semibold text-slate-900 truncate">{report.title}</h3>
+                    <h3 className="font-semibold text-neutral-900 truncate">{report.title}</h3>
                     {report.is_final && (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-700 rounded-full">
                         <CheckCircle2 className="h-3 w-3" />
@@ -44,17 +44,17 @@ export function ReportList({ reports, onView }: ReportListProps) {
                       </span>
                     )}
                   </div>
-                  <div className="mt-1.5 flex flex-wrap gap-3 text-sm text-slate-500">
+                  <div className="mt-1.5 flex flex-wrap gap-3 text-sm text-neutral-500">
                     <span className="inline-flex items-center gap-1">
-                      <span className="text-slate-400">Type:</span>
+                      <span className="text-neutral-400">Type:</span>
                       <span className="font-medium">{report.report_type}</span>
                     </span>
                     <span className="inline-flex items-center gap-1">
-                      <span className="text-slate-400">Version:</span>
+                      <span className="text-neutral-400">Version:</span>
                       <span className="font-medium">{report.version}</span>
                     </span>
                     <span className="inline-flex items-center gap-1">
-                      <span className="text-slate-400">Generated:</span>
+                      <span className="text-neutral-400">Generated:</span>
                       <span className="font-medium">{new Date(report.generated_at).toLocaleString()}</span>
                     </span>
                   </div>

@@ -76,7 +76,7 @@ export function MultiFrameworkProgress({
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-8 text-slate-400">
+      <div className="flex items-center justify-center p-8 text-neutral-400">
         <Layers className="w-5 h-5 animate-pulse mr-2" />
         Loading framework progress...
       </div>
@@ -86,8 +86,8 @@ export function MultiFrameworkProgress({
   if (items.length === 0) {
     return (
       <div className="text-center py-8">
-        <Layers className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-        <p className="text-slate-500">No frameworks in scope</p>
+        <Layers className="w-12 h-12 text-neutral-300 mx-auto mb-3" />
+        <p className="text-neutral-500">No frameworks in scope</p>
         <Link
           href={`/assessments/${assessmentId}/scope`}
           className="text-primary-600 hover:text-primary-700 text-sm mt-2 inline-flex items-center gap-1"
@@ -108,28 +108,28 @@ export function MultiFrameworkProgress({
         return (
           <div
             key={item.framework.id}
-            className="p-4 bg-white rounded-lg border border-slate-200 hover:border-slate-300 transition-all"
+            className="p-4 bg-white rounded-lg border border-neutral-200 hover:border-neutral-300 transition-all"
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-3">
                 <div
                   className={cn(
                     'w-3 h-3 rounded-full',
-                    frameworkTypeColors[item.framework.framework_type] || 'bg-slate-500'
+                    frameworkTypeColors[item.framework.framework_type] || 'bg-neutral-500'
                   )}
                 />
-                <span className="font-medium text-slate-900">
+                <span className="font-medium text-neutral-900">
                   {item.framework.name}
                 </span>
               </div>
               <div className="flex items-center gap-4 text-sm">
                 {item.stats && (
-                  <span className="text-slate-500">
+                  <span className="text-neutral-500">
                     {item.stats.assessable_requirements} requirements
                   </span>
                 )}
                 {item.score !== null && item.score !== undefined && (
-                  <span className="font-semibold text-slate-900">
+                  <span className="font-semibold text-neutral-900">
                     {item.score.toFixed(1)}/4.0
                   </span>
                 )}
@@ -137,11 +137,11 @@ export function MultiFrameworkProgress({
             </div>
 
             {/* Progress bar */}
-            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div className="h-2 bg-neutral-100 rounded-full overflow-hidden">
               <div
                 className={cn(
                   'h-full rounded-full transition-all',
-                  frameworkTypeColors[item.framework.framework_type] || 'bg-slate-500',
+                  frameworkTypeColors[item.framework.framework_type] || 'bg-neutral-500',
                   item.score === null || item.score === undefined ? 'opacity-30' : ''
                 )}
                 style={{
@@ -153,9 +153,9 @@ export function MultiFrameworkProgress({
             </div>
 
             {item.score === null || item.score === undefined ? (
-              <p className="text-xs text-slate-400 mt-2">Score not yet calculated</p>
+              <p className="text-xs text-neutral-400 mt-2">Score not yet calculated</p>
             ) : (
-              <div className="flex items-center justify-between mt-2 text-xs text-slate-500">
+              <div className="flex items-center justify-between mt-2 text-xs text-neutral-500">
                 <span>
                   {scorePercent < 25
                     ? 'Initial'
