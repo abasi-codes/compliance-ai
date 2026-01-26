@@ -3,13 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Shield, LayoutDashboard, BookOpen, Layers, Menu, X } from 'lucide-react';
+import { Shield, LayoutDashboard, Layers, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: 'Assessments', href: '/assessments', icon: LayoutDashboard },
   { name: 'Frameworks', href: '/frameworks', icon: Layers },
-  { name: 'NIST CSF', href: '/framework', icon: BookOpen },
 ];
 
 interface HeaderProps {
