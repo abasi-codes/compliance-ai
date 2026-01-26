@@ -54,7 +54,8 @@ class CrosswalkStatsResponse(BaseModel):
     average_confidence: float
 
 
-# Endpoints
+# Endpoints - specific paths MUST come before parameterized paths
+
 @router.get("", response_model=list[CrosswalkResponse])
 async def list_crosswalks(
     source_framework_id: Optional[str] = None,
@@ -103,34 +104,14 @@ async def list_crosswalks(
     ]
 
 
-@router.get("/{crosswalk_id}", response_model=CrosswalkResponse)
-async def get_crosswalk(
-    crosswalk_id: str,
+@router.get("/stats", response_model=CrosswalkStatsResponse)
+async def get_crosswalk_stats(
     db: Session = Depends(get_db),
 ):
-    """Get a crosswalk by ID."""
+    """Get statistics about crosswalks."""
     service = CrosswalkService(db)
-    cw = service.get_crosswalk(uuid.UUID(crosswalk_id))
-
-    if not cw:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Crosswalk {crosswalk_id} not found",
-        )
-
-    return CrosswalkResponse(
-        id=str(cw.id),
-        source_requirement_id=str(cw.source_requirement_id),
-        source_requirement_code=cw.source_requirement.code if cw.source_requirement else None,
-        target_requirement_id=str(cw.target_requirement_id),
-        target_requirement_code=cw.target_requirement.code if cw.target_requirement else None,
-        mapping_type=cw.mapping_type,
-        confidence_score=cw.confidence_score,
-        mapping_source=cw.mapping_source,
-        reasoning=cw.reasoning,
-        is_approved=cw.is_approved,
-        approved_at=cw.approved_at.isoformat() if cw.approved_at else None,
-    )
+    stats = service.get_crosswalk_statistics()
+    return CrosswalkStatsResponse(**stats)
 
 
 @router.post("/generate")
@@ -212,50 +193,6 @@ async def create_crosswalk(
     )
 
 
-@router.post("/{crosswalk_id}/approve")
-async def approve_crosswalk(
-    crosswalk_id: str,
-    x_user_id: str = Header(...),
-    db: Session = Depends(get_db),
-):
-    """Approve a pending crosswalk mapping."""
-    service = CrosswalkService(db)
-    cw = service.approve_crosswalk(
-        crosswalk_id=uuid.UUID(crosswalk_id),
-        approved_by_id=uuid.UUID(x_user_id),
-    )
-
-    if not cw:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Crosswalk {crosswalk_id} not found",
-        )
-
-    return {
-        "id": str(cw.id),
-        "is_approved": cw.is_approved,
-        "approved_at": cw.approved_at.isoformat() if cw.approved_at else None,
-    }
-
-
-@router.delete("/{crosswalk_id}")
-async def reject_crosswalk(
-    crosswalk_id: str,
-    db: Session = Depends(get_db),
-):
-    """Reject (delete) a crosswalk mapping."""
-    service = CrosswalkService(db)
-    deleted = service.reject_crosswalk(uuid.UUID(crosswalk_id))
-
-    if not deleted:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Crosswalk {crosswalk_id} not found",
-        )
-
-    return {"message": "Crosswalk rejected and deleted"}
-
-
 @router.get("/requirement/{requirement_id}/mappings")
 async def get_requirement_crosswalks(
     requirement_id: str,
@@ -313,11 +250,76 @@ async def get_equivalent_requirements(
     ]
 
 
-@router.get("/stats", response_model=CrosswalkStatsResponse)
-async def get_crosswalk_stats(
+# Parameterized routes MUST come after specific paths
+@router.get("/{crosswalk_id}", response_model=CrosswalkResponse)
+async def get_crosswalk(
+    crosswalk_id: str,
     db: Session = Depends(get_db),
 ):
-    """Get statistics about crosswalks."""
+    """Get a crosswalk by ID."""
     service = CrosswalkService(db)
-    stats = service.get_crosswalk_statistics()
-    return CrosswalkStatsResponse(**stats)
+    cw = service.get_crosswalk(uuid.UUID(crosswalk_id))
+
+    if not cw:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Crosswalk {crosswalk_id} not found",
+        )
+
+    return CrosswalkResponse(
+        id=str(cw.id),
+        source_requirement_id=str(cw.source_requirement_id),
+        source_requirement_code=cw.source_requirement.code if cw.source_requirement else None,
+        target_requirement_id=str(cw.target_requirement_id),
+        target_requirement_code=cw.target_requirement.code if cw.target_requirement else None,
+        mapping_type=cw.mapping_type,
+        confidence_score=cw.confidence_score,
+        mapping_source=cw.mapping_source,
+        reasoning=cw.reasoning,
+        is_approved=cw.is_approved,
+        approved_at=cw.approved_at.isoformat() if cw.approved_at else None,
+    )
+
+
+@router.post("/{crosswalk_id}/approve")
+async def approve_crosswalk(
+    crosswalk_id: str,
+    x_user_id: str = Header(...),
+    db: Session = Depends(get_db),
+):
+    """Approve a pending crosswalk mapping."""
+    service = CrosswalkService(db)
+    cw = service.approve_crosswalk(
+        crosswalk_id=uuid.UUID(crosswalk_id),
+        approved_by_id=uuid.UUID(x_user_id),
+    )
+
+    if not cw:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Crosswalk {crosswalk_id} not found",
+        )
+
+    return {
+        "id": str(cw.id),
+        "is_approved": cw.is_approved,
+        "approved_at": cw.approved_at.isoformat() if cw.approved_at else None,
+    }
+
+
+@router.delete("/{crosswalk_id}")
+async def reject_crosswalk(
+    crosswalk_id: str,
+    db: Session = Depends(get_db),
+):
+    """Reject (delete) a crosswalk mapping."""
+    service = CrosswalkService(db)
+    deleted = service.reject_crosswalk(uuid.UUID(crosswalk_id))
+
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Crosswalk {crosswalk_id} not found",
+        )
+
+    return {"message": "Crosswalk rejected and deleted"}
