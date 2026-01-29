@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { DM_Serif_Display, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { HeaderWrapper, MainContent } from "@/components/layout";
 
@@ -9,7 +9,7 @@ const dmSerifDisplay = DM_Serif_Display({
   weight: "400",
 });
 
-const ibmPlexSans = IBM_Plex_Sans({
+const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${dmSerifDisplay.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable} antialiased bg-background min-h-screen font-sans`}
+        className={`${dmSerifDisplay.variable} ${inter.variable} ${ibmPlexMono.variable} antialiased bg-background min-h-screen font-sans`}
       >
         <HeaderWrapper />
         <MainContent>{children}</MainContent>

@@ -8,28 +8,39 @@ const stats = [
 
 export function StatsSection() {
   return (
-    <section className="py-20 bg-neutral-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12">
-          <h2 className="font-display text-3xl sm:text-4xl text-primary-900 mb-4">
+    <section className="py-24 bg-surface-dark relative overflow-hidden">
+      {/* Decorative orbs */}
+      <div className="orb orb-primary w-72 h-72 -top-36 -left-36 animate-pulse-slow" />
+      <div className="orb orb-accent w-64 h-64 -bottom-32 -right-32 animate-pulse-slow" style={{ animationDelay: '2s' }} />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section header */}
+        <div className="text-center mb-16">
+          <span className="section-pill bg-white/10 text-white/90 mb-6 inline-block">By the Numbers</span>
+          <h2 className="font-display text-3xl sm:text-4xl text-white mb-4">
             Built for Enterprise Compliance
           </h2>
-          <p className="text-lg text-neutral-600 max-w-2xl">
+          <p className="text-lg text-on-dark-secondary max-w-2xl mx-auto">
             Comprehensive assessment coverage with AI-powered efficiency
           </p>
-          <div className="mt-4 w-20 h-0.5 bg-accent-500" />
         </div>
 
+        {/* Stats grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {stats.map((stat, index) => (
             <div
               key={stat.label}
-              className="bg-background rounded-lg p-8 border border-neutral-200 scroll-reveal"
+              className="text-center scroll-reveal"
               style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <div className="stat-number mb-3">{stat.value}</div>
-              <div className="text-lg font-semibold text-primary-900 mb-1">{stat.label}</div>
-              <div className="text-sm text-neutral-500">{stat.description}</div>
+              {/* Large gradient number */}
+              <div className="stat-number mb-4">{stat.value}</div>
+
+              {/* Label */}
+              <div className="text-xl font-semibold text-white mb-2">{stat.label}</div>
+
+              {/* Description */}
+              <div className="text-sm text-on-dark-tertiary">{stat.description}</div>
             </div>
           ))}
         </div>

@@ -45,18 +45,20 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section className="py-20 bg-background">
+    <section className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-16">
-          <h2 className="font-display text-3xl sm:text-4xl text-primary-900 mb-4">
+        {/* Section header - centered with pill badge */}
+        <div className="text-center mb-16">
+          <span className="section-pill mb-6 inline-block">Features</span>
+          <h2 className="font-display text-3xl sm:text-4xl text-neutral-900 mb-4">
             Complete Compliance Toolkit
           </h2>
-          <p className="text-lg text-neutral-600 max-w-2xl">
+          <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
             Everything you need to assess, document, and improve your compliance posture across multiple frameworks.
           </p>
-          <div className="mt-4 w-20 h-0.5 bg-accent-500" />
         </div>
 
+        {/* Feature cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <FeatureCard
@@ -65,6 +67,7 @@ export function FeaturesSection() {
               title={feature.title}
               description={feature.description}
               delay={index * 100}
+              highlighted={index === 0}
             />
           ))}
         </div>
