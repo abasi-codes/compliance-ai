@@ -77,6 +77,29 @@ async def login(
     )
 
 
+@router.post("/guest", response_model=TokenResponse)
+async def guest_login(
+    db: Session = Depends(get_db),
+):
+    """
+    Create a temporary guest account and return tokens.
+
+    Creates a guest user with read-only (viewer) permissions.
+    No credentials are required.
+    """
+    auth_service = AuthService(db)
+
+    user = auth_service.create_guest_user()
+
+    access_token = AuthService.create_access_token(user.id)
+    refresh_token = AuthService.create_refresh_token(user.id)
+
+    return TokenResponse(
+        access_token=access_token,
+        refresh_token=refresh_token,
+    )
+
+
 @router.post("/refresh", response_model=TokenResponse)
 async def refresh_token(
     data: TokenRefresh,

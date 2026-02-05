@@ -1,5 +1,6 @@
 """JWT authentication service."""
 
+import uuid as uuid_mod
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from uuid import UUID
@@ -44,6 +45,27 @@ class AuthService:
         self.db.flush()
 
         # Assign default viewer role
+        viewer_role = self.db.query(Role).filter(Role.name == "viewer").first()
+        if viewer_role:
+            user.roles.append(viewer_role)
+
+        self.db.commit()
+        self.db.refresh(user)
+        return user
+
+    def create_guest_user(self) -> User:
+        """Create a temporary guest user with viewer permissions."""
+        guest_email = f"guest-{uuid_mod.uuid4()}@guest.local"
+        user = User(
+            email=guest_email,
+            name="Guest User",
+            password_hash=None,
+            is_active=True,
+            is_guest=True,
+        )
+        self.db.add(user)
+        self.db.flush()
+
         viewer_role = self.db.query(Role).filter(Role.name == "viewer").first()
         if viewer_role:
             user.roles.append(viewer_role)

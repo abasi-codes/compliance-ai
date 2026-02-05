@@ -9,6 +9,7 @@ export interface UserResponse {
   email: string;
   name: string;
   is_active: boolean;
+  is_guest: boolean;
   roles: string[];
 }
 
@@ -83,6 +84,12 @@ export async function login(data: LoginData): Promise<TokenResponse> {
   return authRequest<TokenResponse>('/auth/login', {
     method: 'POST',
     body: data,
+  });
+}
+
+export async function loginAsGuest(): Promise<TokenResponse> {
+  return authRequest<TokenResponse>('/auth/guest', {
+    method: 'POST',
   });
 }
 

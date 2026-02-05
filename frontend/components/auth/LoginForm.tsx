@@ -2,17 +2,18 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Mail, Lock, AlertCircle } from 'lucide-react';
+import { Mail, Lock, AlertCircle, UserCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/lib/auth';
 
 export function LoginForm() {
-  const { login } = useAuth();
+  const { login, loginAsGuest } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isGuestLoading, setIsGuestLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +26,19 @@ export function LoginForm() {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGuestLogin = async () => {
+    setError('');
+    setIsGuestLoading(true);
+
+    try {
+      await loginAsGuest();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Guest login failed');
+    } finally {
+      setIsGuestLoading(false);
     }
   };
 
@@ -68,8 +82,30 @@ export function LoginForm() {
         variant="primary"
         className="w-full"
         loading={isLoading}
+        disabled={isGuestLoading}
       >
         Sign in
+      </Button>
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-neutral-200" />
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="bg-white px-2 text-neutral-500">or</span>
+        </div>
+      </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        loading={isGuestLoading}
+        disabled={isLoading}
+        onClick={handleGuestLogin}
+      >
+        <UserCircle className="h-4 w-4 mr-2" />
+        Continue as Guest
       </Button>
 
       <p className="text-center text-sm text-neutral-600">

@@ -13,6 +13,7 @@ import {
   login as apiLogin,
   register as apiRegister,
   logout as apiLogout,
+  loginAsGuest as apiLoginAsGuest,
   getCurrentUser,
   refreshToken as apiRefreshToken,
   type UserResponse,
@@ -27,7 +28,9 @@ interface AuthContextType {
   user: UserResponse | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isGuest: boolean;
   login: (data: LoginData) => Promise<void>;
+  loginAsGuest: () => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => Promise<void>;
   getAccessToken: () => string | null;
@@ -121,6 +124,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [setTokens, router]
   );
 
+  const loginAsGuest = useCallback(async () => {
+    const tokens = await apiLoginAsGuest();
+    setTokens(tokens.access_token, tokens.refresh_token);
+    const userData = await getCurrentUser(tokens.access_token);
+    setUser(userData);
+    router.push('/dashboard');
+  }, [setTokens, router]);
+
   const register = useCallback(
     async (data: RegisterData) => {
       await apiRegister(data);
@@ -147,7 +158,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         isLoading,
         isAuthenticated: !!user,
+        isGuest: user?.is_guest ?? false,
         login,
+        loginAsGuest,
         register,
         logout,
         getAccessToken,

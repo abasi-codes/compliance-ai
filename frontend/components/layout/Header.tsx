@@ -19,7 +19,7 @@ interface HeaderProps {
 
 export function Header({ variant = 'default' }: HeaderProps) {
   const pathname = usePathname();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, isGuest, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -147,22 +147,31 @@ export function Header({ variant = 'default' }: HeaderProps) {
                     <span className="hidden sm:block text-sm font-medium">
                       {user?.name?.split(' ')[0] || 'User'}
                     </span>
+                    {isGuest && (
+                      <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-neutral-100 text-neutral-600">
+                        Guest
+                      </span>
+                    )}
                   </button>
 
                   {isUserMenuOpen && (
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-neutral-200 py-2 z-50">
                       <div className="px-4 py-2 border-b border-neutral-100">
                         <p className="text-sm font-medium text-neutral-900">{user?.name}</p>
-                        <p className="text-xs text-neutral-500">{user?.email}</p>
+                        {!isGuest && (
+                          <p className="text-xs text-neutral-500">{user?.email}</p>
+                        )}
                       </div>
-                      <Link
-                        href="/settings"
-                        onClick={() => setIsUserMenuOpen(false)}
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
-                      >
-                        <Settings className="h-4 w-4" />
-                        Settings
-                      </Link>
+                      {!isGuest && (
+                        <Link
+                          href="/settings"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                        >
+                          <Settings className="h-4 w-4" />
+                          Settings
+                        </Link>
+                      )}
                       <button
                         onClick={handleLogout}
                         className="flex items-center gap-2 w-full px-4 py-2 text-sm text-danger-600 hover:bg-danger-50"

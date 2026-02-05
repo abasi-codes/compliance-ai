@@ -43,6 +43,7 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     password_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
+    is_guest: Mapped[bool] = mapped_column(default=False, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.utcnow, nullable=False
     )

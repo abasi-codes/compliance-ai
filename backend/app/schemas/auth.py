@@ -48,6 +48,7 @@ class UserResponse(BaseModel):
     email: str
     name: str
     is_active: bool
+    is_guest: bool
     roles: list[str]
 
     model_config = {"from_attributes": True}
@@ -60,5 +61,6 @@ class UserResponse(BaseModel):
             email=user.email,
             name=user.name,
             is_active=user.is_active,
+            is_guest=user.is_guest,
             roles=[role.name for role in user.roles],
         )
