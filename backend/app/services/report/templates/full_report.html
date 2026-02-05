@@ -1,0 +1,331 @@
+{% extends "report_base.html" %}
+
+{% block content %}
+<!-- Cover Page -->
+<div class="cover-page">
+    <div class="cover-logo">C</div>
+    <h1>Compliance Assessment Report</h1>
+    <p class="subtitle">{{ metadata.framework }}</p>
+    <p class="org-name">{{ metadata.organization_name }}</p>
+    <p class="date">{{ metadata.assessment_name }}</p>
+    <p class="date">Generated: {{ metadata.generated_at }}</p>
+</div>
+
+<!-- Table of Contents -->
+<h2>Table of Contents</h2>
+<div class="toc">
+    <div class="toc-item"><span>1. Executive Summary</span><span>3</span></div>
+    <div class="toc-item"><span>2. Maturity Assessment</span><span>4</span></div>
+    <div class="toc-item"><span>3. Deviations &amp; Gaps</span><span>5</span></div>
+    <div class="toc-item"><span>4. Recommendations</span><span>6</span></div>
+    <div class="toc-item"><span>5. Detailed Breakdown</span><span>7</span></div>
+    <div class="toc-item"><span>Appendix: Methodology</span><span>8</span></div>
+</div>
+
+<!-- Executive Summary -->
+<div class="page-break"></div>
+<h2>1. Executive Summary</h2>
+
+<div style="text-align: center; margin: 2em 0;">
+    <div class="score-gauge">
+        <div class="score-gauge-inner">
+            <span class="score-value">{{ "%.1f"|format(executive_summary.overall_maturity) }}</span>
+            <span class="score-label">out of 4.0</span>
+        </div>
+    </div>
+    <p style="color: #666; margin-top: 0.5em;">Overall Maturity Score</p>
+</div>
+
+<div class="summary-box">
+    <p><strong>Assessment Overview:</strong> {{ executive_summary.recommendations_summary }}</p>
+</div>
+
+<div class="strengths-gaps">
+    <div class="strengths">
+        <h4>Key Strengths</h4>
+        {% if executive_summary.key_strengths %}
+        <ul>
+            {% for strength in executive_summary.key_strengths %}
+            <li>{{ strength }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p style="color: #666; font-style: italic;">No high-performing areas identified.</p>
+        {% endif %}
+    </div>
+    <div class="gaps">
+        <h4>Critical Gaps</h4>
+        {% if executive_summary.critical_gaps %}
+        <ul>
+            {% for gap in executive_summary.critical_gaps %}
+            <li>{{ gap }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p style="color: #666; font-style: italic;">No critical gaps identified.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Maturity Summary -->
+<div class="page-break"></div>
+<h2>2. Maturity Assessment</h2>
+
+<h3>Scores by Function</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Function</th>
+            <th>Score</th>
+            <th style="width: 40%;">Progress</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for func in maturity_summary.by_function %}
+        <tr>
+            <td><strong>{{ func.function_code }}</strong> - {{ func.function_name }}</td>
+            <td>{{ "%.1f"|format(func.score) }}</td>
+            <td>
+                <div class="score-bar">
+                    <div class="score-bar-bg">
+                        <div class="score-bar-fill" style="width: {{ (func.score / 4 * 100)|int }}%;"></div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if maturity_summary.by_category %}
+<h3>Scores by Category</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cat in maturity_summary.by_category %}
+        <tr>
+            <td>{{ cat.category_code }} - {{ cat.category_name }}</td>
+            <td>{{ "%.1f"|format(cat.score) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<!-- Deviations -->
+<div class="page-break"></div>
+<h2>3. Deviations &amp; Gaps</h2>
+
+<h3>Summary by Severity</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Severity</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="severity-critical">Critical</td>
+            <td>{{ deviations.by_severity.critical }}</td>
+        </tr>
+        <tr>
+            <td class="severity-high">High</td>
+            <td>{{ deviations.by_severity.high }}</td>
+        </tr>
+        <tr>
+            <td class="severity-medium">Medium</td>
+            <td>{{ deviations.by_severity.medium }}</td>
+        </tr>
+        <tr>
+            <td class="severity-low">Low</td>
+            <td>{{ deviations.by_severity.low }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Risk-Ranked Deviations</h3>
+{% for dev in deviations.risk_ranked_list[:15] %}
+<div class="deviation-card">
+    <div class="deviation-header">
+        <span class="deviation-title">{{ dev.title }}</span>
+        <span class="badge badge-{{ dev.severity }}">{{ dev.severity|upper }}</span>
+    </div>
+    <p style="font-size: 10pt; color: #666;">
+        {% if dev.subcategory_code %}{{ dev.subcategory_code }} &bull; {% endif %}
+        Risk Score: {{ dev.risk_score }}
+    </p>
+    <p>{{ dev.description }}</p>
+    {% if dev.recommended_remediation %}
+    <p style="margin-top: 0.5em;"><strong>Recommendation:</strong> {{ dev.recommended_remediation }}</p>
+    {% endif %}
+</div>
+{% endfor %}
+
+{% if deviations.risk_ranked_list|length > 15 %}
+<p style="color: #666; font-style: italic;">
+    Showing top 15 of {{ deviations.total_count }} deviations. See full details in exported data.
+</p>
+{% endif %}
+
+<!-- Recommendations -->
+<div class="page-break"></div>
+<h2>4. Recommendations</h2>
+
+{% if recommendations.immediate %}
+<div class="recommendation-section">
+    <p class="recommendation-priority">Immediate Priority (Critical/High Risk)</p>
+    <ul>
+        {% for rec in recommendations.immediate %}
+        <li>
+            {% if rec.subcategory_code %}<strong>{{ rec.subcategory_code }}:</strong> {% endif %}
+            {{ rec.action }}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if recommendations.short_term %}
+<div class="recommendation-section">
+    <p class="recommendation-priority">Short-Term (Medium Risk)</p>
+    <ul>
+        {% for rec in recommendations.short_term %}
+        <li>
+            {% if rec.subcategory_code %}<strong>{{ rec.subcategory_code }}:</strong> {% endif %}
+            {{ rec.action }}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if recommendations.long_term %}
+<div class="recommendation-section">
+    <p class="recommendation-priority">Long-Term (Low Risk / Continuous Improvement)</p>
+    <ul>
+        {% for rec in recommendations.long_term %}
+        <li>
+            {% if rec.subcategory_code %}<strong>{{ rec.subcategory_code }}:</strong> {% endif %}
+            {{ rec.action }}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<!-- Detailed Breakdown -->
+<div class="page-break"></div>
+<h2>5. Detailed Breakdown</h2>
+
+{% for func in function_details %}
+<h3>{{ func.code }}: {{ func.name }}</h3>
+<p style="color: #666; margin-bottom: 1em;">{{ func.description }}</p>
+<p><strong>Function Score: {{ "%.1f"|format(func.score) }}</strong></p>
+
+{% for cat in func.categories %}
+<h4 style="margin-top: 1em; font-size: 11pt;">{{ cat.code }}: {{ cat.name }} ({{ "%.1f"|format(cat.score) }})</h4>
+<table style="font-size: 10pt;">
+    <thead>
+        <tr>
+            <th style="width: 15%;">Code</th>
+            <th>Description</th>
+            <th style="width: 10%;">Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sub in cat.subcategories %}
+        <tr>
+            <td>{{ sub.code }}</td>
+            <td>{{ sub.description }}</td>
+            <td>{{ sub.score }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
+
+{% if not loop.last %}<div class="page-break"></div>{% endif %}
+{% endfor %}
+
+<!-- Appendix -->
+<div class="page-break"></div>
+<div class="appendix">
+<h2>Appendix: Methodology</h2>
+
+<h3>Scoring Scale</h3>
+<p>The assessment uses a 0-4 maturity scale aligned with NIST CSF implementation tiers:</p>
+<table>
+    <thead>
+        <tr>
+            <th>Score</th>
+            <th>Tier</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>0</td>
+            <td>Not Implemented</td>
+            <td>No evidence of implementation</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Partial</td>
+            <td>Ad hoc, reactive practices</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Risk Informed</td>
+            <td>Some formalized practices, not organization-wide</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Repeatable</td>
+            <td>Documented, organization-wide practices</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Adaptive</td>
+            <td>Continuously improving, predictive capabilities</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Assessment Process</h3>
+<p>This assessment was conducted using the following methodology:</p>
+<ol>
+    <li>Control inventory collection and mapping to framework requirements</li>
+    <li>Policy document ingestion and analysis</li>
+    <li>Structured interviews with control owners</li>
+    <li>AI-assisted gap analysis and scoring</li>
+    <li>Human review and validation of findings</li>
+</ol>
+
+<h3>Glossary</h3>
+<table>
+    <tr>
+        <td><strong>Deviation</strong></td>
+        <td>A gap between expected and actual compliance state</td>
+    </tr>
+    <tr>
+        <td><strong>Risk Score</strong></td>
+        <td>Impact × Likelihood (scale 1-25)</td>
+    </tr>
+    <tr>
+        <td><strong>Crosswalk</strong></td>
+        <td>Mapping between requirements across frameworks</td>
+    </tr>
+</table>
+</div>
+
+<div class="footer">
+    <p>Generated by Compliance AI &bull; {{ metadata.generated_at }}</p>
+    <p>This report is confidential and intended for {{ metadata.organization_name }} internal use only.</p>
+</div>
+{% endblock %}

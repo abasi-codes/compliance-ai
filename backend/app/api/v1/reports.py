@@ -2,8 +2,8 @@
 
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi.responses import JSONResponse, Response
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
@@ -12,6 +12,7 @@ from app.models.user import User
 from app.schemas.report import ReportResponse
 from app.dependencies.auth import get_current_user, require_user
 from app.services.report.generator import ReportGenerator
+from app.services.report.pdf_generator import PDFGenerator
 
 router = APIRouter()
 
@@ -60,11 +61,17 @@ async def get_report(
 @router.get("/{report_id}/download")
 async def download_report(
     report_id: uuid.UUID,
-    format: str = "json",
+    format: str = Query("json", description="Output format: json or pdf"),
     db: Session = Depends(get_db),
     current_user: User | None = Depends(get_current_user),
 ):
-    """Download a report in the specified format."""
+    """
+    Download a report in the specified format.
+
+    Supported formats:
+    - json: Raw JSON data
+    - pdf: Formatted PDF document
+    """
     generator = ReportGenerator(db)
     report = generator.get_report(report_id)
 
@@ -74,19 +81,76 @@ async def download_report(
             detail="Report not found",
         )
 
-    if format != "json":
+    if format == "json":
+        return JSONResponse(
+            content=report.content,
+            headers={
+                "Content-Disposition": f'attachment; filename="report_{report_id}.json"',
+            },
+        )
+    elif format == "pdf":
+        try:
+            pdf_generator = PDFGenerator()
+            pdf_bytes = pdf_generator.generate_pdf(report.content)
+
+            return Response(
+                content=pdf_bytes,
+                media_type="application/pdf",
+                headers={
+                    "Content-Disposition": f'attachment; filename="report_{report_id}.pdf"',
+                },
+            )
+        except ImportError as e:
+            raise HTTPException(
+                status_code=status.HTTP_501_NOT_IMPLEMENTED,
+                detail=str(e),
+            )
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"PDF generation failed: {str(e)}",
+            )
+    else:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Only JSON format is supported in MVP",
+            detail=f"Unsupported format: {format}. Use 'json' or 'pdf'.",
         )
 
-    # Return as downloadable JSON
-    return JSONResponse(
-        content=report.content,
-        headers={
-            "Content-Disposition": f'attachment; filename="report_{report_id}.json"',
-        },
-    )
+
+@router.get("/{report_id}/preview")
+async def preview_report_html(
+    report_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    current_user: User | None = Depends(get_current_user),
+):
+    """
+    Get an HTML preview of the report.
+
+    Returns the rendered HTML that would be used for PDF generation.
+    Useful for debugging and previewing the report layout.
+    """
+    generator = ReportGenerator(db)
+    report = generator.get_report(report_id)
+
+    if not report:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Report not found",
+        )
+
+    try:
+        pdf_generator = PDFGenerator()
+        html_content = pdf_generator.generate_html(report.content)
+
+        return Response(
+            content=html_content,
+            media_type="text/html",
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"HTML generation failed: {str(e)}",
+        )
 
 
 @router.get("/assessments/{assessment_id}/list")

@@ -35,5 +35,11 @@ class Settings(BaseSettings):
     # Scoring
     default_confidence_threshold: float = 0.5
 
+    # JWT Authentication
+    jwt_secret_key: str = "change-me-in-production-use-a-secure-random-key"
+    jwt_algorithm: str = "HS256"
+    jwt_access_token_expire_minutes: int = 30
+    jwt_refresh_token_expire_days: int = 7
+
 
 settings = Settings()

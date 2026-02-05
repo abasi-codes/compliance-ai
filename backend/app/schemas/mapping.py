@@ -70,3 +70,24 @@ class GapListResponse(BaseModel):
     control_only_count: int
     coverage_percentage: float
     gaps: list[GapResponse]
+
+
+class BulkMappingRequest(BaseModel):
+    """Request for bulk mapping operations."""
+    mapping_ids: list[UUID]
+    mapping_type: Literal["policy", "control"]
+
+
+class BulkMappingResult(BaseModel):
+    """Result of a single mapping operation in bulk."""
+    mapping_id: UUID
+    success: bool
+    error: str | None = None
+
+
+class BulkMappingResponse(BaseModel):
+    """Response from bulk mapping operations."""
+    total: int
+    successful: int
+    failed: int
+    results: list[BulkMappingResult]

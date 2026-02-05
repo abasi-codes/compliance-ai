@@ -15,6 +15,8 @@ from app.schemas.mapping import (
     MappingGenerateResponse,
     MappingApproveRequest,
     GapListResponse,
+    BulkMappingRequest,
+    BulkMappingResponse,
 )
 from app.schemas.control import ControlMappingResponse
 from app.schemas.policy import PolicyMappingResponse
@@ -161,3 +163,153 @@ async def get_gaps(
     result = gap_detector.detect_gaps(assessment_id)
 
     return GapListResponse(**result)
+
+
+@router.post("/bulk-approve", response_model=BulkMappingResponse)
+async def bulk_approve_mappings(
+    request: BulkMappingRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_user),
+):
+    """
+    Bulk approve multiple mappings.
+
+    Approves all valid mappings and reports any failures.
+    """
+    from datetime import datetime
+    from app.services.audit.audit_service import AuditService
+
+    results = []
+    successful = 0
+    failed = 0
+
+    audit_service = AuditService(db)
+
+    for mapping_id in request.mapping_ids:
+        try:
+            if request.mapping_type == "control":
+                mapping = db.query(ControlMapping).filter(
+                    ControlMapping.id == mapping_id
+                ).first()
+            else:
+                mapping = db.query(PolicyMapping).filter(
+                    PolicyMapping.id == mapping_id
+                ).first()
+
+            if not mapping:
+                results.append({
+                    "mapping_id": mapping_id,
+                    "success": False,
+                    "error": "Mapping not found",
+                })
+                failed += 1
+                continue
+
+            mapping.is_approved = True
+            mapping.approved_by_id = current_user.id
+            mapping.approved_at = datetime.utcnow()
+
+            audit_service.log_update(
+                entity_type=f"{request.mapping_type}_mapping",
+                entity_id=mapping_id,
+                old_values={"is_approved": False},
+                new_values={"is_approved": True},
+                user_id=current_user.id,
+            )
+
+            results.append({
+                "mapping_id": mapping_id,
+                "success": True,
+                "error": None,
+            })
+            successful += 1
+
+        except Exception as e:
+            results.append({
+                "mapping_id": mapping_id,
+                "success": False,
+                "error": str(e),
+            })
+            failed += 1
+
+    db.commit()
+
+    return BulkMappingResponse(
+        total=len(request.mapping_ids),
+        successful=successful,
+        failed=failed,
+        results=results,
+    )
+
+
+@router.post("/bulk-reject", response_model=BulkMappingResponse)
+async def bulk_reject_mappings(
+    request: BulkMappingRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_user),
+):
+    """
+    Bulk reject (delete) multiple mappings.
+
+    Deletes all valid mappings and reports any failures.
+    """
+    from app.services.audit.audit_service import AuditService
+
+    results = []
+    successful = 0
+    failed = 0
+
+    audit_service = AuditService(db)
+
+    for mapping_id in request.mapping_ids:
+        try:
+            if request.mapping_type == "control":
+                mapping = db.query(ControlMapping).filter(
+                    ControlMapping.id == mapping_id
+                ).first()
+            else:
+                mapping = db.query(PolicyMapping).filter(
+                    PolicyMapping.id == mapping_id
+                ).first()
+
+            if not mapping:
+                results.append({
+                    "mapping_id": mapping_id,
+                    "success": False,
+                    "error": "Mapping not found",
+                })
+                failed += 1
+                continue
+
+            db.delete(mapping)
+
+            audit_service.log_delete(
+                entity_type=f"{request.mapping_type}_mapping",
+                entity_id=mapping_id,
+                old_values={"is_approved": mapping.is_approved},
+                user_id=current_user.id,
+            )
+
+            results.append({
+                "mapping_id": mapping_id,
+                "success": True,
+                "error": None,
+            })
+            successful += 1
+
+        except Exception as e:
+            results.append({
+                "mapping_id": mapping_id,
+                "success": False,
+                "error": str(e),
+            })
+            failed += 1
+
+    db.commit()
+
+    return BulkMappingResponse(
+        total=len(request.mapping_ids),
+        successful=successful,
+        failed=failed,
+        results=results,
+    )

@@ -1,5 +1,8 @@
 from fastapi import APIRouter
 
+from app.api.v1.auth import router as auth_router
+from app.api.v1.users import router as users_router
+from app.api.v1.dashboard import router as dashboard_router
 from app.api.v1.assessments import router as assessments_router
 from app.api.v1.controls import router as controls_router
 from app.api.v1.policies import router as policies_router
@@ -14,6 +17,15 @@ from app.api.v1.crosswalks import router as crosswalks_router
 from app.api.v1.clusters import router as clusters_router
 
 api_router = APIRouter()
+
+# Authentication
+api_router.include_router(auth_router, prefix="/auth", tags=["auth"])
+
+# Users
+api_router.include_router(users_router, prefix="/users", tags=["users"])
+
+# Dashboard
+api_router.include_router(dashboard_router, prefix="/dashboard", tags=["dashboard"])
 
 # Existing endpoints
 api_router.include_router(assessments_router, prefix="/assessments", tags=["assessments"])

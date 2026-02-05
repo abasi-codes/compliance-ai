@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Serif_Display, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { HeaderWrapper, MainContent } from "@/components/layout";
+import { AuthProvider } from "@/lib/auth";
 
 const dmSerifDisplay = DM_Serif_Display({
   variable: "--font-display",
@@ -36,8 +37,10 @@ export default function RootLayout({
       <body
         className={`${dmSerifDisplay.variable} ${inter.variable} ${ibmPlexMono.variable} antialiased bg-background min-h-screen font-sans`}
       >
-        <HeaderWrapper />
-        <MainContent>{children}</MainContent>
+        <AuthProvider>
+          <HeaderWrapper />
+          <MainContent>{children}</MainContent>
+        </AuthProvider>
       </body>
     </html>
   );

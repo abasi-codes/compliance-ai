@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ metadata.assessment_name }} - {{ metadata.organization_name }}</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 1in;
+            @top-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-size: 9pt;
+                color: #666;
+            }
+            @bottom-center {
+                content: "{{ metadata.organization_name }} - Confidential";
+                font-size: 9pt;
+                color: #666;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #1a1a1a;
+        }
+
+        h1 {
+            font-size: 24pt;
+            color: #0a2540;
+            margin-bottom: 0.5em;
+        }
+
+        h2 {
+            font-size: 16pt;
+            color: #0a2540;
+            margin-top: 1.5em;
+            margin-bottom: 0.75em;
+            padding-bottom: 0.25em;
+            border-bottom: 2px solid #4f46e5;
+        }
+
+        h3 {
+            font-size: 13pt;
+            color: #374151;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+
+        p {
+            margin-bottom: 0.75em;
+        }
+
+        .cover-page {
+            page-break-after: always;
+            text-align: center;
+            padding-top: 3in;
+        }
+
+        .cover-page h1 {
+            font-size: 32pt;
+            margin-bottom: 0.5em;
+        }
+
+        .cover-page .subtitle {
+            font-size: 14pt;
+            color: #4f46e5;
+            margin-bottom: 2em;
+        }
+
+        .cover-page .org-name {
+            font-size: 18pt;
+            color: #374151;
+            margin-bottom: 0.5em;
+        }
+
+        .cover-page .date {
+            font-size: 12pt;
+            color: #666;
+        }
+
+        .cover-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2em;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36pt;
+            font-weight: bold;
+        }
+
+        .score-gauge {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #4f46e5 0deg {{ score_angle }}deg,
+                #e5e7eb {{ score_angle }}deg 360deg
+            );
+            position: relative;
+            margin: 1em auto;
+        }
+
+        .score-gauge-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-value {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #0a2540;
+        }
+
+        .score-label {
+            font-size: 9pt;
+            color: #666;
+        }
+
+        .summary-box {
+            background: #f9fafb;
+            border-left: 4px solid #4f46e5;
+            padding: 1em;
+            margin: 1em 0;
+        }
+
+        .summary-box p {
+            margin: 0;
+        }
+
+        .strengths-gaps {
+            display: flex;
+            gap: 2em;
+            margin: 1em 0;
+        }
+
+        .strengths, .gaps {
+            flex: 1;
+        }
+
+        .strengths h4 {
+            color: #059669;
+            margin-bottom: 0.5em;
+        }
+
+        .gaps h4 {
+            color: #dc2626;
+            margin-bottom: 0.5em;
+        }
+
+        ul {
+            padding-left: 1.5em;
+            margin-bottom: 1em;
+        }
+
+        li {
+            margin-bottom: 0.25em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+        }
+
+        th, td {
+            padding: 0.5em;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .severity-critical {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .severity-high {
+            color: #ea580c;
+            font-weight: bold;
+        }
+
+        .severity-medium {
+            color: #ca8a04;
+        }
+
+        .severity-low {
+            color: #6b7280;
+        }
+
+        .score-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+
+        .score-bar-fill {
+            height: 8px;
+            border-radius: 4px;
+            background: #4f46e5;
+        }
+
+        .score-bar-bg {
+            flex: 1;
+            height: 8px;
+            border-radius: 4px;
+            background: #e5e7eb;
+        }
+
+        .score-bar-value {
+            font-weight: 600;
+            min-width: 2em;
+            text-align: right;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        .deviation-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1em;
+            margin-bottom: 1em;
+        }
+
+        .deviation-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5em;
+        }
+
+        .deviation-title {
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.125em 0.5em;
+            border-radius: 4px;
+            font-size: 10pt;
+        }
+
+        .badge-critical {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge-high {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .badge-medium {
+            background: #fef3c7;
+            color: #ca8a04;
+        }
+
+        .badge-low {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .recommendation-section {
+            margin-bottom: 1.5em;
+        }
+
+        .recommendation-priority {
+            font-size: 10pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #4f46e5;
+            margin-bottom: 0.5em;
+        }
+
+        .toc {
+            margin: 2em 0;
+        }
+
+        .toc-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5em 0;
+            border-bottom: 1px dotted #e5e7eb;
+        }
+
+        .appendix {
+            font-size: 10pt;
+        }
+
+        .appendix h3 {
+            font-size: 11pt;
+        }
+
+        .footer {
+            margin-top: 3em;
+            padding-top: 1em;
+            border-top: 1px solid #e5e7eb;
+            font-size: 9pt;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+{% block content %}{% endblock %}
+</body>
+</html>

@@ -41,6 +41,7 @@ class User(Base):
     )
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
+    password_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.utcnow, nullable=False
@@ -52,3 +53,33 @@ class User(Base):
     roles: Mapped[list["Role"]] = relationship(
         secondary=user_roles, back_populates="users"
     )
+    preferences: Mapped["UserPreferences | None"] = relationship(
+        back_populates="user", uselist=False
+    )
+
+
+class UserPreferences(Base):
+    __tablename__ = "user_preferences"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"),
+        unique=True, nullable=False
+    )
+    theme: Mapped[str] = mapped_column(String(20), default="system", nullable=False)
+    email_notifications: Mapped[bool] = mapped_column(default=True, nullable=False)
+    default_framework_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("frameworks.id", ondelete="SET NULL"),
+        nullable=True
+    )
+    items_per_page: Mapped[int] = mapped_column(default=25, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+    user: Mapped["User"] = relationship(back_populates="preferences")

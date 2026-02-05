@@ -1,4 +1,5 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+const TOKEN_KEY = 'compliance-ai-access-token';
 
 export class ApiError extends Error {
   constructor(public status: number, message: string, public details?: unknown) {
@@ -7,12 +8,22 @@ export class ApiError extends Error {
   }
 }
 
+function getAccessToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem(TOKEN_KEY);
+}
+
 export async function apiRequest<T>(
   endpoint: string,
   options: { method?: string; body?: unknown; userId?: string } = {}
 ): Promise<T> {
   const headers: HeadersInit = { 'Content-Type': 'application/json' };
-  if (options.userId) {
+
+  // Use JWT token if available, otherwise fall back to userId header
+  const token = getAccessToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  } else if (options.userId) {
     headers['X-User-ID'] = options.userId;
   }
 
@@ -56,7 +67,12 @@ export async function uploadFile<T>(
   }
 
   const headers: HeadersInit = {};
-  if (userId) {
+
+  // Use JWT token if available, otherwise fall back to userId header
+  const token = getAccessToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  } else if (userId) {
     headers['X-User-ID'] = userId;
   }
 

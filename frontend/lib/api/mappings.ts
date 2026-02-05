@@ -78,3 +78,40 @@ export async function getGaps(
     { userId }
   );
 }
+
+export interface BulkMappingResult {
+  mapping_id: string;
+  success: boolean;
+  error: string | null;
+}
+
+export interface BulkMappingResponse {
+  total: number;
+  successful: number;
+  failed: number;
+  results: BulkMappingResult[];
+}
+
+export async function bulkApproveMappings(
+  mappingIds: string[],
+  mappingType: 'policy' | 'control',
+  userId?: string
+): Promise<BulkMappingResponse> {
+  return apiRequest<BulkMappingResponse>('/mappings/bulk-approve', {
+    method: 'POST',
+    body: { mapping_ids: mappingIds, mapping_type: mappingType },
+    userId,
+  });
+}
+
+export async function bulkRejectMappings(
+  mappingIds: string[],
+  mappingType: 'policy' | 'control',
+  userId?: string
+): Promise<BulkMappingResponse> {
+  return apiRequest<BulkMappingResponse>('/mappings/bulk-reject', {
+    method: 'POST',
+    body: { mapping_ids: mappingIds, mapping_type: mappingType },
+    userId,
+  });
+}

@@ -54,6 +54,23 @@ class CrosswalkStatsResponse(BaseModel):
     average_confidence: float
 
 
+class BulkCrosswalkRequest(BaseModel):
+    crosswalk_ids: list[str]
+
+
+class BulkCrosswalkResult(BaseModel):
+    crosswalk_id: str
+    success: bool
+    error: Optional[str] = None
+
+
+class BulkCrosswalkResponse(BaseModel):
+    total: int
+    successful: int
+    failed: int
+    results: list[BulkCrosswalkResult]
+
+
 # Endpoints - specific paths MUST come before parameterized paths
 
 @router.get("", response_model=list[CrosswalkResponse])
@@ -323,3 +340,110 @@ async def reject_crosswalk(
         )
 
     return {"message": "Crosswalk rejected and deleted"}
+
+
+@router.post("/bulk-approve", response_model=BulkCrosswalkResponse)
+async def bulk_approve_crosswalks(
+    request: BulkCrosswalkRequest,
+    x_user_id: str = Header(...),
+    db: Session = Depends(get_db),
+):
+    """
+    Bulk approve multiple crosswalk mappings.
+
+    Approves all valid crosswalks and reports any failures.
+    """
+    service = CrosswalkService(db)
+    user_id = uuid.UUID(x_user_id)
+
+    results = []
+    successful = 0
+    failed = 0
+
+    for crosswalk_id in request.crosswalk_ids:
+        try:
+            cw = service.approve_crosswalk(
+                crosswalk_id=uuid.UUID(crosswalk_id),
+                approved_by_id=user_id,
+            )
+
+            if cw:
+                results.append(BulkCrosswalkResult(
+                    crosswalk_id=crosswalk_id,
+                    success=True,
+                    error=None,
+                ))
+                successful += 1
+            else:
+                results.append(BulkCrosswalkResult(
+                    crosswalk_id=crosswalk_id,
+                    success=False,
+                    error="Crosswalk not found",
+                ))
+                failed += 1
+
+        except Exception as e:
+            results.append(BulkCrosswalkResult(
+                crosswalk_id=crosswalk_id,
+                success=False,
+                error=str(e),
+            ))
+            failed += 1
+
+    return BulkCrosswalkResponse(
+        total=len(request.crosswalk_ids),
+        successful=successful,
+        failed=failed,
+        results=results,
+    )
+
+
+@router.post("/bulk-reject", response_model=BulkCrosswalkResponse)
+async def bulk_reject_crosswalks(
+    request: BulkCrosswalkRequest,
+    db: Session = Depends(get_db),
+):
+    """
+    Bulk reject (delete) multiple crosswalk mappings.
+
+    Deletes all valid crosswalks and reports any failures.
+    """
+    service = CrosswalkService(db)
+
+    results = []
+    successful = 0
+    failed = 0
+
+    for crosswalk_id in request.crosswalk_ids:
+        try:
+            deleted = service.reject_crosswalk(uuid.UUID(crosswalk_id))
+
+            if deleted:
+                results.append(BulkCrosswalkResult(
+                    crosswalk_id=crosswalk_id,
+                    success=True,
+                    error=None,
+                ))
+                successful += 1
+            else:
+                results.append(BulkCrosswalkResult(
+                    crosswalk_id=crosswalk_id,
+                    success=False,
+                    error="Crosswalk not found",
+                ))
+                failed += 1
+
+        except Exception as e:
+            results.append(BulkCrosswalkResult(
+                crosswalk_id=crosswalk_id,
+                success=False,
+                error=str(e),
+            ))
+            failed += 1
+
+    return BulkCrosswalkResponse(
+        total=len(request.crosswalk_ids),
+        successful=successful,
+        failed=failed,
+        results=results,
+    )

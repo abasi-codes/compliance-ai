@@ -145,3 +145,37 @@ export async function getEquivalentRequirements(
 export async function getCrosswalkStats(): Promise<CrosswalkStats> {
   return apiRequest<CrosswalkStats>('/crosswalks/stats');
 }
+
+// Bulk operations
+export interface BulkCrosswalkResult {
+  crosswalk_id: string;
+  success: boolean;
+  error: string | null;
+}
+
+export interface BulkCrosswalkResponse {
+  total: number;
+  successful: number;
+  failed: number;
+  results: BulkCrosswalkResult[];
+}
+
+export async function bulkApproveCrosswalks(
+  crosswalkIds: string[],
+  userId: string
+): Promise<BulkCrosswalkResponse> {
+  return apiRequest<BulkCrosswalkResponse>('/crosswalks/bulk-approve', {
+    method: 'POST',
+    body: { crosswalk_ids: crosswalkIds },
+    userId,
+  });
+}
+
+export async function bulkRejectCrosswalks(
+  crosswalkIds: string[]
+): Promise<BulkCrosswalkResponse> {
+  return apiRequest<BulkCrosswalkResponse>('/crosswalks/bulk-reject', {
+    method: 'POST',
+    body: { crosswalk_ids: crosswalkIds },
+  });
+}

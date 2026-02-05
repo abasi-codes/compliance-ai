@@ -1,4 +1,7 @@
 export * from './client';
+export * from './auth';
+export * from './users';
+export * from './dashboard';
 export * from './assessments';
 export * from './controls';
 export * from './policies';
