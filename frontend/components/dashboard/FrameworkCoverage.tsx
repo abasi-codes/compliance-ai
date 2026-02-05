@@ -10,7 +10,7 @@ interface FrameworkCoverageProps {
 export function FrameworkCoverage({ frameworks }: FrameworkCoverageProps) {
   if (frameworks.length === 0) {
     return (
-      <Card className="h-full">
+      <Card>
         <CardHeader>
           <CardTitle>Framework Coverage</CardTitle>
         </CardHeader>
@@ -24,7 +24,7 @@ export function FrameworkCoverage({ frameworks }: FrameworkCoverageProps) {
   }
 
   return (
-    <Card className="h-full">
+    <Card>
       <CardHeader>
         <CardTitle>Framework Coverage</CardTitle>
       </CardHeader>

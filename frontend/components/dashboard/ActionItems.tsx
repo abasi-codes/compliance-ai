@@ -26,7 +26,7 @@ export function ActionItems({ items, pendingCount }: ActionItemsProps) {
   };
 
   return (
-    <Card className="h-full">
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="flex items-center gap-2">
           <CardTitle>Action Items</CardTitle>

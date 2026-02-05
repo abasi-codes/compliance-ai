@@ -144,12 +144,13 @@ export function Header({ variant = 'default' }: HeaderProps) {
                     <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center">
                       <User className="h-4 w-4 text-primary-700" />
                     </div>
-                    <span className="hidden sm:block text-sm font-medium">
-                      {user?.name?.split(' ')[0] || 'User'}
-                    </span>
-                    {isGuest && (
+                    {isGuest ? (
                       <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-neutral-100 text-neutral-600">
                         Guest
+                      </span>
+                    ) : (
+                      <span className="hidden sm:block text-sm font-medium">
+                        {user?.name?.split(' ')[0] || 'User'}
                       </span>
                     )}
                   </button>

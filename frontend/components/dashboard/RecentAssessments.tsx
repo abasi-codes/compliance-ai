@@ -19,7 +19,7 @@ export function RecentAssessments({ assessments }: RecentAssessmentsProps) {
   };
 
   return (
-    <Card className="h-full">
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Recent Assessments</CardTitle>
         <Link

@@ -26,7 +26,7 @@ export function ComplianceOverview({ score, trend }: ComplianceOverviewProps) {
   };
 
   return (
-    <Card glow className="h-full">
+    <Card glow>
       <CardHeader variant="gradient">
         <CardTitle>Overall Maturity</CardTitle>
       </CardHeader>

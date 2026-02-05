@@ -37,7 +37,7 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
   };
 
   return (
-    <Card className="h-full">
+    <Card>
       <CardHeader>
         <CardTitle>Recent Activity</CardTitle>
       </CardHeader>

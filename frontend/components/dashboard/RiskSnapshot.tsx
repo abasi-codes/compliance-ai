@@ -41,7 +41,7 @@ export function RiskSnapshot({ summary }: RiskSnapshotProps) {
   ];
 
   return (
-    <Card className="h-full">
+    <Card>
       <CardHeader>
         <CardTitle>Risk Snapshot</CardTitle>
       </CardHeader>

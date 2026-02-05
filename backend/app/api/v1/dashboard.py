@@ -8,7 +8,7 @@ from app.db.session import get_db
 from app.dependencies.auth import require_user
 from app.models.user import User
 from app.models.assessment import Assessment, AssessmentStatus
-from app.models.control import ControlMapping
+from app.models.control import Control, ControlMapping
 from app.models.deviation import Deviation, DeviationStatus, DeviationSeverity
 from app.models.audit import AuditLog
 from app.models.score import FunctionScore
@@ -203,8 +203,6 @@ async def get_dashboard_summary(
         .limit(5)
         .all()
     )
-
-    from app.models.control import Control
 
     for mapping, assessment_name in pending_mappings:
         action_items.append(
