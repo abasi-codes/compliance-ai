@@ -199,7 +199,7 @@ export default function MappingsPage({ params }: MappingsPageProps) {
         <Card animated>
           <CardContent>
             {gapData ? (
-              <GapsList gapData={gapData} />
+              <GapsList gapData={gapData} assessmentId={id} />
             ) : (
               <div className="text-center py-8">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center">

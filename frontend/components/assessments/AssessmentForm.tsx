@@ -2,11 +2,33 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Layers } from 'lucide-react';
+import { Layers, Search, Wrench } from 'lucide-react';
 import { Button, Input, Textarea } from '@/components/ui';
 import { FrameworkSelector } from '@/components/frameworks';
 import { createAssessment, setAssessmentScope } from '@/lib/api';
 import { useUserId } from '@/lib/hooks/useUserId';
+import { AssessmentDepth } from '@/lib/types';
+import { cn } from '@/lib/utils';
+
+const depthOptions: {
+  value: AssessmentDepth;
+  label: string;
+  description: string;
+  icon: typeof Search;
+}[] = [
+  {
+    value: 'design',
+    label: 'Design',
+    description: 'Evaluate policies, procedures, and control design documentation',
+    icon: Search,
+  },
+  {
+    value: 'implementation',
+    label: 'Implementation',
+    description: 'Verify controls are in place and operating as designed',
+    icon: Wrench,
+  },
+];
 
 export function AssessmentForm() {
   const router = useRouter();
@@ -14,6 +36,7 @@ export function AssessmentForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedFrameworks, setSelectedFrameworks] = useState<string[]>([]);
+  const [depthLevel, setDepthLevel] = useState<AssessmentDepth>('design');
   const [formData, setFormData] = useState({
     name: '',
     organization_name: '',
@@ -33,7 +56,7 @@ export function AssessmentForm() {
     setError(null);
 
     try {
-      const assessment = await createAssessment(formData, userId);
+      const assessment = await createAssessment({ ...formData, depth_level: depthLevel }, userId);
 
       // Set up framework scope for the assessment
       for (const frameworkId of selectedFrameworks) {
@@ -82,6 +105,54 @@ export function AssessmentForm() {
         placeholder="Brief description of the assessment scope and objectives..."
         rows={4}
       />
+
+      <div>
+        <label className="flex items-center gap-2 text-sm font-medium text-neutral-700 mb-3">
+          Assessment Depth
+          <span className="text-red-500">*</span>
+        </label>
+        <p className="text-sm text-neutral-500 mb-4">
+          Choose the depth of evaluation for this assessment.
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          {depthOptions.map((option) => {
+            const Icon = option.icon;
+            const isSelected = depthLevel === option.value;
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => setDepthLevel(option.value)}
+                className={cn(
+                  'flex items-start gap-3 p-4 rounded-xl border-2 text-left transition-all',
+                  isSelected
+                    ? 'border-primary-500 bg-primary-50'
+                    : 'border-neutral-200 hover:border-neutral-300 bg-white'
+                )}
+              >
+                <div className={cn(
+                  'p-2 rounded-lg',
+                  isSelected ? 'bg-primary-100' : 'bg-neutral-100'
+                )}>
+                  <Icon className={cn(
+                    'w-5 h-5',
+                    isSelected ? 'text-primary-600' : 'text-neutral-500'
+                  )} />
+                </div>
+                <div>
+                  <p className={cn(
+                    'font-semibold',
+                    isSelected ? 'text-primary-700' : 'text-neutral-900'
+                  )}>
+                    {option.label}
+                  </p>
+                  <p className="text-sm text-neutral-500 mt-0.5">{option.description}</p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       <div>
         <label className="flex items-center gap-2 text-sm font-medium text-neutral-700 mb-3">

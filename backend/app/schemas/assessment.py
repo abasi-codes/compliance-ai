@@ -5,7 +5,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from app.models.assessment import AssessmentStatus
+from app.models.assessment import AssessmentStatus, AssessmentDepth
 
 
 class AssessmentBase(BaseModel):
@@ -15,9 +15,16 @@ class AssessmentBase(BaseModel):
     organization_name: str = Field(..., max_length=255)
 
 
+class AIPromptOverrides(BaseModel):
+    """Schema for AI prompt customization."""
+    mapping_prompt_suffix: str | None = None
+    analysis_prompt_suffix: str | None = None
+
+
 class AssessmentCreate(AssessmentBase):
     """Schema for creating an Assessment."""
-    pass
+    depth_level: AssessmentDepth = AssessmentDepth.DESIGN
+    ai_prompt_overrides: AIPromptOverrides | None = None
 
 
 class AssessmentUpdate(BaseModel):
@@ -26,12 +33,16 @@ class AssessmentUpdate(BaseModel):
     description: str | None = None
     organization_name: str | None = Field(default=None, max_length=255)
     status: AssessmentStatus | None = None
+    depth_level: AssessmentDepth | None = None
+    ai_prompt_overrides: AIPromptOverrides | None = None
 
 
 class AssessmentResponse(AssessmentBase):
     """Schema for Assessment response."""
     id: UUID
     status: str
+    depth_level: str
+    ai_prompt_overrides: dict | None = None
     created_by_id: UUID
     created_at: datetime
     updated_at: datetime

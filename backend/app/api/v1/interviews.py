@@ -112,6 +112,23 @@ async def submit_response(
     return result
 
 
+@router.get("/assessments/{assessment_id}/sessions", response_model=list[InterviewSessionResponse])
+async def list_assessment_sessions(
+    assessment_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    current_user: User | None = Depends(get_current_user),
+):
+    """List all interview sessions for an assessment."""
+    sessions = (
+        db.query(InterviewSession)
+        .filter(InterviewSession.assessment_id == assessment_id)
+        .order_by(InterviewSession.created_at.desc())
+        .all()
+    )
+
+    return [InterviewSessionResponse.model_validate(session) for session in sessions]
+
+
 @router.get("/assessments/{assessment_id}/progress")
 async def get_assessment_interview_progress(
     assessment_id: uuid.UUID,

@@ -1,6 +1,8 @@
-import { X, FileText, BarChart3, AlertTriangle, Lightbulb } from 'lucide-react';
+import { useState } from 'react';
+import { X, FileText, BarChart3, AlertTriangle, Lightbulb, ChevronRight, Download } from 'lucide-react';
 import { Report } from '@/lib/types';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components/ui';
+import { downloadReport } from '@/lib/api/reports';
 import { cn } from '@/lib/utils';
 
 interface ReportViewerProps {
@@ -10,19 +12,73 @@ interface ReportViewerProps {
 
 export function ReportViewer({ report, onClose }: ReportViewerProps) {
   const content = report.content;
+  const [activeSection, setActiveSection] = useState<string>('executive');
+  const [downloading, setDownloading] = useState(false);
+
+  const sections = [
+    { id: 'executive', label: 'Executive Summary' },
+    { id: 'maturity', label: 'Maturity Scores' },
+    { id: 'deviations', label: 'Deviations' },
+    { id: 'recommendations', label: 'Recommendations' },
+    ...(content.function_details ? [{ id: 'details', label: 'Function Details' }] : []),
+  ];
+
+  const handleDownload = async (format: 'json' | 'pdf') => {
+    setDownloading(true);
+    try {
+      await downloadReport(report.id, format);
+    } catch {
+      // Download errors handled by the function
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* Header */}
       <div className="flex justify-between items-center pb-4 border-b border-neutral-200">
-        <h2 className="text-2xl font-bold gradient-text">{report.title}</h2>
-        <Button variant="secondary" onClick={onClose} leftIcon={<X className="h-4 w-4" />}>
-          Close
-        </Button>
+        <div>
+          <h2 className="text-2xl font-bold gradient-text">{report.title}</h2>
+          <p className="text-sm text-neutral-500 mt-1">
+            Generated {new Date(report.generated_at).toLocaleDateString()} | Version {report.version}
+            {report.is_final && <span className="ml-2 px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full">Final</span>}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" onClick={() => handleDownload('json')} disabled={downloading}>
+            <Download className="h-4 w-4 mr-1" /> JSON
+          </Button>
+          <Button variant="ghost" size="sm" onClick={() => handleDownload('pdf')} disabled={downloading}>
+            <Download className="h-4 w-4 mr-1" /> PDF
+          </Button>
+          <Button variant="secondary" onClick={onClose} leftIcon={<X className="h-4 w-4" />}>
+            Close
+          </Button>
+        </div>
+      </div>
+
+      {/* Section Navigation */}
+      <div className="flex gap-1 overflow-x-auto pb-2">
+        {sections.map((section) => (
+          <button
+            key={section.id}
+            type="button"
+            onClick={() => setActiveSection(section.id)}
+            className={cn(
+              'px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-all',
+              activeSection === section.id
+                ? 'bg-primary-50 text-primary-700 border border-primary-200'
+                : 'text-neutral-500 hover:bg-neutral-50'
+            )}
+          >
+            {section.label}
+          </button>
+        ))}
       </div>
 
       {/* Executive Summary */}
-      <Card animated>
+      <Card animated className={activeSection !== 'executive' ? 'hidden' : ''}>
         <CardHeader variant="gradient">
           <CardTitle icon={<FileText className="h-5 w-5" />}>Executive Summary</CardTitle>
         </CardHeader>
@@ -75,7 +131,7 @@ export function ReportViewer({ report, onClose }: ReportViewerProps) {
       </Card>
 
       {/* Maturity by Function */}
-      <Card animated>
+      <Card animated className={activeSection !== 'maturity' ? 'hidden' : ''}>
         <CardHeader variant="gradient">
           <CardTitle icon={<BarChart3 className="h-5 w-5" />}>Maturity by Function</CardTitle>
         </CardHeader>
@@ -112,7 +168,7 @@ export function ReportViewer({ report, onClose }: ReportViewerProps) {
       </Card>
 
       {/* Deviations Summary */}
-      <Card animated>
+      <Card animated className={activeSection !== 'deviations' ? 'hidden' : ''}>
         <CardHeader variant="gradient">
           <CardTitle icon={<AlertTriangle className="h-5 w-5" />}>Deviations Summary</CardTitle>
         </CardHeader>
@@ -152,7 +208,7 @@ export function ReportViewer({ report, onClose }: ReportViewerProps) {
       </Card>
 
       {/* Recommendations */}
-      <Card animated>
+      <Card animated className={activeSection !== 'recommendations' ? 'hidden' : ''}>
         <CardHeader variant="gradient">
           <CardTitle icon={<Lightbulb className="h-5 w-5" />}>Recommendations</CardTitle>
         </CardHeader>
@@ -211,6 +267,53 @@ export function ReportViewer({ report, onClose }: ReportViewerProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Function Details (drill-down) */}
+      {content.function_details && content.function_details.length > 0 && (
+        <Card animated className={activeSection !== 'details' ? 'hidden' : ''}>
+          <CardHeader variant="gradient">
+            <CardTitle icon={<BarChart3 className="h-5 w-5" />}>Function Details</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              {content.function_details.map((func) => (
+                <div key={func.function_code} className="border border-neutral-200 rounded-xl overflow-hidden">
+                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-neutral-50 to-neutral-100">
+                    <div className="flex items-center gap-3">
+                      <span className="px-2.5 py-1 text-xs font-bold bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-lg">
+                        {func.function_code}
+                      </span>
+                      <span className="font-medium text-neutral-900">{func.function_name}</span>
+                    </div>
+                    <span className="text-lg font-bold gradient-text">{func.score.toFixed(1)}/4.0</span>
+                  </div>
+                  <div className="p-4">
+                    <div className="grid gap-2">
+                      {func.categories.map((cat) => (
+                        <div key={cat.code} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-neutral-50">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-mono text-primary-600">{cat.code}</span>
+                            <span className="text-sm text-neutral-700">{cat.name}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-24 bg-neutral-200 rounded-full h-2 overflow-hidden">
+                              <div
+                                className="bg-gradient-to-r from-primary-400 to-accent-500 rounded-full h-2 transition-all duration-500"
+                                style={{ width: `${(cat.score / 4) * 100}%` }}
+                              />
+                            </div>
+                            <span className="text-sm font-medium text-neutral-700 w-8 text-right">{cat.score.toFixed(1)}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

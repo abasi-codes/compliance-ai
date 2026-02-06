@@ -49,6 +49,7 @@ class CrosswalkService:
         top_k_per_requirement: int = 5,
         validate_with_llm: bool = True,
         auto_approve_threshold: float = 0.9,
+        prompt_suffix: Optional[str] = None,
     ) -> list[RequirementCrosswalk]:
         """Generate cross-framework mappings using embeddings and optional LLM validation.
 
@@ -94,7 +95,7 @@ class CrosswalkService:
             reasoning = None
 
             if validate_with_llm:
-                llm_result = self._validate_mapping_with_llm(source, target)
+                llm_result = self._validate_mapping_with_llm(source, target, prompt_suffix=prompt_suffix)
                 if llm_result:
                     mapping_type = llm_result.get("mapping_type", MappingType.RELATED)
                     # Combine embedding and LLM confidence
@@ -147,6 +148,7 @@ class CrosswalkService:
         self,
         source: FrameworkRequirement,
         target: FrameworkRequirement,
+        prompt_suffix: Optional[str] = None,
     ) -> Optional[dict[str, Any]]:
         """Use LLM to validate and classify a requirement mapping.
 
@@ -183,6 +185,9 @@ Definitions:
 - "none": No meaningful relationship between requirements
 
 Respond ONLY with the JSON object."""
+
+        if prompt_suffix:
+            prompt += f"\n\nAdditional context from the assessor:\n{prompt_suffix}"
 
         try:
             response = self.ai_client.messages.create(

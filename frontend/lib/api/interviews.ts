@@ -11,9 +11,10 @@ export async function listSessions(
   assessmentId: string,
   userId?: string
 ): Promise<InterviewSession[]> {
-  // The backend returns sessions when creating, we need to track them
-  // For now, return empty array as there's no list endpoint
-  return [];
+  return apiRequest<InterviewSession[]>(
+    `/interviews/assessments/${assessmentId}/sessions`,
+    { userId }
+  );
 }
 
 export async function createSession(

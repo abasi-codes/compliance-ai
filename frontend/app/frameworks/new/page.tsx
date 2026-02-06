@@ -3,16 +3,19 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Layers } from 'lucide-react';
+import { ArrowLeft, Plus, Layers, Upload } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, PageHeader } from '@/components/ui';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { createFramework } from '@/lib/api';
+import { FrameworkUploader } from '@/components/frameworks';
+import { cn } from '@/lib/utils';
 
 export default function NewFrameworkPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'manual' | 'upload'>('upload');
 
   const [formData, setFormData] = useState({
     code: '',
@@ -93,7 +96,59 @@ export default function NewFrameworkPage() {
         icon={Layers}
       />
 
-      <Card className="mt-8">
+      {/* Tab Navigation */}
+      <div className="mt-6 border-b border-neutral-200">
+        <nav className="-mb-px flex space-x-4">
+          {[
+            { id: 'upload' as const, label: 'Upload Document', icon: Upload },
+            { id: 'manual' as const, label: 'Manual Setup', icon: Plus },
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={cn(
+                  'relative flex items-center gap-2 py-3 px-4 text-sm font-medium transition-all duration-200',
+                  isActive
+                    ? 'text-primary-600'
+                    : 'text-neutral-500 hover:text-neutral-700'
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                {tab.label}
+                {isActive && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full" />
+                )}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* Upload Tab */}
+      {activeTab === 'upload' && (
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>Upload Framework Document</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-neutral-500 mb-4">
+              Upload a spreadsheet (XLSX, CSV) or document (PDF, DOCX) containing your framework
+              requirements. We'll parse the content and create a structured framework.
+            </p>
+            <FrameworkUploader
+              onComplete={(frameworkId) => router.push(`/frameworks/${frameworkId}`)}
+            />
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Manual Tab */}
+      {activeTab === 'manual' && (
+      <Card className="mt-6">
         <CardHeader>
           <CardTitle>Framework Details</CardTitle>
         </CardHeader>
@@ -217,6 +272,7 @@ export default function NewFrameworkPage() {
           </form>
         </CardContent>
       </Card>
+      )}
     </div>
   );
 }

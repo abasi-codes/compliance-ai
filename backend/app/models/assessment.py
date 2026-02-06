@@ -2,9 +2,10 @@ import uuid
 from datetime import datetime
 from enum import Enum
 
-from sqlalchemy import DateTime, ForeignKey, String, Text
+from sqlalchemy import DateTime, ForeignKey, String, Text, JSON
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import Optional
 
 from app.db.base import Base
 
@@ -15,6 +16,11 @@ class AssessmentStatus(str, Enum):
     REVIEW = "review"
     COMPLETED = "completed"
     ARCHIVED = "archived"
+
+
+class AssessmentDepth(str, Enum):
+    DESIGN = "design"
+    IMPLEMENTATION = "implementation"
 
 
 class Assessment(Base):
@@ -31,6 +37,10 @@ class Assessment(Base):
     status: Mapped[str] = mapped_column(
         String(50), default=AssessmentStatus.DRAFT.value, nullable=False
     )
+    depth_level: Mapped[str] = mapped_column(
+        String(50), default=AssessmentDepth.DESIGN.value, nullable=False
+    )
+    ai_prompt_overrides: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
     created_by_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id"), nullable=False
     )

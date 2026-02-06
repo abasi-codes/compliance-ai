@@ -17,6 +17,7 @@ import { LoadingSpinner } from '@/components/ui';
 import { getAssessment, listControls, listPolicies, listSessions, getScoreSummary, getAssessmentScope, listFrameworks } from '@/lib/api';
 import { useUserId } from '@/lib/hooks/useUserId';
 import { Assessment, AssessmentScope, Framework } from '@/lib/types';
+import { WorkflowStepper } from '@/components/assessment/WorkflowStepper';
 import { cn } from '@/lib/utils';
 
 interface OverviewPageProps {
@@ -236,6 +237,20 @@ export default function AssessmentOverviewPage({ params }: OverviewPageProps) {
           );
         })}
       </div>
+
+      {/* Workflow Progress */}
+      {userId && (
+        <Card animated>
+          <CardHeader variant="gradient">
+            <CardTitle icon={<TrendingUp className="h-5 w-5" />}>
+              Assessment Workflow
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <WorkflowStepper assessmentId={id} userId={userId} />
+          </CardContent>
+        </Card>
+      )}
 
       {/* Frameworks in Scope */}
       {frameworksInScope.length > 0 && (

@@ -153,6 +153,68 @@ export async function removeCompanyFramework(
   );
 }
 
+// Framework document upload
+export async function uploadFrameworkPreview(
+  file: File,
+  columnMapping?: Record<string, string>
+): Promise<{
+  filename: string;
+  file_type: string;
+  headers: string[];
+  suggested_mapping: Record<string, string>;
+  requirements_count: number;
+  requirements: Array<{
+    code: string;
+    name: string;
+    description: string;
+    parent: string;
+    guidance: string;
+  }>;
+  total_available: number;
+}> {
+  const formData = new FormData();
+  formData.append('file', file);
+  if (columnMapping) {
+    formData.append('column_mapping', JSON.stringify(columnMapping));
+  }
+
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+  const TOKEN_KEY = 'compliance-ai-access-token';
+  const token = typeof window !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null;
+
+  const headers: HeadersInit = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_BASE}/frameworks/upload/preview`, {
+    method: 'POST',
+    headers,
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.detail || `Upload failed: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+export async function confirmFrameworkUpload(data: {
+  code: string;
+  name: string;
+  version?: string;
+  description?: string;
+  hierarchy_labels?: string[];
+  requirements: Array<{ code: string; name: string; description: string; parent: string; guidance: string }>;
+}): Promise<Framework> {
+  return apiRequest<Framework>('/frameworks/upload/confirm', {
+    method: 'POST',
+    body: data,
+  });
+}
+
 // Assessment scope
 export async function getAssessmentScope(
   assessmentId: string

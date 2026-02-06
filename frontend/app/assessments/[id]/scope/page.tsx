@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
-import { Layers, ChevronLeft, Plus, Trash2 } from 'lucide-react';
+import { Layers, ChevronLeft, Plus, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, PageHeader } from '@/components/ui';
 import { LoadingPage, ErrorMessage } from '@/components/ui';
 import { Button } from '@/components/ui/Button';
@@ -13,6 +13,7 @@ import {
   removeAssessmentScope,
 } from '@/lib/api';
 import { Framework, AssessmentScope } from '@/lib/types';
+import { TrustServiceSelector } from '@/components/assessment/TrustServiceSelector';
 import { cn } from '@/lib/utils';
 
 const frameworkTypeColors: Record<string, string> = {
@@ -41,6 +42,7 @@ export default function AssessmentScopePage({ params }: ScopePageProps) {
   const [error, setError] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [selectedFrameworkId, setSelectedFrameworkId] = useState<string>('');
+  const [expandedSoc2, setExpandedSoc2] = useState<string | null>(null);
 
   const fetchData = async () => {
     try {
@@ -175,59 +177,89 @@ export default function AssessmentScopePage({ params }: ScopePageProps) {
             </p>
           ) : (
             <div className="space-y-3">
-              {scopedFrameworksWithDetails.map((scope, index) => (
-                <div
-                  key={scope.id}
-                  className="flex items-center justify-between p-4 bg-white rounded-lg border border-neutral-200 hover:border-neutral-300 transition-all animate-slideInUp opacity-0"
-                  style={{
-                    animationDelay: `${index * 50}ms`,
-                    animationFillMode: 'forwards',
-                  }}
-                >
-                  <div className="flex items-center gap-4">
-                    {scope.framework && (
-                      <span
-                        className={cn(
-                          'px-3 py-1.5 text-white text-xs font-semibold rounded-full bg-gradient-to-r',
-                          frameworkTypeColors[scope.framework.framework_type] ||
-                            frameworkTypeColors.custom
+              {scopedFrameworksWithDetails.map((scope, index) => {
+                const isSoc2 = scope.framework?.framework_type === 'soc2_tsc';
+                const isExpanded = expandedSoc2 === scope.framework_id;
+
+                return (
+                  <div
+                    key={scope.id}
+                    className="bg-white rounded-lg border border-neutral-200 hover:border-neutral-300 transition-all animate-slideInUp opacity-0"
+                    style={{
+                      animationDelay: `${index * 50}ms`,
+                      animationFillMode: 'forwards',
+                    }}
+                  >
+                    <div className="flex items-center justify-between p-4">
+                      <div className="flex items-center gap-4">
+                        {scope.framework && (
+                          <span
+                            className={cn(
+                              'px-3 py-1.5 text-white text-xs font-semibold rounded-full bg-gradient-to-r',
+                              frameworkTypeColors[scope.framework.framework_type] ||
+                                frameworkTypeColors.custom
+                            )}
+                          >
+                            {frameworkTypeLabels[scope.framework.framework_type] || 'Custom'}
+                          </span>
                         )}
-                      >
-                        {frameworkTypeLabels[scope.framework.framework_type] || 'Custom'}
-                      </span>
-                    )}
-                    <div>
-                      <h3 className="font-medium text-neutral-900">
-                        {scope.framework_code || scope.framework?.name || 'Unknown Framework'}
-                      </h3>
-                      <p className="text-sm text-neutral-500">
-                        {scope.include_all
-                          ? 'All requirements included'
-                          : 'Custom requirement selection'}
-                      </p>
+                        <div>
+                          <h3 className="font-medium text-neutral-900">
+                            {scope.framework_code || scope.framework?.name || 'Unknown Framework'}
+                          </h3>
+                          <p className="text-sm text-neutral-500">
+                            {scope.include_all
+                              ? 'All requirements included'
+                              : 'Custom requirement selection'}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={cn(
+                            'px-2 py-1 text-xs rounded',
+                            scope.include_all
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-yellow-100 text-yellow-700'
+                          )}
+                        >
+                          {scope.include_all ? 'Full Scope' : 'Partial'}
+                        </span>
+                        {isSoc2 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setExpandedSoc2(isExpanded ? null : scope.framework_id)}
+                          >
+                            {isExpanded ? (
+                              <ChevronUp className="w-4 h-4 text-neutral-400" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4 text-neutral-400" />
+                            )}
+                          </Button>
+                        )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveFramework(scope.framework_id)}
+                        >
+                          <Trash2 className="w-4 h-4 text-neutral-400 hover:text-red-500" />
+                        </Button>
+                      </div>
                     </div>
+                    {isSoc2 && isExpanded && (
+                      <div className="border-t border-neutral-100 pb-4">
+                        <TrustServiceSelector
+                          frameworkId={scope.framework_id}
+                          assessmentId={assessmentId}
+                          currentScope={scope}
+                          onScopeChange={fetchData}
+                        />
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={cn(
-                        'px-2 py-1 text-xs rounded',
-                        scope.include_all
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-yellow-100 text-yellow-700'
-                      )}
-                    >
-                      {scope.include_all ? 'Full Scope' : 'Partial'}
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleRemoveFramework(scope.framework_id)}
-                    >
-                      <Trash2 className="w-4 h-4 text-neutral-400 hover:text-red-500" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </CardContent>

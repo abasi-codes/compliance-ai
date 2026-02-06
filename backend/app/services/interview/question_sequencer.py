@@ -28,9 +28,26 @@ class QuestionSequencer:
     def __init__(self, db: Session):
         self.db = db
 
+    # Question types included at each depth level
+    DEPTH_QUESTION_TYPES = {
+        "design": {
+            QuestionType.EXISTENCE.value,
+            QuestionType.DESIGN.value,
+            QuestionType.DOCUMENTATION.value,
+        },
+        "implementation": {
+            QuestionType.EXISTENCE.value,
+            QuestionType.DESIGN.value,
+            QuestionType.DOCUMENTATION.value,
+            QuestionType.OPERATION.value,
+            QuestionType.RESPONSIBILITY.value,
+        },
+    }
+
     def get_ordered_questions(
         self,
         target_roles: list[str] | None = None,
+        depth_level: str | None = None,
     ) -> list[InterviewQuestion]:
         """
         Get all interview questions in deterministic order.
@@ -78,6 +95,11 @@ class QuestionSequencer:
             return (func_order, cat_code, subcat_code, type_order, q.order)
 
         questions = sorted(questions, key=sort_key)
+
+        # Filter by depth level
+        if depth_level and depth_level in self.DEPTH_QUESTION_TYPES:
+            allowed_types = self.DEPTH_QUESTION_TYPES[depth_level]
+            questions = [q for q in questions if q.question_type in allowed_types]
 
         # Filter by target roles if specified
         if target_roles:

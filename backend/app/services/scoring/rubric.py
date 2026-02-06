@@ -77,7 +77,11 @@ class ScoringRubric:
         },
     }
 
-    def calculate_score(self, evidence: dict[str, Any]) -> tuple[int, dict]:
+    def calculate_score(
+        self,
+        evidence: dict[str, Any],
+        depth_level: str | None = None,
+    ) -> tuple[int, dict]:
         """
         Calculate a maturity score based on evidence.
 
@@ -90,6 +94,8 @@ class ScoringRubric:
                 - has_metrics: bool (optional)
                 - has_improvement: bool (optional)
                 - interview_responses: list[dict] (optional)
+            depth_level: Assessment depth ("design" or "implementation").
+                Design-only assessments don't penalize for missing operation evidence.
 
         Returns:
             Tuple of (score, score_breakdown)
@@ -100,6 +106,13 @@ class ScoringRubric:
         has_operation = evidence.get("has_operation", False)
         has_metrics = evidence.get("has_metrics", False)
         has_improvement = evidence.get("has_improvement", False)
+
+        # For design-only assessments, assume operation is satisfied if
+        # policy and controls are in place (don't penalize for missing
+        # operational evidence since it's not being evaluated)
+        if depth_level == "design" and not has_operation:
+            if has_policy and has_control:
+                has_operation = True
 
         breakdown = {
             "has_policy": has_policy,

@@ -1,9 +1,9 @@
 """API endpoints for multi-framework management."""
 
 import uuid
-from typing import Optional
+from typing import Optional, Any
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, UploadFile, File, Form
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -11,6 +11,7 @@ from app.db.session import get_db
 from app.models.unified_framework import Framework, FrameworkType
 from app.services.frameworks.framework_service import FrameworkService
 from app.services.frameworks.requirement_service import RequirementService
+from app.services.frameworks.loaders.document_loader import DocumentFrameworkLoader
 
 router = APIRouter()
 
@@ -70,6 +71,15 @@ class AssessmentScopeCreate(BaseModel):
     include_all: bool = True
     excluded_requirement_ids: Optional[list[str]] = None
     included_requirement_ids: Optional[list[str]] = None
+
+
+class FrameworkUploadConfirm(BaseModel):
+    code: str = Field(..., min_length=1, max_length=50)
+    name: str = Field(..., min_length=1, max_length=255)
+    version: str = Field(default="1.0", min_length=1, max_length=50)
+    description: Optional[str] = None
+    hierarchy_labels: Optional[list[str]] = None
+    requirements: list[dict]
 
 
 # Endpoints
@@ -336,6 +346,126 @@ async def load_builtin_frameworks(
                 for f in frameworks
             ],
         }
+
+
+# Document upload endpoints
+@router.post("/upload/preview")
+async def upload_framework_preview(
+    file: UploadFile = File(...),
+    column_mapping: Optional[str] = Form(None),
+):
+    """Upload a document and get a preview of parsed requirements.
+
+    Supports XLSX, CSV, PDF, and DOCX files. For spreadsheets, columns are
+    auto-detected or can be explicitly mapped. For PDFs and DOCX files,
+    AI is used to extract requirements.
+
+    Returns a preview of parsed requirements that can be confirmed to create the framework.
+    """
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="No filename provided")
+
+    ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
+    allowed = {"csv", "xlsx", "xls", "pdf", "docx", "doc", "txt", "md"}
+
+    if ext not in allowed:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported file type: .{ext}. Allowed: {', '.join('.' + e for e in sorted(allowed))}",
+        )
+
+    content = await file.read()
+
+    if len(content) > 10 * 1024 * 1024:  # 10MB
+        raise HTTPException(status_code=400, detail="File too large (max 10MB)")
+
+    try:
+        col_map = None
+        if column_mapping:
+            import json
+            col_map = json.loads(column_mapping)
+
+        if ext in ("csv", "xlsx", "xls"):
+            # Parse spreadsheet
+            detection = DocumentFrameworkLoader.detect_columns(content, file.filename)
+            requirements = DocumentFrameworkLoader.parse_spreadsheet(
+                content, file.filename, col_map
+            )
+            return {
+                "filename": file.filename,
+                "file_type": "spreadsheet",
+                "headers": detection.get("headers", []),
+                "suggested_mapping": detection.get("suggested_mapping", {}),
+                "requirements_count": len(requirements),
+                "requirements": requirements[:100],  # Preview first 100
+                "total_available": len(requirements),
+            }
+        else:
+            # Parse document with AI
+            requirements = await DocumentFrameworkLoader.parse_document_with_ai(
+                content, file.filename
+            )
+            return {
+                "filename": file.filename,
+                "file_type": "document",
+                "headers": [],
+                "suggested_mapping": {},
+                "requirements_count": len(requirements),
+                "requirements": requirements[:100],
+                "total_available": len(requirements),
+            }
+
+    except ImportError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to parse file: {str(e)}")
+
+
+@router.post("/upload/confirm", response_model=FrameworkResponse, status_code=status.HTTP_201_CREATED)
+async def upload_framework_confirm(
+    data: FrameworkUploadConfirm,
+    db: Session = Depends(get_db),
+):
+    """Confirm and save a parsed framework from document upload.
+
+    Takes the requirements previewed from /upload/preview and creates
+    the framework in the database.
+    """
+    service = FrameworkService(db)
+
+    # Check if code already exists
+    existing = service.get_framework_by_code(data.code)
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Framework with code {data.code} already exists",
+        )
+
+    # Create the framework using DocumentFrameworkLoader
+    loader = DocumentFrameworkLoader(
+        requirements=data.requirements,
+        framework_code=data.code,
+        framework_name=data.name,
+        framework_version=data.version,
+        description=data.description,
+        hierarchy_labels=data.hierarchy_labels,
+    )
+
+    framework = loader.load(db)
+
+    return FrameworkResponse(
+        id=str(framework.id),
+        code=framework.code,
+        name=framework.name,
+        version=framework.version,
+        description=framework.description,
+        framework_type=framework.framework_type,
+        hierarchy_levels=framework.hierarchy_levels,
+        hierarchy_labels=framework.hierarchy_labels,
+        is_active=framework.is_active,
+        is_builtin=framework.is_builtin,
+        metadata=framework.extra_metadata,
+    )
 
 
 # Company framework selection endpoints

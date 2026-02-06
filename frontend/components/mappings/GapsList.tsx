@@ -1,12 +1,15 @@
 'use client';
 
-import { CheckCircle, AlertCircle } from 'lucide-react';
+import Link from 'next/link';
+import { CheckCircle, AlertCircle, FileText, Settings, MessageSquare, ArrowRight } from 'lucide-react';
 import { GapListResponse } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 
 interface GapsListProps {
   gapData: GapListResponse;
+  assessmentId?: string;
 }
 
 const gapTypeLabels: Record<string, { label: string; bg: string; text: string; border: string }> = {
@@ -30,7 +33,7 @@ const gapTypeLabels: Record<string, { label: string; bg: string; text: string; b
   },
 };
 
-export function GapsList({ gapData }: GapsListProps) {
+export function GapsList({ gapData, assessmentId }: GapsListProps) {
   if (gapData.gaps.length === 0) {
     return (
       <div className="text-center py-12">
@@ -139,6 +142,34 @@ export function GapsList({ gapData }: GapsListProps) {
                     )}
                   </div>
                 </div>
+
+                {/* Action Buttons */}
+                {assessmentId && (
+                  <div className="mt-3 pt-3 border-t border-neutral-100 flex flex-wrap gap-2">
+                    {!gap.has_policy && (
+                      <Link href={`/assessments/${assessmentId}/policies`}>
+                        <Button variant="ghost" size="sm">
+                          <FileText className="w-3.5 h-3.5 mr-1" />
+                          Upload Policy
+                        </Button>
+                      </Link>
+                    )}
+                    {!gap.has_control && (
+                      <Link href={`/assessments/${assessmentId}/controls`}>
+                        <Button variant="ghost" size="sm">
+                          <Settings className="w-3.5 h-3.5 mr-1" />
+                          Upload Control
+                        </Button>
+                      </Link>
+                    )}
+                    <Link href={`/assessments/${assessmentId}/interviews`}>
+                      <Button variant="ghost" size="sm">
+                        <MessageSquare className="w-3.5 h-3.5 mr-1" />
+                        Add Interview
+                      </Button>
+                    </Link>
+                  </div>
+                )}
               </CardContent>
             </Card>
           );
